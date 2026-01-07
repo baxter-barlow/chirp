@@ -1516,6 +1516,11 @@ void MmwDemo_CLIInit(uint8_t taskPriority)
     cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_powerMode;
     cnt++;
 
+    cliCfg.tableEntry[cnt].cmd = "chirpProfile";
+    cliCfg.tableEntry[cnt].helpString = "<name> (development, low_bandwidth, low_power, high_rate)";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_profile;
+    cnt++;
+
 #ifdef SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN
     cliCfg.tableEntry[cnt].cmd = "idlePowerCycle";
     cliCfg.tableEntry[cnt].helpString =

@@ -59,6 +59,13 @@ extern "C"
      */
     int32_t Chirp_CLI_powerMode(int32_t argc, char *argv[]);
 
+    /**
+     * @brief Apply a configuration profile
+     * Usage: chirpProfile <name>
+     * name: development, low_bandwidth, low_power, high_rate
+     */
+    int32_t Chirp_CLI_profile(int32_t argc, char *argv[]);
+
 #ifdef __cplusplus
 }
 #endif

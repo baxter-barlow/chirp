@@ -5,6 +5,17 @@ All notable changes to chirp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-01-07
+
+### Added
+- **Configuration Profiles** - Pre-configured radar profiles for common use cases
+  - `development.cfg` - Full output, all TLVs, debugging
+  - `low_bandwidth.cfg` - PHASE mode only, minimal output
+  - `low_power.cfg` - PRESENCE mode with 20% duty cycling
+  - `high_rate.cfg` - TARGET_IQ at 50 FPS for motion tracking
+  - `vital_signs.cfg` - Optimized for respiratory/heart rate
+- **CLI command**: `chirpProfile <name>` - Quick-set chirp settings for each profile
+
 ## [0.3.0] - 2026-01-07
 
 ### Added
@@ -58,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI workflow for linting (pre-commit, clang-format, ruff, black)
 - Documentation and development plan
 
+[0.4.0]: https://github.com/baxter-barlow/chirp/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/baxter-barlow/chirp/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/baxter-barlow/chirp/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/baxter-barlow/chirp/releases/tag/v0.1.0

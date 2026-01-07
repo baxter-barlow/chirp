@@ -197,6 +197,78 @@ int32_t Chirp_CLI_reset(int32_t argc, char *argv[])
 }
 
 /*******************************************************************************
+ * CLI Command: chirpProfile
+ * Usage: chirpProfile <name>
+ * name: development, low_bandwidth, low_power, high_rate
+ ******************************************************************************/
+int32_t Chirp_CLI_profile(int32_t argc, char *argv[])
+{
+    if (argc < 2)
+    {
+        CLI_write("Error: chirpProfile requires a profile name\n");
+        CLI_write("Usage: chirpProfile <name>\n");
+        CLI_write("  development  - RAW_IQ, all outputs, full power\n");
+        CLI_write("  low_bandwidth - PHASE only, minimal output\n");
+        CLI_write("  low_power    - PRESENCE, 20%% duty cycle\n");
+        CLI_write("  high_rate    - TARGET_IQ, motion enabled\n");
+        return -1;
+    }
+
+    if (strcmp(argv[1], "development") == 0)
+    {
+        /* RAW_IQ mode with all outputs enabled */
+        Chirp_OutputMode_set(&gChirpState.outputConfig, CHIRP_OUTPUT_MODE_RAW_IQ);
+        gChirpState.outputConfig.enableMotionOutput = 1;
+        gChirpState.outputConfig.enableTargetInfo = 1;
+        Chirp_TargetSelect_configure(&gChirpState.targetConfig, 0.3f, 5.0f, 6, 5);
+        Chirp_Motion_configure(&gChirpState.motionConfig, 1, 100, 2, 50);
+        Chirp_Power_setMode(&gChirpState.powerConfig, CHIRP_POWER_MODE_FULL);
+        CLI_write("Profile: development (RAW_IQ, full power)\n");
+    }
+    else if (strcmp(argv[1], "low_bandwidth") == 0)
+    {
+        /* PHASE mode only, minimal output */
+        Chirp_OutputMode_set(&gChirpState.outputConfig, CHIRP_OUTPUT_MODE_PHASE);
+        gChirpState.outputConfig.enableMotionOutput = 0;
+        gChirpState.outputConfig.enableTargetInfo = 0;
+        Chirp_TargetSelect_configure(&gChirpState.targetConfig, 0.3f, 5.0f, 8, 3);
+        Chirp_Motion_configure(&gChirpState.motionConfig, 0, 100, 2, 50);
+        Chirp_Power_setMode(&gChirpState.powerConfig, CHIRP_POWER_MODE_FULL);
+        CLI_write("Profile: low_bandwidth (PHASE only)\n");
+    }
+    else if (strcmp(argv[1], "low_power") == 0)
+    {
+        /* PRESENCE mode with duty cycling */
+        Chirp_OutputMode_set(&gChirpState.outputConfig, CHIRP_OUTPUT_MODE_PRESENCE);
+        gChirpState.outputConfig.enableMotionOutput = 0;
+        gChirpState.outputConfig.enableTargetInfo = 0;
+        Chirp_TargetSelect_configure(&gChirpState.targetConfig, 0.3f, 3.0f, 6, 1);
+        Chirp_Motion_configure(&gChirpState.motionConfig, 1, 80, 2, 30);
+        Chirp_Power_setMode(&gChirpState.powerConfig, CHIRP_POWER_MODE_LOW_POWER);
+        CLI_write("Profile: low_power (PRESENCE, 20%% duty)\n");
+    }
+    else if (strcmp(argv[1], "high_rate") == 0)
+    {
+        /* TARGET_IQ mode for fast motion */
+        Chirp_OutputMode_set(&gChirpState.outputConfig, CHIRP_OUTPUT_MODE_TARGET_IQ);
+        gChirpState.outputConfig.enableMotionOutput = 1;
+        gChirpState.outputConfig.enableTargetInfo = 1;
+        Chirp_TargetSelect_configure(&gChirpState.targetConfig, 0.2f, 4.0f, 8, 5);
+        Chirp_Motion_configure(&gChirpState.motionConfig, 1, 50, 2, 40);
+        Chirp_Power_setMode(&gChirpState.powerConfig, CHIRP_POWER_MODE_FULL);
+        CLI_write("Profile: high_rate (TARGET_IQ, motion)\n");
+    }
+    else
+    {
+        CLI_write("Error: Unknown profile '%s'\n", argv[1]);
+        CLI_write("Available: development, low_bandwidth, low_power, high_rate\n");
+        return -1;
+    }
+
+    return 0;
+}
+
+/*******************************************************************************
  * CLI Command: chirpPowerMode
  * Usage: chirpPowerMode <mode> [activeMs] [sleepMs]
  * mode: 0=FULL, 1=BALANCED, 2=LOW_POWER, 3=ULTRA_LOW, 4=CUSTOM
