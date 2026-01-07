@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: Lint with ruff
-        run: ruff check host-sdk/ tools/ || true
+        run: ruff check host-sdk/ tools/
 
       - name: Run tests
         run: |
