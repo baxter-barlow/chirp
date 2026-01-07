@@ -37,7 +37,7 @@ MSS_MMW_DEMO_STD_LIBS = $(R4F_COMMON_STD_LIB)						\
             -llibosal_$(MMWAVE_SDK_DEVICE_TYPE).$(R4F_LIB_EXT)       \
             -llibcbuff_$(MMWAVE_SDK_DEVICE_TYPE).$(R4F_LIB_EXT)         \
             -llibhsiheader_$(MMWAVE_SDK_DEVICE_TYPE).$(R4F_LIB_EXT)     \
-            -llibsleep_xwr68xx.$(R4F_LIB_EXT)           
+            -llibsleep_xwr68xx.$(R4F_LIB_EXT)
 
 MSS_MMW_DEMO_LOC_LIBS = $(R4F_COMMON_LOC_LIB)					\
    			-i$(MMWAVE_SDK_INSTALL_PATH)/ti/drivers/pinmux/lib 	\
@@ -138,4 +138,3 @@ mssDemoClean:
 # Dependency handling
 ###################################################################################
 -include $(MSS_MMW_DEMO_DEPENDS)
-

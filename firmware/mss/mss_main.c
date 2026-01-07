@@ -95,7 +95,7 @@
  *      stopping the processing of the data path are taken
  *    - @ref MmwDemo_mmWaveCtrlTask. This task is used to provide an execution
  *      context for the mmWave control, it calls in an endless loop the MMWave_execute API.
- *    - @ref mmwDemo_mssDPMTask. This task is used to provide an execution context for 
+ *    - @ref mmwDemo_mssDPMTask. This task is used to provide an execution context for
  *      DPM (Data Path Manager) execution, it calls in an endless loop. There is no DPC registered
  *      with DPM.
  *
@@ -109,7 +109,7 @@
  *      the DPM_execute API. In this context, all of the registered object detection
  *      DPC (Data Path Chain) APIs like configuration, control and execute will
  *      take place. In this task. When the DPC's execute API produces the detected objects and other
- *      results, they are reported to MSS where they are transmitted out of the UART port for display 
+ *      results, they are reported to MSS where they are transmitted out of the UART port for display
  *      using the visualizer.
  *
  *   @section datapath Data Path
@@ -274,10 +274,10 @@
  *       Length: (size of @ref MmwDemo_temperatureStats_t)
  *
  *       Value: Structure of detailed temperature report as obtained from Radar front end.
- *       @ref MmwDemo_temperatureStats_t::tempReportValid is set to return value of 
- *       rlRfGetTemperatureReport(). If @ref MmwDemo_temperatureStats_t::tempReportValid is 0,  
- *       values in @ref MmwDemo_temperatureStats_t::temperatureReport are valid else they should 
- *       be ignored. This TLV is sent along with Stats TLV described in @ref tlv6 
+ *       @ref MmwDemo_temperatureStats_t::tempReportValid is set to return value of
+ *       rlRfGetTemperatureReport(). If @ref MmwDemo_temperatureStats_t::tempReportValid is 0,
+ *       values in @ref MmwDemo_temperatureStats_t::temperatureReport are valid else they should
+ *       be ignored. This TLV is sent along with Stats TLV described in @ref tlv6
  *
  *  @section Calibration_section Range Bias and Rx Channel Gain/Phase Measurement and Compensation
  *
@@ -315,7 +315,8 @@
  *     the measurement results are written out on the CLI port (@ref MmwDemo_measurementResultOutput)
  *     in the format below:
  *     @verbatim
-       compRangeBiasAndRxChanPhase <rangeBias> <Re(0,0)> <Im(0,0)> <Re(0,1)> <Im(0,1)> ... <Re(0,R-1)> <Im(0,R-1)> <Re(1,0)> <Im(1,0)> ... <Re(T-1,R-1)> <Im(T-1,R-1)>
+       compRangeBiasAndRxChanPhase <rangeBias> <Re(0,0)> <Im(0,0)> <Re(0,1)> <Im(0,1)> ... <Re(0,R-1)> <Im(0,R-1)>
+ <Re(1,0)> <Im(1,0)> ... <Re(T-1,R-1)> <Im(T-1,R-1)>
        @endverbatim
        For details of how DPC performs the measurement, see the DPC documentation.
  *     -# The command printed out on the CLI now can be copied and pasted in any
@@ -385,7 +386,8 @@
  *    -# For SW data, the number of bytes to transmit each sub-frame/frame is:\n
  *       52 [sizeof(HSIDataCardHeader_t) + sizeof(HSISDKHeader_t)] +
  *       sizeof(MmwDemo_LVDSUserDataHeader_t) [=8] + \n
- *       number of detected objects (Nd) * { sizeof(DPIF_PointCloudCartesian_t) [=16] + sizeof(DPIF_PointCloudSideInfo_t) [=4] }
+ *       number of detected objects (Nd) * { sizeof(DPIF_PointCloudCartesian_t) [=16] +
+ sizeof(DPIF_PointCloudSideInfo_t) [=4] }
  *       rounded up to multiples of 256 [=sizeof(HSIHeader_t)] bytes.\n
  *       or X = round-up(60 + Nd * 20, 256). So the time to transmit this data will be \n
  *       X * 8 / (n*B) us. The maximum number of objects (Ndmax) that can be
@@ -483,28 +485,30 @@
  *         @ref MmwDemo_isAllCfgInPendingState to know if all dynamic config was provided)
  *
  *  @section resourceAlloc Hardware Resource Allocation
- *    The object detection DPCs(objdetrangehwa and objdetdsp) need to configure the DPUs 
+ *    The object detection DPCs(objdetrangehwa and objdetdsp) need to configure the DPUs
  *    hardware resources (HWA, EDMA etc). The resource partitioning is shown to be in
  *    the ownership of the demo. This is to illustrate the general
  *    case of resource allocation across DPCs and/or demo's own
  *    processing that is post-DPC processing. This partitioning
  *    can be seen in the mmw_res.h file. This file is passed as a compiler command line
- *    define @verbatim "--define=APP_RESOURCE_FILE="<ti/demo/xwr68xx/mmw/mmw_res.h>" @endverbatim 
+ *    define @verbatim "--define=APP_RESOURCE_FILE="<ti/demo/xwr68xx/mmw/mmw_res.h>" @endverbatim
  *    in mmw_mss.mak and mmw_dss.mak when building the DPC sources as part of building the demo application and
  *    is referred in object detection DPC sources where needed as
  *    @verbatim #include APP_RESOURCE_FILE @endverbatim
  *
  *  @section demoDesignNotes Design Notes
- *  
+ *
  *  Due to the limitation of DPM local queue size, for certain DPM functions such as @ref DPM_start, @ref DPM_stop and
  *  some of the DPC control through @ref DPM_ioctl, semaphores are used to sync between calling task and function
  *  @ref MmwDemo_DPC_ObjectDetection_reportFxn. So that it won't cause DPM crash because of running out of
- *  DPM local queues. The following diagram demonstrates the example calling flow for blocking @ref DPM_ioctl() function call.
+ *  DPM local queues. The following diagram demonstrates the example calling flow for blocking @ref DPM_ioctl() function
+ call.
  *  Non-blocking @ref DPM_ioctl is also shown for comparison.
  *
  *  @image html dpm_ioctl_handling.png "DPM_ioctl calling flow"
  *
- *  There are DPM report functions on both MSS and DSS for the same DPM_Report. However the sequence is not guaranteed between the
+ *  There are DPM report functions on both MSS and DSS for the same DPM_Report. However the sequence is not guaranteed
+ between the
  *  two cores.
  *
  *  @section memoryUsage Memory Usage
@@ -516,7 +520,8 @@
  *
  *    **MSS:**
  *    For the mapping rules, please refer to <a href="../../demo_mss_mapping.txt">demo_mss_mapping.txt</a>.
- *    Refer to the <a href="../../xwr68xx_mmw_demo_mss_mem_analysis_detailed.txt">xwr68xx_mmw_demo_mss_mem_analysis_detailed.txt</a>
+ *    Refer to the <a
+ href="../../xwr68xx_mmw_demo_mss_mem_analysis_detailed.txt">xwr68xx_mmw_demo_mss_mem_analysis_detailed.txt</a>
  *    for detailed analysis of the memory usage across drivers and control/alg components on MSS and to
  *    <a href="../../demo_mss_mapping_detailed.txt">demo_mss_mapping_detailed.txt</a>
  *    for detailed mapping rules .
@@ -525,7 +530,8 @@
  *
  *    **DSS:**
  *    For the mapping rules, please refer to <a href="../../demo_dss_mapping.txt">demo_dss_mapping.txt</a>.
- *    Refer to the <a href="../../xwr68xx_mmw_demo_dss_mem_analysis_detailed.txt">xwr68xx_mmw_demo_dss_mem_analysis_detailed.txt</a>
+ *    Refer to the <a
+ href="../../xwr68xx_mmw_demo_dss_mem_analysis_detailed.txt">xwr68xx_mmw_demo_dss_mem_analysis_detailed.txt</a>
  *    for detailed analysis of the memory usage across drivers and control/alg components on DSS and to
  *    <a href="../../demo_dss_mapping_detailed.txt">demo_dss_mapping_detailed.txt</a>
  *    for detailed mapping rules .
@@ -548,7 +554,7 @@
  *    The base error code for DPC and DPU can be found in @ref dp_error.h
  *
  *    Module specific error code is specified in the module's header file.
- *    Examples: 
+ *    Examples:
  *       - UART driver error code is defined in uart.h
  *       - DPC error code is defined in the dpc used in demo (ti/datapath/dpc/objectdetection/objdethwa)
  *
@@ -568,11 +574,13 @@
  *    - Here is an example on how to parse the error code - "-40111"\n
  *        -# The error code is from module with error base "-40000", which indicates it is DPC error.\n
  *        -# By referring to @ref dp_error.h, base "-40100" is from HWA based objectdetection DPC.\n
- *        -# Then find the error code in objectdetection.h for error(-11) as DPC_OBJECTDETECTION_ENOMEM__L3_RAM_RADAR_CUBE
+ *        -# Then find the error code in objectdetection.h for error(-11) as
+ DPC_OBJECTDETECTION_ENOMEM__L3_RAM_RADAR_CUBE
  *
  *    - Another example is with mmWave control module: - "mmWave Config failed [Error code: -3109 Subsystem: 71]"\n
  *        -# The above message indicates the error is from module(-3100 ->mmwave) with error -9(MMWAVE_ECHIRPCFG)\n
- *        -# The subsystem(mmwavelink) error is 71(RL_RET_CODE_CHIRP_TX_ENA_1INVAL_IN) which can be found in mmwavelink.h
+ *        -# The subsystem(mmwavelink) error is 71(RL_RET_CODE_CHIRP_TX_ENA_1INVAL_IN) which can be found in
+ mmwavelink.h
  *
  */
 
@@ -581,59 +589,59 @@
  **************************************************************************/
 
 /* Standard Include Files. */
-#include <stdint.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <string.h>
-#include <stdio.h>
 #include <math.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 /* BIOS/XDC Include Files. */
-#include <xdc/std.h>
-#include <xdc/cfg/global.h>
-#include <xdc/runtime/IHeap.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
-#include <xdc/runtime/Memory.h>
 #include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/knl/Event.h>
-#include <ti/sysbios/knl/Semaphore.h>
-#include <ti/sysbios/knl/Clock.h>
-#include <ti/sysbios/heaps/HeapBuf.h>
-#include <ti/sysbios/heaps/HeapMem.h>
-#include <ti/sysbios/knl/Event.h>
 #include <ti/sysbios/family/arm/v7a/Pmu.h>
 #include <ti/sysbios/family/arm/v7r/vim/Hwi.h>
+#include <ti/sysbios/heaps/HeapBuf.h>
+#include <ti/sysbios/heaps/HeapMem.h>
+#include <ti/sysbios/knl/Clock.h>
+#include <ti/sysbios/knl/Event.h>
+#include <ti/sysbios/knl/Semaphore.h>
+#include <ti/sysbios/knl/Task.h>
 #include <ti/sysbios/utils/Load.h>
+#include <xdc/cfg/global.h>
+#include <xdc/runtime/Error.h>
+#include <xdc/runtime/IHeap.h>
+#include <xdc/runtime/Memory.h>
+#include <xdc/runtime/System.h>
+#include <xdc/std.h>
 
 
 /* mmWave SDK Include Files: */
-#include <ti/common/sys_common.h>
 #include <ti/common/mmwave_sdk_version.h>
-#include <ti/drivers/soc/soc.h>
-#include <ti/drivers/esm/esm.h>
+#include <ti/common/sys_common.h>
+#include <ti/control/dpm/dpm.h>
+#include <ti/control/mmwave/mmwave.h>
 #include <ti/drivers/crc/crc.h>
+#include <ti/drivers/esm/esm.h>
 #include <ti/drivers/gpio/gpio.h>
 #include <ti/drivers/mailbox/mailbox.h>
-#include <ti/drivers/pinmux/pinmux.h>
-#include <ti/control/mmwave/mmwave.h>
-#include <ti/control/dpm/dpm.h>
 #include <ti/drivers/osal/DebugP.h>
+#include <ti/drivers/pinmux/pinmux.h>
+#include <ti/drivers/soc/soc.h>
 #include <ti/drivers/uart/UART.h>
 #include <ti/utils/cli/cli.h>
 #include <ti/utils/mathutils/mathutils.h>
 
 /* Demo Include Files */
-#include <ti/demo/xwr68xx/mmw/include/mmw_config.h>
-#include <ti/demo/utils/mmwdemo_monitor.h>
-#include "../include/mmw_output.h"
-#include <ti/demo/xwr68xx/mmw/mmw_res.h>
-#include <ti/demo/xwr68xx/mmw/mss/mmw_mss.h>
-#include <ti/demo/utils/mmwdemo_rfparser.h>
 #include <ti/demo/utils/mmwdemo_adcconfig.h>
 #include <ti/demo/utils/mmwdemo_flash.h>
+#include <ti/demo/utils/mmwdemo_monitor.h>
+#include <ti/demo/utils/mmwdemo_rfparser.h>
+#include <ti/demo/xwr68xx/mmw/include/mmw_config.h>
+#include <ti/demo/xwr68xx/mmw/mmw_res.h>
+#include <ti/demo/xwr68xx/mmw/mss/mmw_mss.h>
+
+#include "../include/mmw_output.h"
 
 /* Chirp Include Files */
 #include "chirp.h"
@@ -656,25 +664,25 @@
  * dpm task assumes CLI task is held back during this processing. The alternative
  * is to use a semaphore between the two tasks.
  */
-#define MMWDEMO_CLI_TASK_PRIORITY                 3
-#define MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY      4
-#define MMWDEMO_MMWAVE_CTRL_TASK_PRIORITY         5
+#define MMWDEMO_CLI_TASK_PRIORITY            3
+#define MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY 4
+#define MMWDEMO_MMWAVE_CTRL_TASK_PRIORITY    5
 
 #if (MMWDEMO_CLI_TASK_PRIORITY >= MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY)
 #error CLI task priority must be < Object Detection DPM task priority
 #endif
 
-#define DPC_OBJDET_R4F_INSTANCEID       (0xFEEDFEED)
+#define DPC_OBJDET_R4F_INSTANCEID (0xFEEDFEED)
 
 /* These address offsets are in bytes, when configure address offset in hardware,
    these values will be converted to number of 128bits
    Buffer at offset 0x0U is reserved by BSS, hence offset starts from 0x800
  */
-#define MMW_DEMO_CQ_SIGIMG_ADDR_OFFSET          0x800U
-#define MMW_DEMO_CQ_RXSAT_ADDR_OFFSET           0x1000U
+#define MMW_DEMO_CQ_SIGIMG_ADDR_OFFSET 0x800U
+#define MMW_DEMO_CQ_RXSAT_ADDR_OFFSET  0x1000U
 
 /* CQ data is at 16 bytes alignment for mulitple chirps */
-#define MMW_DEMO_CQ_DATA_ALIGNMENT            16U
+#define MMW_DEMO_CQ_DATA_ALIGNMENT 16U
 
 /**************************************************************************
  *************************** Global Definitions ***************************
@@ -684,7 +692,7 @@
  * @brief
  *  Global Variable for tracking information required by the mmw Demo
  */
-MmwDemo_MSS_MCB    gMmwMssMCB;
+MmwDemo_MSS_MCB gMmwMssMCB;
 
 /**
  * @brief
@@ -696,7 +704,7 @@ MmwDemo_HSRAM gHSRAM;
 #pragma DATA_SECTION(gHSRAM, ".demoSharedMem");
 #pragma DATA_ALIGN(gHSRAM, 4);
 
- /*! TCMB RAM buffer for object detection DPC */
+/*! TCMB RAM buffer for object detection DPC */
 #define MMWDEMO_OBJDET_LOCALRAM_SIZE (4U * 1024U)
 uint8_t gDPCTCM[MMWDEMO_OBJDET_LOCALRAM_SIZE];
 #pragma DATA_SECTION(gDPCTCM, ".dpcLocalRam");
@@ -709,18 +717,17 @@ uint8_t gMmwL3[SOC_L3RAM_SIZE];
 
 /**
  * @brief
- *  Global Variable for LDO BYPASS config, PLease consult your 
+ *  Global Variable for LDO BYPASS config, PLease consult your
  * board/EVM user guide before changing the values here
  */
-rlRfLdoBypassCfg_t gRFLdoBypassCfg =
-{
-    .ldoBypassEnable   = 0, /* 1.0V RF supply 1 and 1.0V RF supply 2 */
-    .supplyMonIrDrop   = 0, /* IR drop of 3% */
+rlRfLdoBypassCfg_t gRFLdoBypassCfg = {
+    .ldoBypassEnable = 0,   /* 1.0V RF supply 1 and 1.0V RF supply 2 */
+    .supplyMonIrDrop = 0,   /* IR drop of 3% */
     .ioSupplyIndicator = 0, /* 3.3 V IO supply */
 };
 /* Calibration Data Save/Restore defines */
-#define MMWDEMO_CALIB_FLASH_SIZE	              4096
-#define MMWDEMO_CALIB_STORE_MAGIC            (0x7CB28DF9U)
+#define MMWDEMO_CALIB_FLASH_SIZE  4096
+#define MMWDEMO_CALIB_STORE_MAGIC (0x7CB28DF9U)
 
 MmwDemo_calibData gCalibDataStorage;
 #pragma DATA_ALIGN(gCalibDataStorage, 8);
@@ -737,32 +744,16 @@ extern void MmwDemo_CLIInit(uint8_t taskPriority);
 
 /* MMW demo functions for datapath operation */
 static void MmwDemo_dataPathOpen(void);
-static int32_t MmwDemo_dataPathConfig (void);
-static void MmwDemo_dataPathStart (void);
-static void MmwDemo_dataPathStop (void);
-static void MmwDemo_handleObjectDetResult(DPM_Buffer  *ptrResult);
-static void MmwDemo_DPC_ObjectDetection_reportFxn
-(
-    DPM_Report  reportType,
-    uint32_t    instanceId,
-    int32_t     errCode,
-    uint32_t    arg0,
-    uint32_t    arg1
-);
-static void MmwDemo_transmitProcessedOutput
-(
-    UART_Handle     uartHandle,
-    DPC_ObjectDetection_ExecuteResult   *result,
-    MmwDemo_output_message_stats        *timingInfo
-);
+static int32_t MmwDemo_dataPathConfig(void);
+static void MmwDemo_dataPathStart(void);
+static void MmwDemo_dataPathStop(void);
+static void MmwDemo_handleObjectDetResult(DPM_Buffer *ptrResult);
+static void MmwDemo_DPC_ObjectDetection_reportFxn(DPM_Report reportType, uint32_t instanceId, int32_t errCode,
+                                                  uint32_t arg0, uint32_t arg1);
+static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDetection_ExecuteResult *result,
+                                            MmwDemo_output_message_stats *timingInfo);
 static void MmwDemo_measurementResultOutput(DPU_AoAProc_compRxChannelBiasCfg *compRxChanCfg);
-static int32_t MmwDemo_DPM_ioctl_blocking
-(
-    DPM_Handle handle,
-    uint32_t cmd,
-    void* arg,
-    uint32_t argLen
-);
+static int32_t MmwDemo_DPM_ioctl_blocking(DPM_Handle handle, uint32_t cmd, void *arg, uint32_t argLen);
 static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx);
 
 static void MmwDemo_initTask(UArg arg0, UArg arg1);
@@ -770,7 +761,7 @@ static void MmwDemo_platformInit(MmwDemo_platformCfg *config);
 
 /* Mmwave control functions */
 static void MmwDemo_mmWaveCtrlTask(UArg arg0, UArg arg1);
-static int32_t MmwDemo_mmWaveCtrlStop (void);
+static int32_t MmwDemo_mmWaveCtrlStop(void);
 static int32_t MmwDemo_eventCallbackFxn(uint16_t msgId, uint16_t sbId, uint16_t sbLen, uint8_t *payload);
 
 /* external sleep function when in idle (used in .cfg file) */
@@ -780,22 +771,21 @@ void MmwDemo_sleep(void);
 static void MmwDemo_edmaInit(MmwDemo_DataPathObj *obj, uint8_t instance);
 static void MmwDemo_edmaOpen(MmwDemo_DataPathObj *obj, uint8_t instance);
 static void MmwDemo_EDMA_transferControllerErrorCallbackFxn(EDMA_Handle handle,
-                EDMA_transferControllerErrorInfo_t *errorInfo);
+                                                            EDMA_transferControllerErrorInfo_t *errorInfo);
 static void MmwDemo_EDMA_errorCallbackFxn(EDMA_Handle handle, EDMA_errorInfo_t *errorInfo);
 
-static int32_t MmwDemo_configCQ(MmwDemo_SubFrameCfg *subFrameCfg,
-                                           uint8_t numChirpsPerChirpEvent,
-                                           uint8_t validProfileIdx);
+static int32_t MmwDemo_configCQ(MmwDemo_SubFrameCfg *subFrameCfg, uint8_t numChirpsPerChirpEvent,
+                                uint8_t validProfileIdx);
 
 /* Calibration save/restore APIs */
 static int32_t MmwDemo_calibInit(void);
-static int32_t MmwDemo_calibSave(MmwDemo_calibDataHeader *ptrCalibDataHdr, MmwDemo_calibData  *ptrCalibrationData);
-static int32_t MmwDemo_calibRestore(MmwDemo_calibData  *calibrationData);
+static int32_t MmwDemo_calibSave(MmwDemo_calibDataHeader *ptrCalibDataHdr, MmwDemo_calibData *ptrCalibrationData);
+static int32_t MmwDemo_calibRestore(MmwDemo_calibData *calibrationData);
 
 #ifdef SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN
 /*Function for idle power down and up cycle*/
-void idle_power_down(IdleModeCfg   idleModeCfg);
-void idle_power_cycle(IdleModeCfg   idleModeCfg);
+void idle_power_down(IdleModeCfg idleModeCfg);
+void idle_power_cycle(IdleModeCfg idleModeCfg);
 #endif
 /**************************************************************************
  ************************* Millimeter Wave Demo Functions **********************
@@ -819,8 +809,8 @@ static void MmwDemo_edmaInit(MmwDemo_DataPathObj *obj, uint8_t instance)
     errorCode = EDMA_init(instance);
     if (errorCode != EDMA_NO_ERROR)
     {
-        System_printf ("Debug: EDMA instance %d initialization returned error %d\n", errorCode);
-        MmwDemo_debugAssert (0);
+        System_printf("Debug: EDMA instance %d initialization returned error %d\n", errorCode);
+        MmwDemo_debugAssert(0);
         return;
     }
 
@@ -848,11 +838,8 @@ static void MmwDemo_EDMA_errorCallbackFxn(EDMA_Handle handle, EDMA_errorInfo_t *
  *      Declare fatal error if happens, the output errorInfo can be examined if code
  *      gets trapped here.
  */
-static void MmwDemo_EDMA_transferControllerErrorCallbackFxn
-(
-    EDMA_Handle handle,
-    EDMA_transferControllerErrorInfo_t *errorInfo
-)
+static void MmwDemo_EDMA_transferControllerErrorCallbackFxn(EDMA_Handle handle,
+                                                            EDMA_transferControllerErrorInfo_t *errorInfo)
 {
     gMmwMssMCB.dataPathObj.EDMA_transferControllerErrorInfo = *errorInfo;
     MmwDemo_debugAssert(0);
@@ -871,15 +858,15 @@ static void MmwDemo_EDMA_transferControllerErrorCallbackFxn
  */
 static void MmwDemo_edmaOpen(MmwDemo_DataPathObj *obj, uint8_t instance)
 {
-    int32_t             errCode;
+    int32_t errCode;
     EDMA_instanceInfo_t edmaInstanceInfo;
-    EDMA_errorConfig_t  errorConfig;
+    EDMA_errorConfig_t errorConfig;
 
     obj->edmaHandle = EDMA_open(instance, &errCode, &edmaInstanceInfo);
 
     if (obj->edmaHandle == NULL)
     {
-        MmwDemo_debugAssert (0);
+        MmwDemo_debugAssert(0);
         return;
     }
 
@@ -892,8 +879,8 @@ static void MmwDemo_edmaOpen(MmwDemo_DataPathObj *obj, uint8_t instance)
     errorConfig.transferControllerCallbackFxn = MmwDemo_EDMA_transferControllerErrorCallbackFxn;
     if ((errCode = EDMA_configErrorMonitoring(obj->edmaHandle, &errorConfig)) != EDMA_NO_ERROR)
     {
-        //System_printf("Error: EDMA_configErrorMonitoring() failed with errorCode = %d\n", errCode);
-        MmwDemo_debugAssert (0);
+        // System_printf("Error: EDMA_configErrorMonitoring() failed with errorCode = %d\n", errCode);
+        MmwDemo_debugAssert(0);
         return;
     }
 }
@@ -942,14 +929,14 @@ static void MmwDemo_hwaInit(MmwDemo_DataPathObj *obj)
  */
 static void MmwDemo_hwaOpen(MmwDemo_DataPathObj *obj, SOC_Handle socHandle)
 {
-    int32_t             errCode;
+    int32_t errCode;
 
     /* Open the HWA Instance */
     obj->hwaHandle = HWA_open(0, socHandle, &errCode);
     if (obj->hwaHandle == NULL)
     {
-        //System_printf("Error: Unable to open the HWA Instance err:%d\n",errCode);
-        MmwDemo_debugAssert (0);
+        // System_printf("Error: Unable to open the HWA Instance err:%d\n",errCode);
+        MmwDemo_debugAssert(0);
         return;
     }
 }
@@ -966,13 +953,13 @@ static void MmwDemo_hwaOpen(MmwDemo_DataPathObj *obj, SOC_Handle socHandle)
  */
 void MmwDemo_hwaClose(MmwDemo_DataPathObj *obj)
 {
-    int32_t             errCode;
+    int32_t errCode;
 
     /* Close the HWA Instance */
     errCode = HWA_close(obj->hwaHandle);
     if (errCode != 0)
     {
-        MmwDemo_debugAssert (0);
+        MmwDemo_debugAssert(0);
         return;
     }
 }
@@ -989,8 +976,9 @@ void MmwDemo_hwaClose(MmwDemo_DataPathObj *obj)
  */
 void _MmwDemo_debugAssert(int32_t expression, const char *file, int32_t line)
 {
-    if (!expression) {
-        CLI_write ("Exception: %s, line %d.\n",file,line);
+    if (!expression)
+    {
+        CLI_write("Exception: %s, line %d.\n", file, line);
     }
 }
 
@@ -1011,46 +999,46 @@ static void MmwDemo_setSubFramePendingState(MmwDemo_SubFrameCfg *subFrameCfg, ui
     {
         case MMWDEMO_GUIMONSEL_OFFSET:
             subFrameCfg->objDetDynCfg.isPrepareRangeAzimuthHeatMapPending = 1;
-        break;
+            break;
         case MMWDEMO_CFARCFGRANGE_OFFSET:
             subFrameCfg->objDetDynCfg.isCfarCfgRangePending = 1;
-        break;
+            break;
         case MMWDEMO_CFARCFGDOPPLER_OFFSET:
             subFrameCfg->objDetDynCfg.isCfarCfgDopplerPending = 1;
-        break;
+            break;
         case MMWDEMO_FOVRANGE_OFFSET:
             subFrameCfg->objDetDynCfg.isFovRangePending = 1;
-        break;
+            break;
         case MMWDEMO_FOVDOPPLER_OFFSET:
             subFrameCfg->objDetDynCfg.isFovDopplerPending = 1;
-        break;
+            break;
         case MMWDEMO_FOVAOA_OFFSET:
             subFrameCfg->objDetDynCfg.isFovAoaCfgPending = 1;
-        break;
+            break;
         case MMWDEMO_MULTIOBJBEAMFORMING_OFFSET:
             subFrameCfg->objDetDynCfg.isMultiObjBeamFormingCfgPending = 1;
-        break;
+            break;
         case MMWDEMO_CALIBDCRANGESIG_OFFSET:
             subFrameCfg->objDetDynCfg.isCalibDcRangeSigCfg = 1;
-        break;
+            break;
         case MMWDEMO_STATICCLUTTERREMOFVAL_OFFSET:
             subFrameCfg->objDetDynCfg.isStaticClutterRemovalCfgPending = 1;
-        break;
+            break;
         case MMWDEMO_EXTMAXVEL_OFFSET:
             subFrameCfg->objDetDynCfg.isExtMaxVelCfgPending = 1;
-        break;
+            break;
         case MMWDEMO_ADCBUFCFG_OFFSET:
             subFrameCfg->isAdcBufCfgPending = 1;
-        break;
+            break;
         case MMWDEMO_BPMCFG_OFFSET:
             subFrameCfg->isBpmCfgPending = 1;
-        break;
+            break;
         case MMWDEMO_LVDSSTREAMCFG_OFFSET:
             subFrameCfg->isLvdsStreamCfgPending = 1;
-        break;
+            break;
         default:
             MmwDemo_debugAssert(0);
-        break;
+            break;
     }
 }
 
@@ -1068,10 +1056,9 @@ static uint8_t MmwDemo_isDynObjDetCommonCfgPendingState(MmwDemo_DPC_ObjDet_Commo
 {
     uint8_t retVal;
 
-    retVal = (cfg->isCompRxChannelBiasCfgPending == 1) &&
-             (cfg->isMeasureRxChannelBiasCfgPending == 1);
+    retVal = (cfg->isCompRxChannelBiasCfgPending == 1) && (cfg->isMeasureRxChannelBiasCfgPending == 1);
 
-    return(retVal);
+    return (retVal);
 }
 
 
@@ -1089,18 +1076,13 @@ static uint8_t MmwDemo_isDynObjDetCfgPendingState(MmwDemo_DPC_ObjDet_DynCfg *cfg
 {
     uint8_t retVal;
 
-    retVal = (cfg->isCalibDcRangeSigCfg    == 1) &&
-             (cfg->isCfarCfgDopplerPending == 1) &&
-             (cfg->isCfarCfgRangePending   == 1) &&
-             (cfg->isFovDopplerPending     == 1) &&
-             (cfg->isFovRangePending       == 1) &&
-             (cfg->isMultiObjBeamFormingCfgPending     == 1) &&
-             (cfg->isPrepareRangeAzimuthHeatMapPending == 1) &&
-             (cfg->isStaticClutterRemovalCfgPending    == 1) &&
-             (cfg->isFovAoaCfgPending                  == 1) &&
-             (cfg->isExtMaxVelCfgPending               == 1);
+    retVal = (cfg->isCalibDcRangeSigCfg == 1) && (cfg->isCfarCfgDopplerPending == 1) &&
+             (cfg->isCfarCfgRangePending == 1) && (cfg->isFovDopplerPending == 1) && (cfg->isFovRangePending == 1) &&
+             (cfg->isMultiObjBeamFormingCfgPending == 1) && (cfg->isPrepareRangeAzimuthHeatMapPending == 1) &&
+             (cfg->isStaticClutterRemovalCfgPending == 1) && (cfg->isFovAoaCfgPending == 1) &&
+             (cfg->isExtMaxVelCfgPending == 1);
 
-    return(retVal);
+    return (retVal);
 }
 
 /**
@@ -1117,10 +1099,9 @@ static uint8_t MmwDemo_isDynObjDetCommonCfgInNonPendingState(MmwDemo_DPC_ObjDet_
 {
     uint8_t retVal;
 
-    retVal = (cfg->isCompRxChannelBiasCfgPending    == 0) &&
-             (cfg->isMeasureRxChannelBiasCfgPending == 0);
+    retVal = (cfg->isCompRxChannelBiasCfgPending == 0) && (cfg->isMeasureRxChannelBiasCfgPending == 0);
 
-    return(retVal);
+    return (retVal);
 }
 
 /**
@@ -1138,18 +1119,13 @@ static uint8_t MmwDemo_isDynObjDetCfgInNonPendingState(MmwDemo_DPC_ObjDet_DynCfg
 {
     uint8_t retVal;
 
-    retVal = (cfg->isCalibDcRangeSigCfg    == 0) &&
-             (cfg->isCfarCfgDopplerPending == 0) &&
-             (cfg->isCfarCfgRangePending   == 0) &&
-             (cfg->isFovDopplerPending     == 0) &&
-             (cfg->isFovRangePending       == 0) &&
-             (cfg->isMultiObjBeamFormingCfgPending     == 0) &&
-             (cfg->isPrepareRangeAzimuthHeatMapPending == 0) &&
-             (cfg->isStaticClutterRemovalCfgPending    == 0) &&
-             (cfg->isFovAoaCfgPending                  == 0) &&
-             (cfg->isExtMaxVelCfgPending               == 0);
+    retVal = (cfg->isCalibDcRangeSigCfg == 0) && (cfg->isCfarCfgDopplerPending == 0) &&
+             (cfg->isCfarCfgRangePending == 0) && (cfg->isFovDopplerPending == 0) && (cfg->isFovRangePending == 0) &&
+             (cfg->isMultiObjBeamFormingCfgPending == 0) && (cfg->isPrepareRangeAzimuthHeatMapPending == 0) &&
+             (cfg->isStaticClutterRemovalCfgPending == 0) && (cfg->isFovAoaCfgPending == 0) &&
+             (cfg->isExtMaxVelCfgPending == 0);
 
-    return(retVal);
+    return (retVal);
 }
 
 /**
@@ -1181,11 +1157,11 @@ static void MmwDemo_resetDynObjDetCommonCfgPendingState(MmwDemo_DPC_ObjDet_Commo
  */
 static void MmwDemo_resetDynObjDetCfgPendingState(MmwDemo_DPC_ObjDet_DynCfg *cfg)
 {
-    cfg->isCalibDcRangeSigCfg    = 0;
+    cfg->isCalibDcRangeSigCfg = 0;
     cfg->isCfarCfgDopplerPending = 0;
-    cfg->isCfarCfgRangePending   = 0;
-    cfg->isFovDopplerPending     = 0;
-    cfg->isFovRangePending       = 0;
+    cfg->isCfarCfgRangePending = 0;
+    cfg->isFovDopplerPending = 0;
+    cfg->isFovRangePending = 0;
     cfg->isMultiObjBeamFormingCfgPending = 0;
     cfg->isPrepareRangeAzimuthHeatMapPending = 0;
     cfg->isStaticClutterRemovalCfgPending = 0;
@@ -1203,7 +1179,7 @@ void MmwDemo_resetStaticCfgPendingState(void)
 {
     uint8_t indx;
 
-    for(indx = 0; indx < gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames; indx++)
+    for (indx = 0; indx < gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames; indx++)
     {
         gMmwMssMCB.subFrameCfg[indx].isAdcBufCfgPending = 0;
         gMmwMssMCB.subFrameCfg[indx].isBpmCfgPending = 0;
@@ -1226,7 +1202,7 @@ uint8_t MmwDemo_isAllCfgInPendingState(void)
 {
     uint8_t indx, flag = 1;
 
-    for(indx = 0; indx < gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames; indx++)
+    for (indx = 0; indx < gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames; indx++)
     {
         flag = flag && MmwDemo_isDynObjDetCfgPendingState(&gMmwMssMCB.subFrameCfg[indx].objDetDynCfg);
         flag = flag && (gMmwMssMCB.subFrameCfg[indx].isAdcBufCfgPending == 1);
@@ -1236,7 +1212,7 @@ uint8_t MmwDemo_isAllCfgInPendingState(void)
 
     flag = flag && MmwDemo_isDynObjDetCommonCfgPendingState(&gMmwMssMCB.objDetCommonCfg);
     flag = flag && (gMmwMssMCB.isAnaMonCfgPending == 1);
-    return(flag);
+    return (flag);
 }
 
 /**
@@ -1252,7 +1228,7 @@ uint8_t MmwDemo_isAllCfgInNonPendingState(void)
 {
     uint8_t indx, flag = 1;
 
-    for(indx = 0; indx < gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames; indx++)
+    for (indx = 0; indx < gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames; indx++)
     {
         flag = flag && MmwDemo_isDynObjDetCfgInNonPendingState(&gMmwMssMCB.subFrameCfg[indx].objDetDynCfg);
         flag = flag && (gMmwMssMCB.subFrameCfg[indx].isAdcBufCfgPending == 0);
@@ -1262,7 +1238,7 @@ uint8_t MmwDemo_isAllCfgInNonPendingState(void)
 
     flag = flag && (MmwDemo_isDynObjDetCommonCfgInNonPendingState(&gMmwMssMCB.objDetCommonCfg) && flag);
     flag = flag && (gMmwMssMCB.isAnaMonCfgPending == 0);
-    return(flag);
+    return (flag);
 }
 
 /**
@@ -1282,14 +1258,14 @@ uint8_t MmwDemo_isAllCfgInNonPendingState(void)
  *      Error   -   <0
  */
 void MmwDemo_CfgUpdate(void *srcPtr, uint32_t offset, uint32_t size, int8_t subFrameNum)
-{    
+{
     /* if subFrameNum undefined, broadcast to all sub-frames */
-    if(subFrameNum == MMWDEMO_SUBFRAME_NUM_FRAME_LEVEL_CONFIG)
+    if (subFrameNum == MMWDEMO_SUBFRAME_NUM_FRAME_LEVEL_CONFIG)
     {
-        uint8_t  indx;
-        for(indx = 0; indx < RL_MAX_SUBFRAMES; indx++)
+        uint8_t indx;
+        for (indx = 0; indx < RL_MAX_SUBFRAMES; indx++)
         {
-            memcpy((void *)((uint32_t) &gMmwMssMCB.subFrameCfg[indx] + offset), srcPtr, size);
+            memcpy((void *)((uint32_t)&gMmwMssMCB.subFrameCfg[indx] + offset), srcPtr, size);
             MmwDemo_setSubFramePendingState(&gMmwMssMCB.subFrameCfg[indx], offset);
         }
     }
@@ -1297,7 +1273,7 @@ void MmwDemo_CfgUpdate(void *srcPtr, uint32_t offset, uint32_t size, int8_t subF
     {
         /* Apply configuration to specific subframe (or to position zero for the legacy case
            where there is no advanced frame config) */
-        memcpy((void *)((uint32_t) &gMmwMssMCB.subFrameCfg[subFrameNum] + offset), srcPtr, size);
+        memcpy((void *)((uint32_t)&gMmwMssMCB.subFrameCfg[subFrameNum] + offset), srcPtr, size);
         MmwDemo_setSubFramePendingState(&gMmwMssMCB.subFrameCfg[subFrameNum], offset);
     }
 }
@@ -1313,9 +1289,8 @@ void MmwDemo_CfgUpdate(void *srcPtr, uint32_t offset, uint32_t size, int8_t subF
 void MmwDemo_getTemperatureReport()
 {
     /* Get Temerature report */
-    gMmwMssMCB.temperatureStats.tempReportValid = rlRfGetTemperatureReport(RL_DEVICE_MAP_INTERNAL_BSS, 
-                        (rlRfTempData_t*)&gMmwMssMCB.temperatureStats.temperatureReport);
-
+    gMmwMssMCB.temperatureStats.tempReportValid = rlRfGetTemperatureReport(
+        RL_DEVICE_MAP_INTERNAL_BSS, (rlRfTempData_t *)&gMmwMssMCB.temperatureStats.temperatureReport);
 }
 
 
@@ -1325,66 +1300,62 @@ void MmwDemo_getTemperatureReport()
 static void MmwDemo_measurementResultOutput(DPU_AoAProc_compRxChannelBiasCfg *compRxChanCfg)
 {
     /* Send the received DSS calibration info through CLI */
-    CLI_write ("compRangeBiasAndRxChanPhase");
-    CLI_write (" %.7f", compRxChanCfg->rangeBias);
+    CLI_write("compRangeBiasAndRxChanPhase");
+    CLI_write(" %.7f", compRxChanCfg->rangeBias);
     int32_t i;
-    for (i = 0; i < SYS_COMMON_NUM_TX_ANTENNAS*SYS_COMMON_NUM_RX_CHANNEL; i++)
+    for (i = 0; i < SYS_COMMON_NUM_TX_ANTENNAS * SYS_COMMON_NUM_RX_CHANNEL; i++)
     {
-        CLI_write (" %.5f", (float) compRxChanCfg->rxChPhaseComp[i].real/32768.);
-        CLI_write (" %.5f", (float) compRxChanCfg->rxChPhaseComp[i].imag/32768.);
+        CLI_write(" %.5f", (float)compRxChanCfg->rxChPhaseComp[i].real / 32768.);
+        CLI_write(" %.5f", (float)compRxChanCfg->rxChPhaseComp[i].imag / 32768.);
     }
-    CLI_write ("\n");
+    CLI_write("\n");
 }
 
 /** @brief Transmits detection data over UART
-*
-*    The following data is transmitted:
-*    1. Header (size = 32bytes), including "Magic word", (size = 8 bytes)
-*       and including the number of TLV items
-*    TLV Items:
-*    2. If detectedObjects flag is 1 or 2, DPIF_PointCloudCartesian structure containing
-*       X,Y,Z location and velocity for detected objects,
-*       size = sizeof(DPIF_PointCloudCartesian) * number of detected objects
-*    3. If detectedObjects flag is 1, DPIF_PointCloudSideInfo structure containing SNR
-*       and noise for detected objects,
-*       size = sizeof(DPIF_PointCloudCartesian) * number of detected objects
-*    4. If logMagRange flag is set,  rangeProfile,
-*       size = number of range bins * sizeof(uint16_t)
-*    5. If noiseProfile flag is set,  noiseProfile,
-*       size = number of range bins * sizeof(uint16_t)
-*    6. If rangeAzimuthHeatMap flag is set, the zero Doppler column of the
-*       range cubed matrix, size = number of Rx Azimuth virtual antennas *
-*       number of chirps per frame * sizeof(uint32_t)
-*    7. If rangeDopplerHeatMap flag is set, the log magnitude range-Doppler matrix,
-*       size = number of range bins * number of Doppler bins * sizeof(uint16_t)
-*    8. If statsInfo flag is set, the stats information
-*   @param[in] uartHandle   UART driver handle
-*   @param[in] result       Pointer to result from object detection DPC processing
-*   @param[in] timingInfo   Pointer to timing information provided from core that runs data path
-*/
-static void MmwDemo_transmitProcessedOutput
-(
-    UART_Handle     uartHandle,
-    DPC_ObjectDetection_ExecuteResult   *result,
-    MmwDemo_output_message_stats        *timingInfo
-)
+ *
+ *    The following data is transmitted:
+ *    1. Header (size = 32bytes), including "Magic word", (size = 8 bytes)
+ *       and including the number of TLV items
+ *    TLV Items:
+ *    2. If detectedObjects flag is 1 or 2, DPIF_PointCloudCartesian structure containing
+ *       X,Y,Z location and velocity for detected objects,
+ *       size = sizeof(DPIF_PointCloudCartesian) * number of detected objects
+ *    3. If detectedObjects flag is 1, DPIF_PointCloudSideInfo structure containing SNR
+ *       and noise for detected objects,
+ *       size = sizeof(DPIF_PointCloudCartesian) * number of detected objects
+ *    4. If logMagRange flag is set,  rangeProfile,
+ *       size = number of range bins * sizeof(uint16_t)
+ *    5. If noiseProfile flag is set,  noiseProfile,
+ *       size = number of range bins * sizeof(uint16_t)
+ *    6. If rangeAzimuthHeatMap flag is set, the zero Doppler column of the
+ *       range cubed matrix, size = number of Rx Azimuth virtual antennas *
+ *       number of chirps per frame * sizeof(uint32_t)
+ *    7. If rangeDopplerHeatMap flag is set, the log magnitude range-Doppler matrix,
+ *       size = number of range bins * number of Doppler bins * sizeof(uint16_t)
+ *    8. If statsInfo flag is set, the stats information
+ *   @param[in] uartHandle   UART driver handle
+ *   @param[in] result       Pointer to result from object detection DPC processing
+ *   @param[in] timingInfo   Pointer to timing information provided from core that runs data path
+ */
+static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDetection_ExecuteResult *result,
+                                            MmwDemo_output_message_stats *timingInfo)
 {
     MmwDemo_output_message_header header;
-    MmwDemo_GuiMonSel   *pGuiMonSel;
+    MmwDemo_GuiMonSel *pGuiMonSel;
     MmwDemo_SubFrameCfg *subFrameCfg;
     uint32_t tlvIdx = 0;
     uint32_t index;
     uint32_t numPaddingBytes;
     uint32_t packetLen;
     uint8_t padding[MMWDEMO_OUTPUT_MSG_SEGMENT_LEN];
-    MmwDemo_output_message_tl   tl[MMWDEMO_OUTPUT_MSG_MAX];
+    MmwDemo_output_message_tl tl[MMWDEMO_OUTPUT_MSG_MAX];
     int32_t errCode;
     uint16_t *detMatrix = (uint16_t *)result->detMatrix.data;
     DPIF_PointCloudCartesian *objOut;
     cmplx16ImRe_t *azimuthStaticHeatMap;
     DPIF_PointCloudSideInfo *objOutSideInfo;
     DPC_ObjectDetection_Stats *stats;
-    
+
     /* Get subframe configuration */
     subFrameCfg = &gMmwMssMCB.subFrameCfg[result->subFrameIdx];
 
@@ -1399,48 +1370,40 @@ static void MmwDemo_transmitProcessedOutput
        address translation is needed for buffer pointers
     *******************************************************************/
     {
-        detMatrix = (uint16_t *) SOC_translateAddress((uint32_t)detMatrix,
-                                                     SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                     &errCode);
-        DebugP_assert ((uint32_t)detMatrix!= SOC_TRANSLATEADDR_INVALID);
+        detMatrix =
+            (uint16_t *)SOC_translateAddress((uint32_t)detMatrix, SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+        DebugP_assert((uint32_t)detMatrix != SOC_TRANSLATEADDR_INVALID);
 
-        objOut = (DPIF_PointCloudCartesian *) SOC_translateAddress((uint32_t)result->objOut,
-                                                     SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                     &errCode);
-        DebugP_assert ((uint32_t)objOut != SOC_TRANSLATEADDR_INVALID);
+        objOut = (DPIF_PointCloudCartesian *)SOC_translateAddress((uint32_t)result->objOut,
+                                                                  SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+        DebugP_assert((uint32_t)objOut != SOC_TRANSLATEADDR_INVALID);
 
-        objOutSideInfo = (DPIF_PointCloudSideInfo *) SOC_translateAddress((uint32_t)result->objOutSideInfo,
-                                                     SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                     &errCode);
-        DebugP_assert ((uint32_t)objOutSideInfo != SOC_TRANSLATEADDR_INVALID);
+        objOutSideInfo = (DPIF_PointCloudSideInfo *)SOC_translateAddress(
+            (uint32_t)result->objOutSideInfo, SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+        DebugP_assert((uint32_t)objOutSideInfo != SOC_TRANSLATEADDR_INVALID);
 
-        stats = (DPC_ObjectDetection_Stats *) SOC_translateAddress((uint32_t)result->stats,
-                                                     SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                     &errCode);
-        DebugP_assert ((uint32_t)stats != SOC_TRANSLATEADDR_INVALID);
+        stats = (DPC_ObjectDetection_Stats *)SOC_translateAddress((uint32_t)result->stats,
+                                                                  SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+        DebugP_assert((uint32_t)stats != SOC_TRANSLATEADDR_INVALID);
 
 
-        result->radarCube.data = (void *) SOC_translateAddress((uint32_t) result->radarCube.data,
-                                                     SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                     &errCode);
-        DebugP_assert ((uint32_t) result->radarCube.data!= SOC_TRANSLATEADDR_INVALID);
+        result->radarCube.data = (void *)SOC_translateAddress((uint32_t)result->radarCube.data,
+                                                              SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+        DebugP_assert((uint32_t)result->radarCube.data != SOC_TRANSLATEADDR_INVALID);
     }
 
     /* Header: */
-    header.platform =  0xA6843;
+    header.platform = 0xA6843;
     header.magicWord[0] = 0x0102;
     header.magicWord[1] = 0x0304;
     header.magicWord[2] = 0x0506;
     header.magicWord[3] = 0x0708;
     header.numDetectedObj = result->numObjOut;
-    header.version =    MMWAVE_SDK_VERSION_BUILD |
-                        (MMWAVE_SDK_VERSION_BUGFIX << 8) |
-                        (MMWAVE_SDK_VERSION_MINOR << 16) |
-                        (MMWAVE_SDK_VERSION_MAJOR << 24);
+    header.version = MMWAVE_SDK_VERSION_BUILD | (MMWAVE_SDK_VERSION_BUGFIX << 8) | (MMWAVE_SDK_VERSION_MINOR << 16) |
+                     (MMWAVE_SDK_VERSION_MAJOR << 24);
 
     packetLen = sizeof(MmwDemo_output_message_header);
-    if ((pGuiMonSel->detectedObjects == 1) || (pGuiMonSel->detectedObjects == 2) &&
-         (result->numObjOut > 0))
+    if ((pGuiMonSel->detectedObjects == 1) || (pGuiMonSel->detectedObjects == 2) && (result->numObjOut > 0))
     {
         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_DETECTED_POINTS;
         tl[tlvIdx].length = sizeof(DPIF_PointCloudCartesian) * result->numObjOut;
@@ -1473,7 +1436,7 @@ static void MmwDemo_transmitProcessedOutput
     {
         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_AZIMUT_STATIC_HEAT_MAP;
         tl[tlvIdx].length = result->azimuthStaticHeatMapSize * sizeof(cmplx16ImRe_t);
-        packetLen += sizeof(MmwDemo_output_message_tl) +  tl[tlvIdx].length;
+        packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
         tlvIdx++;
     }
     if (pGuiMonSel->rangeDopplerHeatMap)
@@ -1506,12 +1469,11 @@ static void MmwDemo_transmitProcessedOutput
 #ifdef MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE
     {
         /* Only output if we have valid radar cube data AND format is as expected */
-        if ((result->radarCube.data != NULL) &&
-            (result->radarCube.datafmt == DPIF_RADARCUBE_FORMAT_1))
+        if ((result->radarCube.data != NULL) && (result->radarCube.datafmt == DPIF_RADARCUBE_FORMAT_1))
         {
             tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_COMPLEX_RANGE_FFT;
-            tl[tlvIdx].length = sizeof(MmwDemo_output_complexRangeFFT_header) +
-                                subFrameCfg->numRangeBins * sizeof(cmplx16ImRe_t);
+            tl[tlvIdx].length =
+                sizeof(MmwDemo_output_complexRangeFFT_header) + subFrameCfg->numRangeBins * sizeof(cmplx16ImRe_t);
             packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
             tlvIdx++;
         }
@@ -1521,55 +1483,41 @@ static void MmwDemo_transmitProcessedOutput
     header.numTLVs = tlvIdx;
     /* Round up packet length to multiple of MMWDEMO_OUTPUT_MSG_SEGMENT_LEN */
     header.totalPacketLen = MMWDEMO_OUTPUT_MSG_SEGMENT_LEN *
-            ((packetLen + (MMWDEMO_OUTPUT_MSG_SEGMENT_LEN-1))/MMWDEMO_OUTPUT_MSG_SEGMENT_LEN);
+                            ((packetLen + (MMWDEMO_OUTPUT_MSG_SEGMENT_LEN - 1)) / MMWDEMO_OUTPUT_MSG_SEGMENT_LEN);
     header.timeCpuCycles = Pmu_getCount(0);
     header.frameNumber = stats->frameStartIntCounter;
     header.subFrameNumber = result->subFrameIdx;
 
-    UART_writePolling (uartHandle,
-                       (uint8_t*)&header,
-                       sizeof(MmwDemo_output_message_header));
+    UART_writePolling(uartHandle, (uint8_t *)&header, sizeof(MmwDemo_output_message_header));
 
     tlvIdx = 0;
     /* Send detected Objects */
-    if ((pGuiMonSel->detectedObjects == 1) || (pGuiMonSel->detectedObjects == 2) &&
-        (result->numObjOut > 0))
+    if ((pGuiMonSel->detectedObjects == 1) || (pGuiMonSel->detectedObjects == 2) && (result->numObjOut > 0))
     {
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
 
         /*Send array of objects */
-        UART_writePolling (uartHandle, (uint8_t*)objOut,
-                           sizeof(DPIF_PointCloudCartesian) * result->numObjOut);
+        UART_writePolling(uartHandle, (uint8_t *)objOut, sizeof(DPIF_PointCloudCartesian) * result->numObjOut);
         tlvIdx++;
     }
 
     /* Send detected Objects Side Info */
     if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
     {
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
 
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
-
-        UART_writePolling (uartHandle, (uint8_t*)objOutSideInfo,
-                           sizeof(DPIF_PointCloudSideInfo) * result->numObjOut);
+        UART_writePolling(uartHandle, (uint8_t *)objOutSideInfo, sizeof(DPIF_PointCloudSideInfo) * result->numObjOut);
         tlvIdx++;
     }
 
     /* Send Range profile */
     if (pGuiMonSel->logMagRange)
     {
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
 
-        for(index = 0; index < subFrameCfg->numRangeBins; index++)
+        for (index = 0; index < subFrameCfg->numRangeBins; index++)
         {
-            UART_writePolling (uartHandle,
-                    (uint8_t*)&detMatrix[index*subFrameCfg->numDopplerBins],
-                    sizeof(uint16_t));
+            UART_writePolling(uartHandle, (uint8_t *)&detMatrix[index * subFrameCfg->numDopplerBins], sizeof(uint16_t));
         }
         tlvIdx++;
     }
@@ -1577,16 +1525,13 @@ static void MmwDemo_transmitProcessedOutput
     /* Send noise profile */
     if (pGuiMonSel->noiseProfile)
     {
-        uint32_t maxDopIdx = subFrameCfg->numDopplerBins/2 -1;
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
+        uint32_t maxDopIdx = subFrameCfg->numDopplerBins / 2 - 1;
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
 
-        for(index = 0; index < subFrameCfg->numRangeBins; index++)
+        for (index = 0; index < subFrameCfg->numRangeBins; index++)
         {
-            UART_writePolling (uartHandle,
-                    (uint8_t*)&detMatrix[index*subFrameCfg->numDopplerBins + maxDopIdx],
-                    sizeof(uint16_t));
+            UART_writePolling(uartHandle, (uint8_t *)&detMatrix[index * subFrameCfg->numDopplerBins + maxDopIdx],
+                              sizeof(uint16_t));
         }
         tlvIdx++;
     }
@@ -1594,18 +1539,14 @@ static void MmwDemo_transmitProcessedOutput
     /* Send data for static azimuth heatmap */
     if (pGuiMonSel->rangeAzimuthHeatMap)
     {
-        azimuthStaticHeatMap = (cmplx16ImRe_t *) SOC_translateAddress((uint32_t)result->azimuthStaticHeatMap,
-                                                     SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                     &errCode);
-        DebugP_assert ((uint32_t)azimuthStaticHeatMap!= SOC_TRANSLATEADDR_INVALID);
+        azimuthStaticHeatMap = (cmplx16ImRe_t *)SOC_translateAddress((uint32_t)result->azimuthStaticHeatMap,
+                                                                     SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+        DebugP_assert((uint32_t)azimuthStaticHeatMap != SOC_TRANSLATEADDR_INVALID);
 
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
 
-        UART_writePolling (uartHandle,
-                (uint8_t *)azimuthStaticHeatMap,
-                result->azimuthStaticHeatMapSize * sizeof(cmplx16ImRe_t));
+        UART_writePolling(uartHandle, (uint8_t *)azimuthStaticHeatMap,
+                          result->azimuthStaticHeatMapSize * sizeof(cmplx16ImRe_t));
 
         tlvIdx++;
     }
@@ -1613,34 +1554,22 @@ static void MmwDemo_transmitProcessedOutput
     /* Send data for range/Doppler heatmap */
     if (pGuiMonSel->rangeDopplerHeatMap == 1)
     {
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
 
-        UART_writePolling (uartHandle,
-                (uint8_t*)detMatrix,
-                tl[tlvIdx].length);
+        UART_writePolling(uartHandle, (uint8_t *)detMatrix, tl[tlvIdx].length);
         tlvIdx++;
     }
 
     /* Send stats information */
     if (pGuiMonSel->statsInfo == 1)
     {
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
 
         /* Address translation is done when buffer is received*/
-        UART_writePolling (uartHandle,
-                           (uint8_t*)timingInfo,
-                           tl[tlvIdx].length);
-        tlvIdx++;        
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&gMmwMssMCB.temperatureStats,
-                           tl[tlvIdx].length);
+        UART_writePolling(uartHandle, (uint8_t *)timingInfo, tl[tlvIdx].length);
+        tlvIdx++;
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&gMmwMssMCB.temperatureStats, tl[tlvIdx].length);
         tlvIdx++;
     }
 
@@ -1650,51 +1579,41 @@ static void MmwDemo_transmitProcessedOutput
      * SAFETY: Only outputs if radar cube is in FORMAT_1 (expected layout)
      **************************************************************************/
 #ifdef MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE
-    if ((result->radarCube.data != NULL) &&
-        (result->radarCube.datafmt == DPIF_RADARCUBE_FORMAT_1))
+    if ((result->radarCube.data != NULL) && (result->radarCube.datafmt == DPIF_RADARCUBE_FORMAT_1))
     {
         MmwDemo_output_complexRangeFFT_header cplxHdr;
         cmplx16ImRe_t *radarCubePtr;
 
         /* Prepare header */
         cplxHdr.numRangeBins = subFrameCfg->numRangeBins;
-        cplxHdr.chirpIndex = 0;   /* First chirp */
-        cplxHdr.rxAntenna = 0;    /* First RX antenna */
+        cplxHdr.chirpIndex = 0; /* First chirp */
+        cplxHdr.rxAntenna = 0;  /* First RX antenna */
         cplxHdr.reserved = 0;
 
         /* Get pointer to radar cube data (already translated earlier) */
         radarCubePtr = (cmplx16ImRe_t *)result->radarCube.data;
 
         /* Send TLV header */
-        UART_writePolling(uartHandle,
-                          (uint8_t*)&tl[tlvIdx],
-                          sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
 
         /* Send complex range FFT header */
-        UART_writePolling(uartHandle,
-                          (uint8_t*)&cplxHdr,
-                          sizeof(MmwDemo_output_complexRangeFFT_header));
+        UART_writePolling(uartHandle, (uint8_t *)&cplxHdr, sizeof(MmwDemo_output_complexRangeFFT_header));
 
         /* Send I/Q data for first chirp, first RX antenna
          * Format 1 layout: x[txPattern][chirp][rx][rangeBin]
          * For TX0, Chirp0, RX0: offset = 0 */
-        UART_writePolling(uartHandle,
-                          (uint8_t*)radarCubePtr,
-                          cplxHdr.numRangeBins * sizeof(cmplx16ImRe_t));
+        UART_writePolling(uartHandle, (uint8_t *)radarCubePtr, cplxHdr.numRangeBins * sizeof(cmplx16ImRe_t));
 
         tlvIdx++;
     }
 #endif /* MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE */
 
     /* Send padding bytes */
-    numPaddingBytes = MMWDEMO_OUTPUT_MSG_SEGMENT_LEN - (packetLen & (MMWDEMO_OUTPUT_MSG_SEGMENT_LEN-1));
-    if (numPaddingBytes<MMWDEMO_OUTPUT_MSG_SEGMENT_LEN)
+    numPaddingBytes = MMWDEMO_OUTPUT_MSG_SEGMENT_LEN - (packetLen & (MMWDEMO_OUTPUT_MSG_SEGMENT_LEN - 1));
+    if (numPaddingBytes < MMWDEMO_OUTPUT_MSG_SEGMENT_LEN)
     {
-        UART_writePolling (uartHandle,
-                            (uint8_t*)padding,
-                            numPaddingBytes);
+        UART_writePolling(uartHandle, (uint8_t *)padding, numPaddingBytes);
     }
-
 }
 
 /**************************************************************************
@@ -1708,26 +1627,26 @@ static void MmwDemo_transmitProcessedOutput
  *  @retval
  *      Not Applicable.
  */
-static int32_t MmwDemo_mmWaveCtrlStop (void)
+static int32_t MmwDemo_mmWaveCtrlStop(void)
 {
-    int32_t                 errCode = 0;
+    int32_t errCode = 0;
 
     DebugP_log0("App: Issuing MMWave_stop\n");
 
     /* Stop the mmWave module: */
-    if (MMWave_stop (gMmwMssMCB.ctrlHandle, &errCode) < 0)
+    if (MMWave_stop(gMmwMssMCB.ctrlHandle, &errCode) < 0)
     {
-        MMWave_ErrorLevel   errorLevel;
-        int16_t             mmWaveErrorCode;
-        int16_t             subsysErrorCode;
+        MMWave_ErrorLevel errorLevel;
+        int16_t mmWaveErrorCode;
+        int16_t subsysErrorCode;
 
         /* Error/Warning: Unable to stop the mmWave module */
-        MMWave_decodeError (errCode, &errorLevel, &mmWaveErrorCode, &subsysErrorCode);
+        MMWave_decodeError(errCode, &errorLevel, &mmWaveErrorCode, &subsysErrorCode);
         if (errorLevel == MMWave_ErrorLevel_ERROR)
         {
             /* Error: Display the error message: */
-            System_printf ("Error: mmWave Stop failed [Error code: %d Subsystem: %d]\n",
-                            mmWaveErrorCode, subsysErrorCode);
+            System_printf("Error: mmWave Stop failed [Error code: %d Subsystem: %d]\n", mmWaveErrorCode,
+                          subsysErrorCode);
 
             /* Not expected */
             MmwDemo_debugAssert(0);
@@ -1735,8 +1654,8 @@ static int32_t MmwDemo_mmWaveCtrlStop (void)
         else
         {
             /* Warning: This is treated as a successful stop. */
-            System_printf ("mmWave Stop error ignored [Error code: %d Subsystem: %d]\n",
-                            mmWaveErrorCode, subsysErrorCode);
+            System_printf("mmWave Stop error ignored [Error code: %d Subsystem: %d]\n", mmWaveErrorCode,
+                          subsysErrorCode);
         }
     }
 
@@ -1759,10 +1678,10 @@ static void MmwDemo_mmWaveCtrlTask(UArg arg0, UArg arg1)
     while (1)
     {
         /* Execute the mmWave control module: */
-        if (MMWave_execute (gMmwMssMCB.ctrlHandle, &errCode) < 0)
+        if (MMWave_execute(gMmwMssMCB.ctrlHandle, &errCode) < 0)
         {
-            //System_printf ("Error: mmWave control execution failed [Error code %d]\n", errCode);
-            MmwDemo_debugAssert (0);
+            // System_printf ("Error: mmWave control execution failed [Error code %d]\n", errCode);
+            MmwDemo_debugAssert(0);
         }
     }
 }
@@ -1780,28 +1699,19 @@ static void MmwDemo_mmWaveCtrlTask(UArg arg0, UArg arg1)
  *      Success         -0
  *      Failed          <0
  */
-static int32_t MmwDemo_DPM_ioctl_blocking
-(
-    DPM_Handle handle,
-    uint32_t cmd,
-    void* arg,
-    uint32_t argLen
-)
+static int32_t MmwDemo_DPM_ioctl_blocking(DPM_Handle handle, uint32_t cmd, void *arg, uint32_t argLen)
 {
     int32_t retVal = 0;
 
-    retVal = DPM_ioctl(handle,
-                     cmd,
-                     arg,
-                     argLen);
+    retVal = DPM_ioctl(handle, cmd, arg, argLen);
 
-    if(retVal == 0)
+    if (retVal == 0)
     {
         /* Wait until ioctl completed */
         Semaphore_pend(gMmwMssMCB.DPMioctlSemHandle, BIOS_WAIT_FOREVER);
     }
 
-    return(retVal);
+    return (retVal);
 }
 
 /**
@@ -1817,11 +1727,11 @@ static int32_t MmwDemo_DPM_ioctl_blocking
  */
 int32_t MmwDemo_bpmConfig(void)
 {
-    uint8_t                subframe;
-    uint8_t                numberOfSubframes;
-    int32_t                errCode;
-    rlBpmChirpCfg_t        bpmChirpCfg;
-    MMWave_BpmChirpHandle  bpmChirpHandle;
+    uint8_t subframe;
+    uint8_t numberOfSubframes;
+    int32_t errCode;
+    rlBpmChirpCfg_t bpmChirpCfg;
+    MMWave_BpmChirpHandle bpmChirpHandle;
 
     /* BPM configuration for all valid subframes */
     numberOfSubframes = MmwDemo_RFParser_getNumSubFrames(&gMmwMssMCB.cfg.ctrlCfg);
@@ -1832,39 +1742,39 @@ int32_t MmwDemo_bpmConfig(void)
      *
      *    Based on 68xx device antenna pattern layout, BPM can be enabled when only TX1 and TX3 are enabled.
      */
-    for(subframe = 0; subframe < numberOfSubframes; subframe++)
+    for (subframe = 0; subframe < numberOfSubframes; subframe++)
     {
         /* Is BPM enabled*/
-        if(gMmwMssMCB.subFrameCfg[subframe].bpmCfg.isEnabled)
+        if (gMmwMssMCB.subFrameCfg[subframe].bpmCfg.isEnabled)
         {
             /* Configure chirp0 (++) */
-            memset ((void *)&bpmChirpCfg, 0, sizeof(rlBpmChirpCfg_t));
+            memset((void *)&bpmChirpCfg, 0, sizeof(rlBpmChirpCfg_t));
             bpmChirpCfg.chirpStartIdx = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp0Idx;
-            bpmChirpCfg.chirpEndIdx   = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp0Idx;
-            /* Phase configuration: Both TX antenna should be positive (for 68xx device, they are TX1 and TX3 ) 
+            bpmChirpCfg.chirpEndIdx = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp0Idx;
+            /* Phase configuration: Both TX antenna should be positive (for 68xx device, they are TX1 and TX3 )
               Note: rlBpmChirpCfg_t uses TX0 - TX2 which refers to TX1 - TX3 on 68xx devices
              */
             bpmChirpCfg.constBpmVal = 0U;
-                        
-            bpmChirpHandle = MMWave_addBpmChirp (gMmwMssMCB.ctrlHandle, &bpmChirpCfg, &errCode);
+
+            bpmChirpHandle = MMWave_addBpmChirp(gMmwMssMCB.ctrlHandle, &bpmChirpCfg, &errCode);
             if (bpmChirpHandle == NULL)
             {
-                System_printf ("Error: Unable to add BPM cfg chirp 0. Subframe %d [Error code %d]\n",subframe, errCode);
+                System_printf("Error: Unable to add BPM cfg chirp 0. Subframe %d [Error code %d]\n", subframe, errCode);
                 return -1;
             }
 
             /*Configure chirp1 (+-) */
-            memset ((void *)&bpmChirpCfg, 0, sizeof(rlBpmChirpCfg_t));
+            memset((void *)&bpmChirpCfg, 0, sizeof(rlBpmChirpCfg_t));
             bpmChirpCfg.chirpStartIdx = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp1Idx;
-            bpmChirpCfg.chirpEndIdx   = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp1Idx;
+            bpmChirpCfg.chirpEndIdx = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp1Idx;
             /* Phase configuration:, first Azimuth Tx antenna should be positive(for 68xx device, this is TX1)
                                  second Azimuth Tx antenna should be negtive(for 68xx device, this is TX3) */
             bpmChirpCfg.constBpmVal = 0x30U;
-            
-            bpmChirpHandle = MMWave_addBpmChirp (gMmwMssMCB.ctrlHandle, &bpmChirpCfg, &errCode);
+
+            bpmChirpHandle = MMWave_addBpmChirp(gMmwMssMCB.ctrlHandle, &bpmChirpCfg, &errCode);
             if (bpmChirpHandle == NULL)
             {
-                System_printf ("Error: Unable to add BPM cfg chirp 1. Subframe %d [Error code %d]\n",subframe, errCode);
+                System_printf("Error: Unable to add BPM cfg chirp 1. Subframe %d [Error code %d]\n", subframe, errCode);
                 return -1;
             }
         }
@@ -1873,15 +1783,16 @@ int32_t MmwDemo_bpmConfig(void)
             /*BPM is disabled.
               Configure the range of chirps [chirp0Idx..chirp1Idx]
               all to have zero phase.*/
-            memset ((void *)&bpmChirpCfg, 0, sizeof(rlBpmChirpCfg_t));
+            memset((void *)&bpmChirpCfg, 0, sizeof(rlBpmChirpCfg_t));
             bpmChirpCfg.chirpStartIdx = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp0Idx;
-            bpmChirpCfg.chirpEndIdx   = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp1Idx;
+            bpmChirpCfg.chirpEndIdx = gMmwMssMCB.subFrameCfg[subframe].bpmCfg.chirp1Idx;
             bpmChirpCfg.constBpmVal = 0U;
 
-            bpmChirpHandle = MMWave_addBpmChirp (gMmwMssMCB.ctrlHandle, &bpmChirpCfg, &errCode);
+            bpmChirpHandle = MMWave_addBpmChirp(gMmwMssMCB.ctrlHandle, &bpmChirpCfg, &errCode);
             if (bpmChirpHandle == NULL)
             {
-                System_printf ("Error: Unable to add BPM cfg for BPM disabled. Subframe %d [Error code %d]\n",subframe, errCode);
+                System_printf("Error: Unable to add BPM cfg for BPM disabled. Subframe %d [Error code %d]\n", subframe,
+                              errCode);
                 return -1;
             }
         }
@@ -1893,7 +1804,7 @@ int32_t MmwDemo_bpmConfig(void)
 /**
  *  @b Description
  *  @n
- *      Perform Data path driver open 
+ *      Perform Data path driver open
  *
  *  @retval
  *      Not Applicable.
@@ -1901,7 +1812,7 @@ int32_t MmwDemo_bpmConfig(void)
 static void MmwDemo_dataPathOpen(void)
 {
     gMmwMssMCB.adcBufHandle = MmwDemo_ADCBufOpen(gMmwMssMCB.socHandle);
-    if(gMmwMssMCB.adcBufHandle == NULL)
+    if (gMmwMssMCB.adcBufHandle == NULL)
     {
         MmwDemo_debugAssert(0);
     }
@@ -1919,16 +1830,15 @@ static void MmwDemo_dataPathOpen(void)
  *  @retval
  *      0 if no error, else error (there will be system prints for these).
  */
-static int32_t MmwDemo_configCQ(MmwDemo_SubFrameCfg *subFrameCfg,
-                                uint8_t numChirpsPerChirpEvent,
+static int32_t MmwDemo_configCQ(MmwDemo_SubFrameCfg *subFrameCfg, uint8_t numChirpsPerChirpEvent,
                                 uint8_t validProfileIdx)
 {
-    MmwDemo_AnaMonitorCfg*      ptrAnaMonitorCfg;
-    ADCBuf_CQConf               cqConfig;
-    rlRxSatMonConf_t*           ptrSatMonCfg;
-    rlSigImgMonConf_t*          ptrSigImgMonCfg;
-    int32_t                     retVal;
-    uint16_t                    cqChirpSize;
+    MmwDemo_AnaMonitorCfg *ptrAnaMonitorCfg;
+    ADCBuf_CQConf cqConfig;
+    rlRxSatMonConf_t *ptrSatMonCfg;
+    rlSigImgMonConf_t *ptrSigImgMonCfg;
+    int32_t retVal;
+    uint16_t cqChirpSize;
 
     /* Get analog monitor configuration */
     ptrAnaMonitorCfg = &gMmwMssMCB.anaMonCfg;
@@ -1940,16 +1850,16 @@ static int32_t MmwDemo_configCQ(MmwDemo_SubFrameCfg *subFrameCfg,
     {
         if (ptrSatMonCfg->profileIndx != validProfileIdx)
         {
-            System_printf ("Error: Saturation monitoring (globally) enabled but not configured for profile(%d)\n",
-                           validProfileIdx);
+            System_printf("Error: Saturation monitoring (globally) enabled but not configured for profile(%d)\n",
+                          validProfileIdx);
             MmwDemo_debugAssert(0);
         }
 
         retVal = mmwDemo_cfgRxSaturationMonitor(ptrSatMonCfg);
-        if(retVal != 0)
+        if (retVal != 0)
         {
-            System_printf ("Error: rlRfRxIfSatMonConfig returns error = %d for profile(%d)\n",
-                           retVal, ptrSatMonCfg->profileIndx);
+            System_printf("Error: rlRfRxIfSatMonConfig returns error = %d for profile(%d)\n", retVal,
+                          ptrSatMonCfg->profileIndx);
             goto exit;
         }
     }
@@ -1961,16 +1871,16 @@ static int32_t MmwDemo_configCQ(MmwDemo_SubFrameCfg *subFrameCfg,
     {
         if (ptrSigImgMonCfg->profileIndx != validProfileIdx)
         {
-            System_printf ("Error: Sig/Image monitoring (globally) enabled but not configured for profile(%d)\n",
-                           validProfileIdx);
+            System_printf("Error: Sig/Image monitoring (globally) enabled but not configured for profile(%d)\n",
+                          validProfileIdx);
             MmwDemo_debugAssert(0);
         }
 
         retVal = mmwDemo_cfgRxSigImgMonitor(ptrSigImgMonCfg);
-        if(retVal != 0)
+        if (retVal != 0)
         {
-            System_printf ("Error: rlRfRxSigImgMonConfig returns error = %d for profile(%d)\n",
-                           retVal, ptrSigImgMonCfg->profileIndx);
+            System_printf("Error: rlRfRxSigImgMonConfig returns error = %d for profile(%d)\n", retVal,
+                          ptrSigImgMonCfg->profileIndx);
             goto exit;
         }
     }
@@ -1978,22 +1888,22 @@ static int32_t MmwDemo_configCQ(MmwDemo_SubFrameCfg *subFrameCfg,
     retVal = mmwDemo_cfgAnalogMonitor(ptrAnaMonitorCfg);
     if (retVal != 0)
     {
-        System_printf ("Error: rlRfAnaMonConfig returns error = %d\n", retVal);
+        System_printf("Error: rlRfAnaMonConfig returns error = %d\n", retVal);
         goto exit;
     }
 
-    if(ptrAnaMonitorCfg->rxSatMonEn || ptrAnaMonitorCfg->sigImgMonEn)
+    if (ptrAnaMonitorCfg->rxSatMonEn || ptrAnaMonitorCfg->sigImgMonEn)
     {
         /* CQ driver config */
         memset((void *)&cqConfig, 0, sizeof(ADCBuf_CQConf));
-        cqConfig.cqDataWidth = 0; /* 16bit for mmw demo */
+        cqConfig.cqDataWidth = 0;                                /* 16bit for mmw demo */
         cqConfig.cq1AddrOffset = MMW_DEMO_CQ_SIGIMG_ADDR_OFFSET; /* CQ1 starts from the beginning of the buffer */
         cqConfig.cq2AddrOffset = MMW_DEMO_CQ_RXSAT_ADDR_OFFSET;  /* Address should be 16 bytes aligned */
 
         retVal = ADCBuf_control(gMmwMssMCB.adcBufHandle, ADCBufMMWave_CMD_CONF_CQ, (void *)&cqConfig);
         if (retVal < 0)
         {
-            System_printf ("Error: MMWDemoDSS Unable to configure the CQ\n");
+            System_printf("Error: MMWDemoDSS Unable to configure the CQ\n");
             MmwDemo_debugAssert(0);
         }
     }
@@ -2019,7 +1929,7 @@ static int32_t MmwDemo_configCQ(MmwDemo_SubFrameCfg *subFrameCfg,
     }
 
 exit:
-    return(retVal);
+    return (retVal);
 }
 
 /**
@@ -2029,7 +1939,7 @@ exit:
  *      from a CLI encoded dB value to a linear value
  *      as expected by the CFAR DPU
  *
- *  @param[in] codedCfarVal CFAR threshold in dB as encoded in the CLI 
+ *  @param[in] codedCfarVal CFAR threshold in dB as encoded in the CLI
  *  @param[in] numVirtualAntennas Number of virtual antennas
  *
  *  @retval
@@ -2038,19 +1948,19 @@ exit:
 static uint16_t MmwDemo_convertCfarToLinear(uint16_t codedCfarVal, uint8_t numVirtualAntennas)
 {
     uint16_t linearVal;
-    float    dbVal, linVal;   
+    float dbVal, linVal;
 
     /* dbVal is a float value from 0-100dB. It needs to
     be converted to linear scale..
     First, recover float dbVal that was encoded in CLI. */
     dbVal = (float)(codedCfarVal / MMWDEMO_CFAR_THRESHOLD_ENCODING_FACTOR);
-    
+
     /* Now convert it to linear value according to the following:
     linear_value = dB_value * (256 / 6) * (numVirtualAntennas / (2^ ceil(log2(numVirtualAntennas)))) .
     */
     linVal = dbVal * (256.0 / 6.0) * ((float)numVirtualAntennas / (float)(1 << mathUtils_ceilLog2(numVirtualAntennas)));
-    
-    linearVal = (uint16_t) linVal;
+
+    linearVal = (uint16_t)linVal;
     return (linearVal);
 }
 
@@ -2066,14 +1976,14 @@ static uint16_t MmwDemo_convertCfarToLinear(uint16_t codedCfarVal, uint8_t numVi
  *  @retval
  *      Error       - <0
  */
-static int32_t MmwDemo_dataPathConfig (void)
+static int32_t MmwDemo_dataPathConfig(void)
 {
-    int32_t                         errCode;
-    MMWave_CtrlCfg                  *ptrCtrlCfg;
+    int32_t errCode;
+    MMWave_CtrlCfg *ptrCtrlCfg;
     MmwDemo_DPC_ObjDet_CommonCfg *objDetCommonCfg;
-    MmwDemo_SubFrameCfg             *subFrameCfg;
-    int8_t                          subFrameIndx;
-    MmwDemo_RFParserOutParams       RFparserOutParams;
+    MmwDemo_SubFrameCfg *subFrameCfg;
+    int8_t subFrameIndx;
+    MmwDemo_RFParserOutParams RFparserOutParams;
     DPC_ObjectDetectionRangeHWA_PreStartCfg objDetPreStartR4fCfg;
     DPC_ObjectDetectionRangeHWA_StaticCfg *staticCfg;
     DPC_ObjectDetection_PreStartCfg objDetPreStartDspCfg;
@@ -2089,37 +1999,34 @@ static int32_t MmwDemo_dataPathConfig (void)
     gMmwMssMCB.rfFreqScaleFactor = SOC_getDeviceRFFreqScaleFactor(gMmwMssMCB.socHandle, &errCode);
     if (errCode < 0)
     {
-        System_printf ("Error: Unable to get RF scale factor [Error:%d]\n", errCode);
+        System_printf("Error: Unable to get RF scale factor [Error:%d]\n", errCode);
         MmwDemo_debugAssert(0);
     }
 
-    gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames =
-        MmwDemo_RFParser_getNumSubFrames(ptrCtrlCfg);
+    gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames = MmwDemo_RFParser_getNumSubFrames(ptrCtrlCfg);
 
     DebugP_log0("App: Issuing Pre-start Common Config IOCTL to R4F\n");
 
     /* DPC pre-start common config */
     preStartCommonCfg.numSubFrames = gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames;
-    errCode = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                         DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_COMMON_CFG,
-                         &preStartCommonCfg,
-                         sizeof (preStartCommonCfg));
+    errCode = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_COMMON_CFG,
+                        &preStartCommonCfg, sizeof(preStartCommonCfg));
     if (errCode < 0)
     {
-        System_printf ("Error: Unable to send DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_COMMON_CFG [Error:%d]\n", errCode);
+        System_printf("Error: Unable to send DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_COMMON_CFG [Error:%d]\n",
+                      errCode);
         goto exit;
     }
     DebugP_log0("App: Issuing Pre-start Common Config IOCTL to DSP\n");
 
     /* DPC pre-start common config */
-    errCode = MmwDemo_DPM_ioctl_blocking (gMmwMssMCB.objDetDpmHandle,
-                         DPC_OBJDET_IOCTL__STATIC_PRE_START_COMMON_CFG,
-                         &objDetCommonCfg->preStartCommonCfg,
-                         sizeof (DPC_ObjectDetection_PreStartCommonCfg));
+    errCode =
+        MmwDemo_DPM_ioctl_blocking(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__STATIC_PRE_START_COMMON_CFG,
+                                   &objDetCommonCfg->preStartCommonCfg, sizeof(DPC_ObjectDetection_PreStartCommonCfg));
 
     if (errCode < 0)
     {
-        System_printf ("Error: Unable to send DPC_OBJDET_IOCTL__STATIC_PRE_START_COMMON_CFG [Error:%d]\n", errCode);
+        System_printf("Error: Unable to send DPC_OBJDET_IOCTL__STATIC_PRE_START_COMMON_CFG [Error:%d]\n", errCode);
         goto exit;
     }
 
@@ -2134,25 +2041,23 @@ static int32_t MmwDemo_dataPathConfig (void)
      * which will be used by range DPU and therefore this computation is required for
      * all sub-frames.
      */
-    for(subFrameIndx = gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames -1; subFrameIndx >= 0;
-        subFrameIndx--)
+    for (subFrameIndx = gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames - 1; subFrameIndx >= 0;
+         subFrameIndx--)
     {
-        subFrameCfg  = &gMmwMssMCB.subFrameCfg[subFrameIndx];
+        subFrameCfg = &gMmwMssMCB.subFrameCfg[subFrameIndx];
 
         /*****************************************************************************
          * Data path :: Algorithm Configuration
          *****************************************************************************/
 
         /* Parse the profile and chirp configs and get the valid number of TX Antennas */
-        errCode = MmwDemo_RFParser_parseConfig(&RFparserOutParams, subFrameIndx,
-                                         &gMmwMssMCB.cfg.openCfg, ptrCtrlCfg,
-                                         &subFrameCfg->adcBufCfg,
-                                         gMmwMssMCB.rfFreqScaleFactor,
-                                         subFrameCfg->bpmCfg.isEnabled); 
+        errCode = MmwDemo_RFParser_parseConfig(&RFparserOutParams, subFrameIndx, &gMmwMssMCB.cfg.openCfg, ptrCtrlCfg,
+                                               &subFrameCfg->adcBufCfg, gMmwMssMCB.rfFreqScaleFactor,
+                                               subFrameCfg->bpmCfg.isEnabled);
 
         if (errCode != 0)
         {
-            System_printf ("Error: MmwDemo_RFParser_parseConfig [Error:%d]\n", errCode);
+            System_printf("Error: MmwDemo_RFParser_parseConfig [Error:%d]\n", errCode);
             goto exit;
         }
 
@@ -2182,20 +2087,17 @@ static int32_t MmwDemo_dataPathConfig (void)
         subFrameCfg->numChirpsPerSubFrame = RFparserOutParams.numChirpsPerFrame;
         subFrameCfg->numVirtualAntennas = RFparserOutParams.numVirtualAntennas;
 
-        errCode = MmwDemo_ADCBufConfig(gMmwMssMCB.adcBufHandle,
-                                 gMmwMssMCB.cfg.openCfg.chCfg.rxChannelEn,
-                                 subFrameCfg->numChirpsPerChirpEvent,
-                                 subFrameCfg->adcBufChanDataSize,
-                                 &subFrameCfg->adcBufCfg,
-                                 &staticCfg->ADCBufData.dataProperty.rxChanOffset[0]);
+        errCode = MmwDemo_ADCBufConfig(gMmwMssMCB.adcBufHandle, gMmwMssMCB.cfg.openCfg.chCfg.rxChannelEn,
+                                       subFrameCfg->numChirpsPerChirpEvent, subFrameCfg->adcBufChanDataSize,
+                                       &subFrameCfg->adcBufCfg, &staticCfg->ADCBufData.dataProperty.rxChanOffset[0]);
         if (errCode < 0)
         {
             System_printf("Error: ADCBuf config failed with error[%d]\n", errCode);
-            MmwDemo_debugAssert (0);
+            MmwDemo_debugAssert(0);
         }
 
-        errCode = MmwDemo_configCQ(subFrameCfg, RFparserOutParams.numChirpsPerChirpEvent,
-                                   RFparserOutParams.validProfileIdx);
+        errCode =
+            MmwDemo_configCQ(subFrameCfg, RFparserOutParams.numChirpsPerChirpEvent, RFparserOutParams.validProfileIdx);
 
         if (errCode < 0)
         {
@@ -2234,7 +2136,8 @@ static int32_t MmwDemo_dataPathConfig (void)
             staticCfg->ADCBufData.dataProperty.numAdcSamples = RFparserOutParams.numAdcSamples;
             staticCfg->ADCBufData.dataProperty.numChirpsPerChirpEvent = RFparserOutParams.numChirpsPerChirpEvent;
             staticCfg->ADCBufData.dataProperty.numRxAntennas = RFparserOutParams.numRxAntennas;
-            staticCfg->ADCBufData.dataSize = RFparserOutParams.numRxAntennas * RFparserOutParams.numAdcSamples * sizeof(cmplx16ImRe_t);
+            staticCfg->ADCBufData.dataSize =
+                RFparserOutParams.numRxAntennas * RFparserOutParams.numAdcSamples * sizeof(cmplx16ImRe_t);
             staticCfg->numChirpsPerFrame = RFparserOutParams.numChirpsPerFrame;
             staticCfg->numDopplerChirps = RFparserOutParams.numDopplerChirps;
             staticCfg->numRangeBins = RFparserOutParams.numRangeBins;
@@ -2242,31 +2145,31 @@ static int32_t MmwDemo_dataPathConfig (void)
             staticCfg->numVirtualAntennas = RFparserOutParams.numVirtualAntennas;
             staticCfg->centerFreq = RFparserOutParams.centerFreq;
 
-            /* Current 68xx SOC has higher receive level as compared to 18xx and hence using higher value for 
+            /* Current 68xx SOC has higher receive level as compared to 18xx and hence using higher value for
              * fftOutputDivShift to avoid overflow when converting from 24-bit to 16-bit
              * TODO: Future RadarSS firmware should be evaluated to assess if these settings are correct
              */
-            if (RFparserOutParams.numRangeBins >= 1022) 
-            {        
+            if (RFparserOutParams.numRangeBins >= 1022)
+            {
                 staticCfg->rangeFFTtuning.fftOutputDivShift = 1;
                 /* scale only 2 stages */
-                staticCfg->rangeFFTtuning.numLastButterflyStagesToScale = 2; 
-            } 
-            else if (RFparserOutParams.numRangeBins==512)
-            {        
+                staticCfg->rangeFFTtuning.numLastButterflyStagesToScale = 2;
+            }
+            else if (RFparserOutParams.numRangeBins == 512)
+            {
                 staticCfg->rangeFFTtuning.fftOutputDivShift = 2;
                 /* scale last stage */
-                staticCfg->rangeFFTtuning.numLastButterflyStagesToScale = 1; 
-            } 
-            else    
-            {        
+                staticCfg->rangeFFTtuning.numLastButterflyStagesToScale = 1;
+            }
+            else
+            {
                 staticCfg->rangeFFTtuning.fftOutputDivShift = 3;
                 /* no scaling needed as ADC data is 16-bit and we have 8 bits to grow */
-                staticCfg->rangeFFTtuning.numLastButterflyStagesToScale = 0; 
+                staticCfg->rangeFFTtuning.numLastButterflyStagesToScale = 0;
             }
-            
+
             /* objectdetection DSP DPC needs radacube in format DPIF_RADARCUBE_FORMAT_1 */
-            staticCfg->radarCubeFormat = DPIF_RADARCUBE_FORMAT_1; 
+            staticCfg->radarCubeFormat = DPIF_RADARCUBE_FORMAT_1;
 
             /* Fill dynamic configuration for the sub-frame */
             objDetPreStartR4fCfg.dynCfg = subFrameCfg->objDetDynCfg.r4fDynCfg;
@@ -2274,13 +2177,13 @@ static int32_t MmwDemo_dataPathConfig (void)
             DebugP_log1("App: Issuing Pre-start Config IOCTL (subFrameIndx = %d)\n", subFrameIndx);
 
             /* send pre-start config to R4F chain, using blocking call here */
-            errCode = MmwDemo_DPM_ioctl_blocking (gMmwMssMCB.objDetDpmHandle,
-                                 DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_CFG,
-                                 &objDetPreStartR4fCfg,
-                                 sizeof (DPC_ObjectDetectionRangeHWA_PreStartCfg));
+            errCode =
+                MmwDemo_DPM_ioctl_blocking(gMmwMssMCB.objDetDpmHandle, DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_CFG,
+                                           &objDetPreStartR4fCfg, sizeof(DPC_ObjectDetectionRangeHWA_PreStartCfg));
             if (errCode < 0)
             {
-                System_printf ("Error: Unable to send DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_CFG [Error:%d]\n", errCode);
+                System_printf("Error: Unable to send DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_CFG [Error:%d]\n",
+                              errCode);
                 goto exit;
             }
             DebugP_log0("App: DPC_OBJDETRANGEHWA_IOCTL__STATIC_PRE_START_CFG is processed \n");
@@ -2295,21 +2198,19 @@ static int32_t MmwDemo_dataPathConfig (void)
             objDetPreStartDspCfg.subFrameNum = subFrameIndx;
 
             /* Convert CFAR threshold value */
-            subFrameCfg->objDetDynCfg.dspDynCfg.cfarCfgRange.thresholdScale = 
-                MmwDemo_convertCfarToLinear(subFrameCfg->objDetDynCfg.dspDynCfg.cfarCfgRange.thresholdScale, 
-                                            staticCfg->numVirtualAntennas);
+            subFrameCfg->objDetDynCfg.dspDynCfg.cfarCfgRange.thresholdScale = MmwDemo_convertCfarToLinear(
+                subFrameCfg->objDetDynCfg.dspDynCfg.cfarCfgRange.thresholdScale, staticCfg->numVirtualAntennas);
 
-            subFrameCfg->objDetDynCfg.dspDynCfg.cfarCfgDoppler.thresholdScale = 
-                MmwDemo_convertCfarToLinear(subFrameCfg->objDetDynCfg.dspDynCfg.cfarCfgDoppler.thresholdScale, 
-                                            staticCfg->numVirtualAntennas);
-                                        
+            subFrameCfg->objDetDynCfg.dspDynCfg.cfarCfgDoppler.thresholdScale = MmwDemo_convertCfarToLinear(
+                subFrameCfg->objDetDynCfg.dspDynCfg.cfarCfgDoppler.thresholdScale, staticCfg->numVirtualAntennas);
+
             objDetPreStartDspCfg.dynCfg = subFrameCfg->objDetDynCfg.dspDynCfg;
 
-            memcpy((void *)&objDetPreStartDspCfg.staticCfg.ADCBufData, 
-                    (void *)&staticCfg->ADCBufData,
-                    sizeof(DPIF_ADCBufData));
+            memcpy((void *)&objDetPreStartDspCfg.staticCfg.ADCBufData, (void *)&staticCfg->ADCBufData,
+                   sizeof(DPIF_ADCBufData));
             objDetPreStartDspCfg.staticCfg.dopplerStep = RFparserOutParams.dopplerStep;
-            objDetPreStartDspCfg.staticCfg.isValidProfileHasOneTxPerChirp = RFparserOutParams.validProfileHasOneTxPerChirp;
+            objDetPreStartDspCfg.staticCfg.isValidProfileHasOneTxPerChirp =
+                RFparserOutParams.validProfileHasOneTxPerChirp;
             objDetPreStartDspCfg.staticCfg.numChirpsPerFrame = RFparserOutParams.numChirpsPerFrame;
             objDetPreStartDspCfg.staticCfg.numDopplerBins = RFparserOutParams.numDopplerBins;
             objDetPreStartDspCfg.staticCfg.numDopplerChirps = RFparserOutParams.numDopplerChirps;
@@ -2339,47 +2240,49 @@ static int32_t MmwDemo_dataPathConfig (void)
                 objDetPreStartDspCfg.staticCfg.txAntOrder[idx] = RFparserOutParams.txAntOrder[idx];
             }
 
-            /* The L3 memory and radarCube memory usage are reported and saved in @ref MmwDemo_DPC_ObjectDetection_reportFxn.
-               The memory information is configured here and passed to objdetdsp chain.
+            /* The L3 memory and radarCube memory usage are reported and saved in @ref
+               MmwDemo_DPC_ObjectDetection_reportFxn. The memory information is configured here and passed to objdetdsp
+               chain.
              */
-            if(gMmwMssMCB.dataPathObj.radarCubeMem.addr != 0)
+            if (gMmwMssMCB.dataPathObj.radarCubeMem.addr != 0)
             {
                 /* Update DPC radar cube configuration */
                 objDetPreStartDspCfg.shareMemCfg.radarCubeMem.addr = gMmwMssMCB.dataPathObj.radarCubeMem.addr;
                 objDetPreStartDspCfg.shareMemCfg.radarCubeMem.size = gMmwMssMCB.dataPathObj.radarCubeMem.size;
 
                 /* Update DPC L3 RAM configuration */
-                objDetPreStartDspCfg.shareMemCfg.L3Ram.addr = (void *)((uint32_t)(gMmwMssMCB.dataPathObj.radarCubeMem.addr) +
-                                                                   gMmwMssMCB.dataPathObj.memUsage.L3RamUsage);
-                objDetPreStartDspCfg.shareMemCfg.L3Ram.size =gMmwMssMCB.dataPathObj.memUsage.L3RamTotal - gMmwMssMCB.dataPathObj.memUsage.L3RamUsage;
+                objDetPreStartDspCfg.shareMemCfg.L3Ram.addr =
+                    (void *)((uint32_t)(gMmwMssMCB.dataPathObj.radarCubeMem.addr) +
+                             gMmwMssMCB.dataPathObj.memUsage.L3RamUsage);
+                objDetPreStartDspCfg.shareMemCfg.L3Ram.size =
+                    gMmwMssMCB.dataPathObj.memUsage.L3RamTotal - gMmwMssMCB.dataPathObj.memUsage.L3RamUsage;
 
                 /* Convert address for DSP core */
-                objDetPreStartDspCfg.shareMemCfg.radarCubeMem.addr = (void *) SOC_translateAddress((uint32_t)objDetPreStartDspCfg.shareMemCfg.radarCubeMem.addr,
-                                                 SOC_TranslateAddr_Dir_TO_OTHER_CPU,
-                                                 &errCode);
-                DebugP_assert ((uint32_t)objDetPreStartDspCfg.shareMemCfg.radarCubeMem.addr != SOC_TRANSLATEADDR_INVALID);
+                objDetPreStartDspCfg.shareMemCfg.radarCubeMem.addr =
+                    (void *)SOC_translateAddress((uint32_t)objDetPreStartDspCfg.shareMemCfg.radarCubeMem.addr,
+                                                 SOC_TranslateAddr_Dir_TO_OTHER_CPU, &errCode);
+                DebugP_assert((uint32_t)objDetPreStartDspCfg.shareMemCfg.radarCubeMem.addr !=
+                              SOC_TRANSLATEADDR_INVALID);
 
-                objDetPreStartDspCfg.shareMemCfg.L3Ram.addr = (void *) SOC_translateAddress((uint32_t)objDetPreStartDspCfg.shareMemCfg.L3Ram.addr,
-                                                 SOC_TranslateAddr_Dir_TO_OTHER_CPU,
-                                                 &errCode);
-                DebugP_assert ((uint32_t)objDetPreStartDspCfg.shareMemCfg.L3Ram.addr != SOC_TRANSLATEADDR_INVALID);
+                objDetPreStartDspCfg.shareMemCfg.L3Ram.addr =
+                    (void *)SOC_translateAddress((uint32_t)objDetPreStartDspCfg.shareMemCfg.L3Ram.addr,
+                                                 SOC_TranslateAddr_Dir_TO_OTHER_CPU, &errCode);
+                DebugP_assert((uint32_t)objDetPreStartDspCfg.shareMemCfg.L3Ram.addr != SOC_TRANSLATEADDR_INVALID);
 
                 /* Enable shared memory configuration */
                 objDetPreStartDspCfg.shareMemCfg.shareMemEnable = true;
             }
 
             /* send pre-start config */
-            errCode = MmwDemo_DPM_ioctl_blocking (gMmwMssMCB.objDetDpmHandle,
-                                 DPC_OBJDET_IOCTL__STATIC_PRE_START_CFG,
-                                 &objDetPreStartDspCfg,
-                                 sizeof (DPC_ObjectDetection_PreStartCfg));
+            errCode = MmwDemo_DPM_ioctl_blocking(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__STATIC_PRE_START_CFG,
+                                                 &objDetPreStartDspCfg, sizeof(DPC_ObjectDetection_PreStartCfg));
             DebugP_log0("App: DPC_OBJDET_IOCTL__STATIC_PRE_START_CFG is processed \n");
 
             MmwDemo_resetDynObjDetCfgPendingState(&subFrameCfg->objDetDynCfg);
 
             if (errCode < 0)
             {
-                System_printf ("Error: Unable to send DPC_OBJDET_IOCTL__STATIC_PRE_START_CFG [Error:%d]\n", errCode);
+                System_printf("Error: Unable to send DPC_OBJDET_IOCTL__STATIC_PRE_START_CFG [Error:%d]\n", errCode);
                 goto exit;
             }
         }
@@ -2396,7 +2299,7 @@ exit:
  *  @retval
  *      Not Applicable.
  */
-static void MmwDemo_dataPathStart (void)
+static void MmwDemo_dataPathStart(void)
 {
     int32_t retVal;
 
@@ -2431,16 +2334,16 @@ static void MmwDemo_dataPathStart (void)
  *  @retval
  *      Not Applicable.
  */
-static void MmwDemo_dataPathStop (void)
+static void MmwDemo_dataPathStop(void)
 {
     int32_t retVal;
 
     DebugP_log0("App: Issuing DPM_stop\n");
 
-    retVal = DPM_stop (gMmwMssMCB.objDetDpmHandle);
+    retVal = DPM_stop(gMmwMssMCB.objDetDpmHandle);
     if (retVal < 0)
     {
-        System_printf ("DPM_stop failed[Error code %d]\n", retVal);
+        System_printf("DPM_stop failed[Error code %d]\n", retVal);
         MmwDemo_debugAssert(0);
     }
 }
@@ -2492,15 +2395,15 @@ static int32_t MmwDemo_eventCallbackFxn(uint16_t msgId, uint16_t sbId, uint16_t 
                 }
                 case RL_RF_AE_INITCALIBSTATUS_SB:
                 {
-                    rlRfInitComplete_t*  ptrRFInitCompleteMessage;
-                    uint32_t            calibrationStatus;
+                    rlRfInitComplete_t *ptrRFInitCompleteMessage;
+                    uint32_t calibrationStatus;
 
                     /* Get the RF-Init completion message: */
-                    ptrRFInitCompleteMessage = (rlRfInitComplete_t*)payload;
+                    ptrRFInitCompleteMessage = (rlRfInitComplete_t *)payload;
                     calibrationStatus = ptrRFInitCompleteMessage->calibStatus & 0x1FFFU;
 
                     /* Display the calibration status: */
-                    CLI_write ("Debug: Init Calibration Status = 0x%x\n", calibrationStatus);
+                    CLI_write("Debug: Init Calibration Status = 0x%x\n", calibrationStatus);
                     break;
                 }
                 case RL_RF_AE_FRAME_TRIGGER_RDY_SB:
@@ -2514,7 +2417,7 @@ static int32_t MmwDemo_eventCallbackFxn(uint16_t msgId, uint16_t sbId, uint16_t 
                     break;
                 }
                 case RL_RF_AE_RUN_TIME_CALIB_REPORT_SB:
-                {                    
+                {
                     gMmwMssMCB.stats.calibrationReports++;
                     break;
                 }
@@ -2528,7 +2431,7 @@ static int32_t MmwDemo_eventCallbackFxn(uint16_t msgId, uint16_t sbId, uint16_t 
                 }
                 default:
                 {
-                    System_printf ("Error: Asynchronous Event SB Id %d not handled\n", asyncSB);
+                    System_printf("Error: Asynchronous Event SB Id %d not handled\n", asyncSB);
                     break;
                 }
             }
@@ -2544,7 +2447,7 @@ static int32_t MmwDemo_eventCallbackFxn(uint16_t msgId, uint16_t sbId, uint16_t 
                     /* link reports protocol error in the async report from BSS */
                     MmwDemo_debugAssert(0);
                     break;
-                }            
+                }
                 case RL_MMWL_AE_INTERNALERR_REPORT:
                 {
                     /* link reports internal error during BSS communication */
@@ -2556,7 +2459,7 @@ static int32_t MmwDemo_eventCallbackFxn(uint16_t msgId, uint16_t sbId, uint16_t 
         }
         default:
         {
-            System_printf ("Error: Asynchronous message %d is NOT handled\n", msgId);
+            System_printf("Error: Asynchronous message %d is NOT handled\n", msgId);
             break;
         }
     }
@@ -2583,22 +2486,16 @@ static int32_t MmwDemo_eventCallbackFxn(uint16_t msgId, uint16_t sbId, uint16_t 
  *  @retval
  *      Not Applicable.
  */
-static void MmwDemo_DPC_ObjectDetection_reportFxn
-(
-    DPM_Report  reportType,
-    uint32_t    instanceId,
-    int32_t     errCode,
-    uint32_t    arg0,
-    uint32_t    arg1
-)
+static void MmwDemo_DPC_ObjectDetection_reportFxn(DPM_Report reportType, uint32_t instanceId, int32_t errCode,
+                                                  uint32_t arg0, uint32_t arg1)
 {
     /* Only errors are logged on the console: */
-    if ((errCode != 0) )
+    if ((errCode != 0))
     {
         /* Error: Detected log on the console and die all errors are FATAL currently. */
-        System_printf ("Error: DPM Report %d received with error:%d arg0:0x%x arg1:0x%x\n",
-                        reportType, errCode, arg0, arg1);
-        DebugP_assert (0);
+        System_printf("Error: DPM Report %d received with error:%d arg0:0x%x arg1:0x%x\n", reportType, errCode, arg0,
+                      arg1);
+        DebugP_assert(0);
     }
 
     /* Processing further is based on the reports received: This is the control of the profile
@@ -2619,72 +2516,61 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
                 DPC_ObjectDetectionRangeHWA_PreStartCfg *cfg;
                 DPC_ObjectDetectionRangeHWA_preStartCfg_memUsage *memUsage;
 
-                cfg = (DPC_ObjectDetectionRangeHWA_PreStartCfg*)arg1;
+                cfg = (DPC_ObjectDetectionRangeHWA_PreStartCfg *)arg1;
 
-                /* Save radar cube memory information, it will be passed to objdetdsp chain for inter-frame processing */
+                /* Save radar cube memory information, it will be passed to objdetdsp chain for inter-frame processing
+                 */
                 memcpy((void *)&gMmwMssMCB.dataPathObj.radarCubeMem, (void *)&cfg->radarCubeMem,
-                    sizeof(DPC_ObjectDetectionRangeHWA_preStartCfg_radarCubeMem));
+                       sizeof(DPC_ObjectDetectionRangeHWA_preStartCfg_radarCubeMem));
 
                 /* Get memory usage and print the usage */
                 memUsage = &cfg->memUsage;
 
                 /* Save memory usage, it will be passed to objdetdsp chain for inter-frame processing */
                 memcpy((void *)&gMmwMssMCB.dataPathObj.memUsage, (void *)memUsage,
-                    sizeof(DPC_ObjectDetectionRangeHWA_preStartCfg_memUsage));
+                       sizeof(DPC_ObjectDetectionRangeHWA_preStartCfg_memUsage));
 
                 System_printf("============ Heap Memory Stats ============\n");
                 System_printf("%20s %12s %12s %12s %12s\n", " ", "Size", "Used", "Free", "DPCUsed");
-                System_printf("%20s %12d %12d %12d %12d\n", "System Heap(TCMB)",
-                              memUsage->SystemHeapTotal, memUsage->SystemHeapUsed,
-                              memUsage->SystemHeapTotal - memUsage->SystemHeapUsed,
+                System_printf("%20s %12d %12d %12d %12d\n", "System Heap(TCMB)", memUsage->SystemHeapTotal,
+                              memUsage->SystemHeapUsed, memUsage->SystemHeapTotal - memUsage->SystemHeapUsed,
                               memUsage->SystemHeapDPCUsed);
 
-                System_printf("%20s %12d %12d %12d\n", "L3",
-                              memUsage->L3RamTotal,
-                              memUsage->L3RamUsage,
+                System_printf("%20s %12d %12d %12d\n", "L3", memUsage->L3RamTotal, memUsage->L3RamUsage,
                               memUsage->L3RamTotal - memUsage->L3RamUsage);
 
-                System_printf("%20s %12d %12d %12d\n", "localRam(TCMB)",
-                              memUsage->CoreLocalRamTotal,
-                              memUsage->CoreLocalRamUsage,
-                              memUsage->CoreLocalRamTotal - memUsage->CoreLocalRamUsage);
+                System_printf("%20s %12d %12d %12d\n", "localRam(TCMB)", memUsage->CoreLocalRamTotal,
+                              memUsage->CoreLocalRamUsage, memUsage->CoreLocalRamTotal - memUsage->CoreLocalRamUsage);
             }
-            if (arg0 == DPC_OBJDET_IOCTL__STATIC_PRE_START_CFG) 
+            if (arg0 == DPC_OBJDET_IOCTL__STATIC_PRE_START_CFG)
             {
                 DPC_ObjectDetection_PreStartCfg *cfg;
                 DPC_ObjectDetection_DPC_IOCTL_preStartCfg_memUsage *memUsage;
 
-                cfg = (DPC_ObjectDetection_PreStartCfg*)arg1;
+                cfg = (DPC_ObjectDetection_PreStartCfg *)arg1;
 
                 memUsage = &cfg->memUsage;
 
                 System_printf("============ Heap Memory Stats ============\n");
                 System_printf("%20s %12s %12s %12s %12s\n", " ", "Size", "Used", "Free", "DPCUsed");
-                System_printf("%20s %12d %12d %12d %12d\n", "System Heap(L2)",
-                              memUsage->SystemHeapTotal, memUsage->SystemHeapUsed,
-                              memUsage->SystemHeapTotal - memUsage->SystemHeapUsed,
+                System_printf("%20s %12d %12d %12d %12d\n", "System Heap(L2)", memUsage->SystemHeapTotal,
+                              memUsage->SystemHeapUsed, memUsage->SystemHeapTotal - memUsage->SystemHeapUsed,
                               memUsage->SystemHeapDPCUsed);
 
-                System_printf("%20s %12d %12d %12d\n", "L3",
-                              memUsage->L3RamTotal,
-                              memUsage->L3RamUsage,
+                System_printf("%20s %12d %12d %12d\n", "L3", memUsage->L3RamTotal, memUsage->L3RamUsage,
                               memUsage->L3RamTotal - memUsage->L3RamUsage);
 
-                System_printf("%20s %12d %12d %12d\n", "localRam(L2)",
-                              memUsage->CoreL2RamTotal,
-                              memUsage->CoreL2RamUsage,
-                              memUsage->CoreL2RamTotal - memUsage->CoreL2RamUsage);
+                System_printf("%20s %12d %12d %12d\n", "localRam(L2)", memUsage->CoreL2RamTotal,
+                              memUsage->CoreL2RamUsage, memUsage->CoreL2RamTotal - memUsage->CoreL2RamUsage);
 
-                System_printf("%20s %12d %12d %12d\n", "localRam(L1)",
-                              memUsage->CoreL1RamTotal,
-                              memUsage->CoreL1RamUsage,
-                              memUsage->CoreL1RamTotal - memUsage->CoreL1RamUsage);
+                System_printf("%20s %12d %12d %12d\n", "localRam(L1)", memUsage->CoreL1RamTotal,
+                              memUsage->CoreL1RamUsage, memUsage->CoreL1RamTotal - memUsage->CoreL1RamUsage);
             }
 
-            switch(arg0)
+            switch (arg0)
             {
                 /* The following ioctls take longer time to finish. It causes DPM to queue IOCTL requests on DSS before
-                 * they are handled. However DPM has limited pipe queues, hence adding sync points in demo to avoid 
+                 * they are handled. However DPM has limited pipe queues, hence adding sync points in demo to avoid
                  * sending too many such ioctls to DSS at a time.
                  * The semaphore blocks CLI task to wait for the response from DSS before sending the next ioctl.
                  */
@@ -2709,9 +2595,9 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
              *****************************************************************/
             DebugP_log0("App: DPM Report DPC Started\n");
             gMmwMssMCB.stats.dpmStartEvents++;
-            /* every sensor start should cause 2 DPM start events due to distributed domain 
+            /* every sensor start should cause 2 DPM start events due to distributed domain
                Wait for both the events before proceeding with remaining steps */
-            if (gMmwMssMCB.stats.dpmStartEvents % 2 == 0) 
+            if (gMmwMssMCB.stats.dpmStartEvents % 2 == 0)
             {
                 Semaphore_post(gMmwMssMCB.DPMstartSemHandle);
             }
@@ -2722,26 +2608,25 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
             /*****************************************************************
              * datapath has finished frame processing, results are reported
              *****************************************************************/
-            DPM_Buffer*     ptrResult;
+            DPM_Buffer *ptrResult;
 
             /* Get the result: */
-            ptrResult = (DPM_Buffer*)arg0;
+            ptrResult = (DPM_Buffer *)arg0;
 
             MmwDemo_handleObjectDetResult(ptrResult);
             break;
         }
         case DPM_Report_DPC_ASSERT:
         {
-            DPM_DPCAssert*  ptrAssert;
+            DPM_DPCAssert *ptrAssert;
 
             /*****************************************************************
              * DPC Fault has been detected:
              * - This implies that the DPC has crashed.
              * - The argument0 points to the DPC assertion information
              *****************************************************************/
-            ptrAssert = (DPM_DPCAssert*)arg0;
-            CLI_write("Obj Det DPC Exception: %s, line %d.\n", ptrAssert->fileName,
-                       ptrAssert->lineNum);
+            ptrAssert = (DPM_DPCAssert *)arg0;
+            CLI_write("Obj Det DPC Exception: %s, line %d.\n", ptrAssert->fileName, ptrAssert->lineNum);
             break;
         }
         case DPM_Report_DPC_STOPPED:
@@ -2753,9 +2638,9 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
              *****************************************************************/
             DebugP_log0("App: DPM Report DPC Stopped\n");
             gMmwMssMCB.stats.dpmStopEvents++;
-            /* every sensor stop should cause 2 DPM stop events due to distributed domain 
+            /* every sensor stop should cause 2 DPM stop events due to distributed domain
                Wait for both the events before proceeding with remaining steps */
-            if (gMmwMssMCB.stats.dpmStopEvents % 2 == 0) 
+            if (gMmwMssMCB.stats.dpmStopEvents % 2 == 0)
             {
                 Semaphore_post(gMmwMssMCB.DPMstopSemHandle);
             }
@@ -2769,7 +2654,7 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
         }
         default:
         {
-            DebugP_assert (0);
+            DebugP_assert(0);
             break;
         }
     }
@@ -2799,7 +2684,7 @@ static uint8_t MmwDemo_getNextSubFrameIndx(uint8_t currentIndx, uint8_t numSubFr
     {
         nextIndx = currentIndx + 1;
     }
-    return(nextIndx);
+    return (nextIndx);
 }
 
 /**
@@ -2825,7 +2710,7 @@ static uint8_t MmwDemo_getPrevSubFrameIndx(uint8_t currentIndx, uint8_t numSubFr
     {
         prevIndx = currentIndx - 1;
     }
-    return(prevIndx);
+    return (prevIndx);
 }
 
 /**
@@ -2844,7 +2729,7 @@ static uint8_t MmwDemo_getPrevSubFrameIndx(uint8_t currentIndx, uint8_t numSubFr
  */
 static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 {
-    int32_t retVal =0;
+    int32_t retVal = 0;
 
     MmwDemo_DPC_ObjDet_CommonCfg *commonCfg = &gMmwMssMCB.objDetCommonCfg;
     MmwDemo_DPC_ObjDet_DynCfg *subFrameCfg = &gMmwMssMCB.subFrameCfg[subFrameIndx].objDetDynCfg;
@@ -2855,10 +2740,10 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
     {
         if (commonCfg->isMeasureRxChannelBiasCfgPending == 1)
         {
-            retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                                 DPC_OBJDET_IOCTL__DYNAMIC_MEASURE_RANGE_BIAS_AND_RX_CHAN_PHASE,
-                                 &commonCfg->preStartCommonCfg.measureRxChannelBiasCfg,
-                                 sizeof (DPC_ObjectDetection_MeasureRxChannelBiasCfg));
+            retVal =
+                DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_MEASURE_RANGE_BIAS_AND_RX_CHAN_PHASE,
+                          &commonCfg->preStartCommonCfg.measureRxChannelBiasCfg,
+                          sizeof(DPC_ObjectDetection_MeasureRxChannelBiasCfg));
             if (retVal != 0)
             {
                 goto exit;
@@ -2867,10 +2752,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
         }
         if (commonCfg->isCompRxChannelBiasCfgPending == 1)
         {
-            retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                                 DPC_OBJDET_IOCTL__DYNAMIC_COMP_RANGE_BIAS_AND_RX_CHAN_PHASE,
-                                 &commonCfg->preStartCommonCfg.compRxChanCfg,
-                                 sizeof (DPU_AoAProc_compRxChannelBiasCfg));
+            retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_COMP_RANGE_BIAS_AND_RX_CHAN_PHASE,
+                               &commonCfg->preStartCommonCfg.compRxChanCfg, sizeof(DPU_AoAProc_compRxChannelBiasCfg));
             if (retVal != 0)
             {
                 goto exit;
@@ -2886,10 +2769,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         cfg.cfg = subFrameCfg->r4fDynCfg.calibDcRangeSigCfg;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDETRANGEHWA_IOCTL__DYNAMIC_CALIB_DC_RANGE_SIG_CFG,
-                             &cfg,
-                             sizeof (DPC_ObjectDetectionRangeHWA_CalibDcRangeSigCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDETRANGEHWA_IOCTL__DYNAMIC_CALIB_DC_RANGE_SIG_CFG, &cfg,
+                           sizeof(DPC_ObjectDetectionRangeHWA_CalibDcRangeSigCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -2902,15 +2783,12 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         /* Update with correct threshold value based on number of virtual antennas */
-        subFrameCfg->dspDynCfg.cfarCfgDoppler.thresholdScale = 
-            MmwDemo_convertCfarToLinear(subFrameCfg->dspDynCfg.cfarCfgDoppler.thresholdScale, 
-                                        numVirtualAntennas);
+        subFrameCfg->dspDynCfg.cfarCfgDoppler.thresholdScale =
+            MmwDemo_convertCfarToLinear(subFrameCfg->dspDynCfg.cfarCfgDoppler.thresholdScale, numVirtualAntennas);
 
         cfg.cfg = subFrameCfg->dspDynCfg.cfarCfgDoppler;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDET_IOCTL__DYNAMIC_CFAR_DOPPLER_CFG,
-                             &cfg,
-                             sizeof (DPC_ObjectDetection_CfarCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_CFAR_DOPPLER_CFG, &cfg,
+                           sizeof(DPC_ObjectDetection_CfarCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -2923,15 +2801,12 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         /* Update with correct threshold value based on number of virtual antennas */
-        subFrameCfg->dspDynCfg.cfarCfgRange.thresholdScale = 
-            MmwDemo_convertCfarToLinear(subFrameCfg->dspDynCfg.cfarCfgRange.thresholdScale, 
-                                        numVirtualAntennas);
-        
+        subFrameCfg->dspDynCfg.cfarCfgRange.thresholdScale =
+            MmwDemo_convertCfarToLinear(subFrameCfg->dspDynCfg.cfarCfgRange.thresholdScale, numVirtualAntennas);
+
         cfg.cfg = subFrameCfg->dspDynCfg.cfarCfgRange;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDET_IOCTL__DYNAMIC_CFAR_RANGE_CFG,
-                             &cfg,
-                             sizeof (DPC_ObjectDetection_CfarCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_CFAR_RANGE_CFG, &cfg,
+                           sizeof(DPC_ObjectDetection_CfarCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -2944,10 +2819,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         cfg.cfg = subFrameCfg->dspDynCfg.fovDoppler;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDET_IOCTL__DYNAMIC_FOV_DOPPLER,
-                             &cfg,
-                             sizeof (DPC_ObjectDetection_fovDopplerCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_FOV_DOPPLER, &cfg,
+                           sizeof(DPC_ObjectDetection_fovDopplerCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -2960,10 +2833,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         cfg.cfg = subFrameCfg->dspDynCfg.fovRange;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDET_IOCTL__DYNAMIC_FOV_RANGE,
-                             &cfg,
-                             sizeof (DPC_ObjectDetection_fovRangeCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_FOV_RANGE, &cfg,
+                           sizeof(DPC_ObjectDetection_fovRangeCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -2976,10 +2847,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         cfg.cfg = subFrameCfg->dspDynCfg.multiObjBeamFormingCfg;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDET_IOCTL__DYNAMIC_MULTI_OBJ_BEAM_FORM_CFG,
-                             &cfg,
-                             sizeof (DPC_ObjectDetection_MultiObjBeamFormingCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_MULTI_OBJ_BEAM_FORM_CFG, &cfg,
+                           sizeof(DPC_ObjectDetection_MultiObjBeamFormingCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -2992,10 +2861,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         cfg.prepareRangeAzimuthHeatMap = subFrameCfg->dspDynCfg.prepareRangeAzimuthHeatMap;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDET_IOCTL__DYNAMIC_RANGE_AZIMUTH_HEAT_MAP,
-                             &cfg,
-                             sizeof (DPC_ObjectDetection_RangeAzimuthHeatMapCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_RANGE_AZIMUTH_HEAT_MAP, &cfg,
+                           sizeof(DPC_ObjectDetection_RangeAzimuthHeatMapCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -3008,10 +2875,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         cfg.cfg = subFrameCfg->dspDynCfg.staticClutterRemovalCfg;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDET_IOCTL__DYNAMIC_STATICCLUTTER_REMOVAL_CFG,
-                             &cfg,
-                             sizeof (DPC_ObjectDetection_StaticClutterRemovalCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_STATICCLUTTER_REMOVAL_CFG, &cfg,
+                           sizeof(DPC_ObjectDetection_StaticClutterRemovalCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -3024,10 +2889,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         cfg.cfg = subFrameCfg->dspDynCfg.fovAoaCfg;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                             DPC_OBJDET_IOCTL__DYNAMIC_FOV_AOA,
-                             &cfg,
-                             sizeof (DPC_ObjectDetection_fovAoaCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_FOV_AOA, &cfg,
+                           sizeof(DPC_ObjectDetection_fovAoaCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -3040,10 +2903,8 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
 
         cfg.subFrameNum = subFrameIndx;
         cfg.cfg = subFrameCfg->dspDynCfg.extMaxVelCfg;
-        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                            DPC_OBJDET_IOCTL__DYNAMIC_EXT_MAX_VELOCITY,
-                            &cfg,
-                            sizeof (DPC_ObjectDetection_extMaxVelCfg));
+        retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_EXT_MAX_VELOCITY, &cfg,
+                           sizeof(DPC_ObjectDetection_extMaxVelCfg));
         if (retVal != 0)
         {
             goto exit;
@@ -3052,7 +2913,7 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
     }
 
 exit:
-    return(retVal);
+    return (retVal);
 }
 
 /**
@@ -3064,42 +2925,36 @@ exit:
  *  @param[in]  dpcResults   pointer to DPC result
  *
  */
-void MmwDemo_transferLVDSUserData(uint8_t subFrameIndx,
-                                  DPC_ObjectDetection_ExecuteResult *dpcResults)
+void MmwDemo_transferLVDSUserData(uint8_t subFrameIndx, DPC_ObjectDetection_ExecuteResult *dpcResults)
 {
     int32_t errCode;
     DPC_ObjectDetection_Stats *stats;
     DPIF_PointCloudCartesian *objOut;
     DPIF_PointCloudSideInfo *objOutSideInfo;
 
-    stats = (DPC_ObjectDetection_Stats *) SOC_translateAddress((uint32_t)dpcResults->stats,
-                                                 SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                 &errCode);
-    DebugP_assert ((uint32_t)stats != SOC_TRANSLATEADDR_INVALID);
+    stats = (DPC_ObjectDetection_Stats *)SOC_translateAddress((uint32_t)dpcResults->stats,
+                                                              SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+    DebugP_assert((uint32_t)stats != SOC_TRANSLATEADDR_INVALID);
 
-    objOut = (DPIF_PointCloudCartesian *) SOC_translateAddress((uint32_t)dpcResults->objOut,
-                                                 SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                 &errCode);
-    DebugP_assert ((uint32_t)objOut != SOC_TRANSLATEADDR_INVALID);
+    objOut = (DPIF_PointCloudCartesian *)SOC_translateAddress((uint32_t)dpcResults->objOut,
+                                                              SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+    DebugP_assert((uint32_t)objOut != SOC_TRANSLATEADDR_INVALID);
 
-    objOutSideInfo = (DPIF_PointCloudSideInfo *) SOC_translateAddress((uint32_t)dpcResults->objOutSideInfo,
-                                                 SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                                 &errCode);
-    DebugP_assert ((uint32_t)objOutSideInfo != SOC_TRANSLATEADDR_INVALID);
+    objOutSideInfo = (DPIF_PointCloudSideInfo *)SOC_translateAddress((uint32_t)dpcResults->objOutSideInfo,
+                                                                     SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
+    DebugP_assert((uint32_t)objOutSideInfo != SOC_TRANSLATEADDR_INVALID);
 
     /* Delete previous SW session if it exists. SW session is being
        reconfigured every frame because number of detected objects
        may change from frame to frame which implies that the size of
        the streamed data may change. */
-    if(gMmwMssMCB.lvdsStream.swSessionHandle != NULL)
+    if (gMmwMssMCB.lvdsStream.swSessionHandle != NULL)
     {
         MmwDemo_LVDSStreamDeleteSwSession();
     }
 
     /* Configure SW session for this subframe */
-    if (MmwDemo_LVDSStreamSwConfig(dpcResults->numObjOut,
-                                   objOut,
-                                   objOutSideInfo) < 0)
+    if (MmwDemo_LVDSStreamSwConfig(dpcResults->numObjOut, objOut, objOutSideInfo) < 0)
     {
         System_printf("Failed LVDS stream SW configuration for sub-frame %d\n", subFrameIndx);
         MmwDemo_debugAssert(0);
@@ -3107,15 +2962,15 @@ void MmwDemo_transferLVDSUserData(uint8_t subFrameIndx,
     }
 
     /* Populate user data header that will be streamed out*/
-    gMmwMssMCB.lvdsStream.userDataHeader.frameNum  = stats->frameStartIntCounter;
+    gMmwMssMCB.lvdsStream.userDataHeader.frameNum = stats->frameStartIntCounter;
     gMmwMssMCB.lvdsStream.userDataHeader.detObjNum = dpcResults->numObjOut;
-    gMmwMssMCB.lvdsStream.userDataHeader.subFrameNum  = (uint16_t) dpcResults->subFrameIdx;
+    gMmwMssMCB.lvdsStream.userDataHeader.subFrameNum = (uint16_t)dpcResults->subFrameIdx;
 
     /* If SW LVDS stream is enabled, start the session here. User data will immediately
        start to stream over LVDS.*/
-    if(CBUFF_activateSession (gMmwMssMCB.lvdsStream.swSessionHandle, &errCode) < 0)
+    if (CBUFF_activateSession(gMmwMssMCB.lvdsStream.swSessionHandle, &errCode) < 0)
     {
-        System_printf("Failed to activate CBUFF session for LVDS stream SW. errCode=%d\n",errCode);
+        System_printf("Failed to activate CBUFF session for LVDS stream SW. errCode=%d\n", errCode);
         MmwDemo_debugAssert(0);
         return;
     }
@@ -3135,38 +2990,34 @@ uint32_t gtsIdx = 0;
  *  @retval
  *      Not Applicable.
  */
-static void MmwDemo_handleObjectDetResult
-(
-    DPM_Buffer  *ptrResult
-)
+static void MmwDemo_handleObjectDetResult(DPM_Buffer *ptrResult)
 {
-    int32_t     retVal;
+    int32_t retVal;
     DPC_ObjectDetection_ExecuteResultExportedInfo exportInfo;
-    DPC_ObjectDetection_ExecuteResult        *dpcResults;
-    MmwDemo_output_message_stats            *frameStats;
-    volatile uint32_t                        startTime;
-    uint8_t                                  nextSubFrameIdx;
-    uint8_t                                  numSubFrames;
-    uint8_t                                  currSubFrameIdx;
-    uint8_t                                  prevSubFrameIdx;
-    MmwDemo_SubFrameStats                    *currSubFrameStats;
-    MmwDemo_SubFrameStats                    *prevSubFrameStats;
+    DPC_ObjectDetection_ExecuteResult *dpcResults;
+    MmwDemo_output_message_stats *frameStats;
+    volatile uint32_t startTime;
+    uint8_t nextSubFrameIdx;
+    uint8_t numSubFrames;
+    uint8_t currSubFrameIdx;
+    uint8_t prevSubFrameIdx;
+    MmwDemo_SubFrameStats *currSubFrameStats;
+    MmwDemo_SubFrameStats *prevSubFrameStats;
 
     /*****************************************************************
      * datapath has finished frame processing, results are reported
      *****************************************************************/
 
     /* Validate DPC results buffer */
-    DebugP_assert (ptrResult->size[0] == sizeof(DPC_ObjectDetection_ExecuteResult));
+    DebugP_assert(ptrResult->size[0] == sizeof(DPC_ObjectDetection_ExecuteResult));
 
     /* Translate the address: */
-    dpcResults = (DPC_ObjectDetection_ExecuteResult *)SOC_translateAddress((uint32_t)ptrResult->ptrBuffer[0],
-                                             SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                             &retVal);
-    DebugP_assert ((uint32_t)dpcResults != SOC_TRANSLATEADDR_INVALID);
+    dpcResults = (DPC_ObjectDetection_ExecuteResult *)SOC_translateAddress(
+        (uint32_t)ptrResult->ptrBuffer[0], SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &retVal);
+    DebugP_assert((uint32_t)dpcResults != SOC_TRANSLATEADDR_INVALID);
 
     /* Validate timing Info buffer */
-    DebugP_assert (ptrResult->size[1] == sizeof(MmwDemo_output_message_stats));
+    DebugP_assert(ptrResult->size[1] == sizeof(MmwDemo_output_message_stats));
 
     numSubFrames = gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames;
     currSubFrameIdx = dpcResults->subFrameIdx;
@@ -3178,18 +3029,16 @@ static void MmwDemo_handleObjectDetResult
      * Transmit results
      *****************************************************************/
     startTime = Cycleprofiler_getTimeStamp();
-    gts[gtsIdx++]=Cycleprofiler_getTimeStamp();
+    gts[gtsIdx++] = Cycleprofiler_getTimeStamp();
 
     /* Send out of CLI the range bias and phase config measurement if it was enabled. */
     if (gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.measureRxChannelBiasCfg.enabled == 1)
     {
-        if(dpcResults->compRxChanBiasMeasurement != NULL)
+        if (dpcResults->compRxChanBiasMeasurement != NULL)
         {
-            dpcResults->compRxChanBiasMeasurement =
-                (DPU_AoAProc_compRxChannelBiasCfg *)SOC_translateAddress((uint32_t)dpcResults->compRxChanBiasMeasurement,
-                SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                &retVal);
-            DebugP_assert ((uint32_t)dpcResults->compRxChanBiasMeasurement != SOC_TRANSLATEADDR_INVALID);
+            dpcResults->compRxChanBiasMeasurement = (DPU_AoAProc_compRxChannelBiasCfg *)SOC_translateAddress(
+                (uint32_t)dpcResults->compRxChanBiasMeasurement, SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &retVal);
+            DebugP_assert((uint32_t)dpcResults->compRxChanBiasMeasurement != SOC_TRANSLATEADDR_INVALID);
 
             MmwDemo_measurementResultOutput(dpcResults->compRxChanBiasMeasurement);
         }
@@ -3201,41 +3050,39 @@ static void MmwDemo_handleObjectDetResult
 
     /* Translate the address: */
     frameStats = (MmwDemo_output_message_stats *)SOC_translateAddress((uint32_t)ptrResult->ptrBuffer[1],
-                                             SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-                                             &retVal);
-    DebugP_assert ((uint32_t)frameStats != SOC_TRANSLATEADDR_INVALID);
+                                                                      SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &retVal);
+    DebugP_assert((uint32_t)frameStats != SOC_TRANSLATEADDR_INVALID);
 
     /* Update current frame stats */
     currSubFrameStats->outputStats.interFrameCPULoad = frameStats->interFrameCPULoad;
-    currSubFrameStats->outputStats.activeFrameCPULoad= gMmwMssMCB.subFrameStats[currSubFrameIdx].outputStats.activeFrameCPULoad;
+    currSubFrameStats->outputStats.activeFrameCPULoad =
+        gMmwMssMCB.subFrameStats[currSubFrameIdx].outputStats.activeFrameCPULoad;
     currSubFrameStats->outputStats.interChirpProcessingMargin = frameStats->interChirpProcessingMargin;
     currSubFrameStats->outputStats.interFrameProcessingTime = frameStats->interFrameProcessingTime;
     prevSubFrameStats->outputStats.interFrameProcessingMargin = frameStats->interFrameProcessingMargin;
-    currSubFrameStats->outputStats.interFrameProcessingMargin = currSubFrameStats->outputStats.interFrameProcessingMargin -
-                                                         (currSubFrameStats->pendingConfigProcTime + currSubFrameStats->subFramePreparationTime);
+    currSubFrameStats->outputStats.interFrameProcessingMargin =
+        currSubFrameStats->outputStats.interFrameProcessingMargin -
+        (currSubFrameStats->pendingConfigProcTime + currSubFrameStats->subFramePreparationTime);
 
-    if (gMmwMssMCB.subFrameCfg[currSubFrameIdx].lvdsStreamCfg.dataFmt !=
-             MMW_DEMO_LVDS_STREAM_CFG_DATAFMT_DISABLED)
+    if (gMmwMssMCB.subFrameCfg[currSubFrameIdx].lvdsStreamCfg.dataFmt != MMW_DEMO_LVDS_STREAM_CFG_DATAFMT_DISABLED)
     {
         /* Pend for completion of h/w session, generally this will not wait
          * because of time spent doing inter-frame processing is expected to
          * be bigger than the transmission of the h/w session */
         Semaphore_pend(gMmwMssMCB.lvdsStream.hwFrameDoneSemHandle, BIOS_WAIT_FOREVER);
     }
-    gts[gtsIdx++]=Cycleprofiler_getTimeStamp();
+    gts[gtsIdx++] = Cycleprofiler_getTimeStamp();
 
     /* Transfer data on LVDS if s/w session is enabled for the current sub-frame */
-    if(gMmwMssMCB.subFrameCfg[currSubFrameIdx].lvdsStreamCfg.isSwEnabled == 1)
+    if (gMmwMssMCB.subFrameCfg[currSubFrameIdx].lvdsStreamCfg.isSwEnabled == 1)
     {
         MmwDemo_transferLVDSUserData(currSubFrameIdx, dpcResults);
     }
-    gts[gtsIdx++]=Cycleprofiler_getTimeStamp();
+    gts[gtsIdx++] = Cycleprofiler_getTimeStamp();
 
     /* Transmit processing results for the frame */
-    MmwDemo_transmitProcessedOutput(gMmwMssMCB.loggingUartHandle,  
-                                    dpcResults,
-                                    &currSubFrameStats->outputStats);
-    gts[gtsIdx++]=Cycleprofiler_getTimeStamp();
+    MmwDemo_transmitProcessedOutput(gMmwMssMCB.loggingUartHandle, dpcResults, &currSubFrameStats->outputStats);
+    gts[gtsIdx++] = Cycleprofiler_getTimeStamp();
 
     /* Wait until s/w session is complete. We expect the LVDS transmission of
      * s/w session to be completed by now because the UART transmission above is slower.
@@ -3248,15 +3095,16 @@ static void MmwDemo_handleObjectDetResult
      * current sub-frame/frame's contents are not being read during the
      * next sub-frame/frame transmission, presently the data that is being
      * transmitted is not double buffered to allow this */
-    if(gMmwMssMCB.subFrameCfg[currSubFrameIdx].lvdsStreamCfg.isSwEnabled == 1)
+    if (gMmwMssMCB.subFrameCfg[currSubFrameIdx].lvdsStreamCfg.isSwEnabled == 1)
     {
         /* Pend completion of s/w session, no wait is expected here */
         Semaphore_pend(gMmwMssMCB.lvdsStream.swFrameDoneSemHandle, BIOS_WAIT_FOREVER);
     }
-    gts[gtsIdx++]=Cycleprofiler_getTimeStamp();
+    gts[gtsIdx++] = Cycleprofiler_getTimeStamp();
 
     /* Update current frame transmit time */
-    currSubFrameStats->outputStats.transmitOutputTime = (Cycleprofiler_getTimeStamp() - startTime)/R4F_CLOCK_MHZ; /* In micro seconds */
+    currSubFrameStats->outputStats.transmitOutputTime =
+        (Cycleprofiler_getTimeStamp() - startTime) / R4F_CLOCK_MHZ; /* In micro seconds */
 
 
     /*****************************************************************
@@ -3270,23 +3118,22 @@ static void MmwDemo_handleObjectDetResult
      *  commands.
      *****************************************************************/
     startTime = Cycleprofiler_getTimeStamp();
-    
-    nextSubFrameIdx = MmwDemo_getNextSubFrameIndx(currSubFrameIdx,   numSubFrames);
+
+    nextSubFrameIdx = MmwDemo_getNextSubFrameIndx(currSubFrameIdx, numSubFrames);
     retVal = MmwDemo_processPendingDynamicCfgCommands(nextSubFrameIdx);
     if (retVal != 0)
     {
-        System_printf ("Error: Executing Pending Dynamic Configuration Commands [Error code %d]\n",
-                       retVal);
-        MmwDemo_debugAssert (0);
+        System_printf("Error: Executing Pending Dynamic Configuration Commands [Error code %d]\n", retVal);
+        MmwDemo_debugAssert(0);
     }
-    currSubFrameStats->pendingConfigProcTime = (Cycleprofiler_getTimeStamp() - startTime)/R4F_CLOCK_MHZ;
-    gts[gtsIdx++]=Cycleprofiler_getTimeStamp();
+    currSubFrameStats->pendingConfigProcTime = (Cycleprofiler_getTimeStamp() - startTime) / R4F_CLOCK_MHZ;
+    gts[gtsIdx++] = Cycleprofiler_getTimeStamp();
     /*****************************************************************
      * Prepare for subFrame switch
      *****************************************************************/
-    if(numSubFrames > 1)
+    if (numSubFrames > 1)
     {
-        MmwDemo_SubFrameCfg  *nextSubFrameCfg;
+        MmwDemo_SubFrameCfg *nextSubFrameCfg;
         uint16_t dummyRxChanOffset[SYS_COMMON_NUM_RX_CHANNEL];
 
         startTime = Cycleprofiler_getTimeStamp();
@@ -3294,26 +3141,23 @@ static void MmwDemo_handleObjectDetResult
         nextSubFrameCfg = &gMmwMssMCB.subFrameCfg[nextSubFrameIdx];
 
         /* Configure ADC for next sub-frame */
-        retVal = MmwDemo_ADCBufConfig(gMmwMssMCB.adcBufHandle,
-                                 gMmwMssMCB.cfg.openCfg.chCfg.rxChannelEn,
-                                 nextSubFrameCfg->numChirpsPerChirpEvent,
-                                 nextSubFrameCfg->adcBufChanDataSize,
-                                 &nextSubFrameCfg->adcBufCfg,
-                                 &dummyRxChanOffset[0]);
-        if(retVal < 0)
+        retVal = MmwDemo_ADCBufConfig(gMmwMssMCB.adcBufHandle, gMmwMssMCB.cfg.openCfg.chCfg.rxChannelEn,
+                                      nextSubFrameCfg->numChirpsPerChirpEvent, nextSubFrameCfg->adcBufChanDataSize,
+                                      &nextSubFrameCfg->adcBufCfg, &dummyRxChanOffset[0]);
+        if (retVal < 0)
         {
             System_printf("Error: ADCBuf config failed with error[%d]\n", retVal);
-            MmwDemo_debugAssert (0);
+            MmwDemo_debugAssert(0);
         }
 
         /* Configure HW LVDS stream for this subframe? */
-        if(nextSubFrameCfg->lvdsStreamCfg.dataFmt != MMW_DEMO_LVDS_STREAM_CFG_DATAFMT_DISABLED)
+        if (nextSubFrameCfg->lvdsStreamCfg.dataFmt != MMW_DEMO_LVDS_STREAM_CFG_DATAFMT_DISABLED)
         {
             MmwDemo_configLVDSHwData(nextSubFrameIdx);
         }
 
-        currSubFrameStats->subFramePreparationTime = (Cycleprofiler_getTimeStamp() - startTime)/R4F_CLOCK_MHZ;
-        gts[gtsIdx++]=Cycleprofiler_getTimeStamp();
+        currSubFrameStats->subFramePreparationTime = (Cycleprofiler_getTimeStamp() - startTime) / R4F_CLOCK_MHZ;
+        gts[gtsIdx++] = Cycleprofiler_getTimeStamp();
     }
     else
     {
@@ -3325,18 +3169,17 @@ static void MmwDemo_handleObjectDetResult
      *****************************************************************/
     /* Indicate result consumed and end of frame/sub-frame processing */
     exportInfo.subFrameIdx = currSubFrameIdx;
-    retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
-                         DPC_OBJDET_IOCTL__DYNAMIC_EXECUTE_RESULT_EXPORTED,
-                         &exportInfo,
-                         sizeof (DPC_ObjectDetection_ExecuteResultExportedInfo));
-    if (retVal < 0) {
-        System_printf ("Error: DPM DPC_OBJDET_IOCTL__DYNAMIC_EXECUTE_RESULT_EXPORTED failed [Error code %d]\n",
-                       retVal);
-        MmwDemo_debugAssert (0);
+    retVal = DPM_ioctl(gMmwMssMCB.objDetDpmHandle, DPC_OBJDET_IOCTL__DYNAMIC_EXECUTE_RESULT_EXPORTED, &exportInfo,
+                       sizeof(DPC_ObjectDetection_ExecuteResultExportedInfo));
+    if (retVal < 0)
+    {
+        System_printf("Error: DPM DPC_OBJDET_IOCTL__DYNAMIC_EXECUTE_RESULT_EXPORTED failed [Error code %d]\n", retVal);
+        MmwDemo_debugAssert(0);
     }
-    gts[gtsIdx++]=Cycleprofiler_getTimeStamp();
+    gts[gtsIdx++] = Cycleprofiler_getTimeStamp();
 
-    if (gtsIdx>90) gtsIdx=0;
+    if (gtsIdx > 90)
+        gtsIdx = 0;
 }
 
 /**
@@ -3350,16 +3193,16 @@ static void MmwDemo_handleObjectDetResult
  */
 static void mmwDemo_mssDPMTask(UArg arg0, UArg arg1)
 {
-    int32_t     errCode;
-    DPM_Buffer  result;
+    int32_t errCode;
+    DPM_Buffer result;
 
     while (1)
     {
         /* Execute the DPM module: */
-        errCode = DPM_execute (gMmwMssMCB.objDetDpmHandle, &result);
+        errCode = DPM_execute(gMmwMssMCB.objDetDpmHandle, &result);
         if (errCode < 0)
         {
-            System_printf ("Error: DPM execution failed [Error code %d]\n", errCode);
+            System_printf("Error: DPM execution failed [Error code %d]\n", errCode);
         }
     }
 }
@@ -3375,13 +3218,13 @@ static void mmwDemo_mssDPMTask(UArg arg0, UArg arg1)
  */
 int32_t MmwDemo_mssSetHsiClk(void)
 {
-    rlDevHsiClk_t                           hsiClkgs;
-    int32_t                                 retVal;
+    rlDevHsiClk_t hsiClkgs;
+    int32_t retVal;
 
     /*************************************************************************************
      * Setup the HSI Clock through the mmWave Link:
      *************************************************************************************/
-    memset ((void*)&hsiClkgs, 0, sizeof(rlDevHsiClk_t));
+    memset((void *)&hsiClkgs, 0, sizeof(rlDevHsiClk_t));
 
     /* Setup the HSI Clock as per the Radar Interface Document:
      * - This is set to 600Mhz DDR Mode */
@@ -3392,7 +3235,7 @@ int32_t MmwDemo_mssSetHsiClk(void)
     if (retVal != RL_RET_CODE_OK)
     {
         /* Error: Unable to set the HSI clock */
-        System_printf ("Error: Setting up the HSI Clock Failed [Error %d]\n", retVal);
+        System_printf("Error: Setting up the HSI Clock Failed [Error %d]\n", retVal);
         return -1;
     }
 
@@ -3411,7 +3254,7 @@ int32_t MmwDemo_mssSetHsiClk(void)
 /**
  *  @b Description
  *  @n
- *      mmw demo helper Function to do one time sensor initialization. 
+ *      mmw demo helper Function to do one time sensor initialization.
  *      User need to fill gMmwMssMCB.cfg.openCfg before calling this function
  *
  *  @param[in]  isFirstTimeOpen     If true then issues MMwave_open
@@ -3423,25 +3266,22 @@ int32_t MmwDemo_mssSetHsiClk(void)
  */
 int32_t MmwDemo_openSensor(bool isFirstTimeOpen)
 {
-    int32_t             errCode;
-    MMWave_ErrorLevel   errorLevel;
-    int16_t             mmWaveErrorCode;
-    int16_t             subsysErrorCode;
-    int32_t             retVal;
-    MMWave_CalibrationData     calibrationDataCfg;
-    MMWave_CalibrationData     *ptrCalibrationDataCfg;
+    int32_t errCode;
+    MMWave_ErrorLevel errorLevel;
+    int16_t mmWaveErrorCode;
+    int16_t subsysErrorCode;
+    int32_t retVal;
+    MMWave_CalibrationData calibrationDataCfg;
+    MMWave_CalibrationData *ptrCalibrationDataCfg;
 
     /*  Open mmWave module, this is only done once */
     if (isFirstTimeOpen == true)
     {
-        
-        System_printf ("Debug: Sending rlRfSetLdoBypassConfig with %d %d %d\n",
-                                            gRFLdoBypassCfg.ldoBypassEnable,
-                                            gRFLdoBypassCfg.supplyMonIrDrop,
-                                            gRFLdoBypassCfg.ioSupplyIndicator);
-        retVal = rlRfSetLdoBypassConfig(RL_DEVICE_MAP_INTERNAL_BSS, (rlRfLdoBypassCfg_t*)&gRFLdoBypassCfg);        
-        if(retVal != 0)
-        {            
+        System_printf("Debug: Sending rlRfSetLdoBypassConfig with %d %d %d\n", gRFLdoBypassCfg.ldoBypassEnable,
+                      gRFLdoBypassCfg.supplyMonIrDrop, gRFLdoBypassCfg.ioSupplyIndicator);
+        retVal = rlRfSetLdoBypassConfig(RL_DEVICE_MAP_INTERNAL_BSS, (rlRfLdoBypassCfg_t *)&gRFLdoBypassCfg);
+        if (retVal != 0)
+        {
             System_printf("Error: rlRfSetLdoBypassConfig retVal=%d\n", retVal);
             return -1;
         }
@@ -3453,32 +3293,31 @@ int32_t MmwDemo_openSensor(bool isFirstTimeOpen)
 
         /* start/stop async events */
         gMmwMssMCB.cfg.openCfg.disableFrameStartAsyncEvent = false;
-        gMmwMssMCB.cfg.openCfg.disableFrameStopAsyncEvent  = false;
+        gMmwMssMCB.cfg.openCfg.disableFrameStopAsyncEvent = false;
 
         /* No custom calibration: */
-        gMmwMssMCB.cfg.openCfg.useCustomCalibration        = false;
+        gMmwMssMCB.cfg.openCfg.useCustomCalibration = false;
         gMmwMssMCB.cfg.openCfg.customCalibrationEnableMask = 0x0;
 
         /* calibration monitoring base time unit
-         * setting it to one frame duration as the demo doesnt support any 
+         * setting it to one frame duration as the demo doesnt support any
          * monitoring related functionality
          */
-        gMmwMssMCB.cfg.openCfg.calibMonTimeUnit            = 1;
+        gMmwMssMCB.cfg.openCfg.calibMonTimeUnit = 1;
 
-        if( (gMmwMssMCB.calibCfg.saveEnable != 0) &&
-		(gMmwMssMCB.calibCfg.restoreEnable != 0) )
+        if ((gMmwMssMCB.calibCfg.saveEnable != 0) && (gMmwMssMCB.calibCfg.restoreEnable != 0))
         {
             /* Error: only one can be enabled at at time */
-            System_printf ("Error: MmwDemo failed with both save and restore enabled.\n");
+            System_printf("Error: MmwDemo failed with both save and restore enabled.\n");
             return -1;
-	    }
+        }
 
-        if(gMmwMssMCB.calibCfg.restoreEnable != 0)
+        if (gMmwMssMCB.calibCfg.restoreEnable != 0)
         {
-            if(MmwDemo_calibRestore(&gCalibDataStorage) < 0)
+            if (MmwDemo_calibRestore(&gCalibDataStorage) < 0)
             {
-	            System_printf ("Error: MmwDemo failed restoring calibration data from flash.\n");
-	            return -1;
+                System_printf("Error: MmwDemo failed restoring calibration data from flash.\n");
+                return -1;
             }
 
             /*  Boot calibration during restore: Disable calibration for:
@@ -3489,13 +3328,14 @@ int32_t MmwDemo_openSensor(bool isFirstTimeOpen)
 
                  The above calibration data will be restored from flash. Since they are calibrated in a control
                  way to avoid interfaerence and spec violations.
-                 In this demo, other bit fields(except the above) are enabled as indicated in customCalibrationEnableMask to perform boot time
-                 calibration. The boot time calibration will overwrite the restored calibration data from flash.
-                 However other bit fields can be disabled and calibration data can be restored from flash as well.
+                 In this demo, other bit fields(except the above) are enabled as indicated in
+               customCalibrationEnableMask to perform boot time calibration. The boot time calibration will overwrite
+               the restored calibration data from flash. However other bit fields can be disabled and calibration data
+               can be restored from flash as well.
 
                  Note: In this demo, calibration masks are enabled for all bit fields when "saving" the data.
             */
-            gMmwMssMCB.cfg.openCfg.useCustomCalibration        = true;
+            gMmwMssMCB.cfg.openCfg.useCustomCalibration = true;
             gMmwMssMCB.cfg.openCfg.customCalibrationEnableMask = 0x1F0U;
 
             calibrationDataCfg.ptrCalibData = &gCalibDataStorage.calibData;
@@ -3508,35 +3348,34 @@ int32_t MmwDemo_openSensor(bool isFirstTimeOpen)
         }
 
         /* Open the mmWave module: */
-        if (MMWave_open (gMmwMssMCB.ctrlHandle, &gMmwMssMCB.cfg.openCfg, ptrCalibrationDataCfg, &errCode) < 0)
+        if (MMWave_open(gMmwMssMCB.ctrlHandle, &gMmwMssMCB.cfg.openCfg, ptrCalibrationDataCfg, &errCode) < 0)
         {
             /* Error: decode and Report the error */
-            MMWave_decodeError (errCode, &errorLevel, &mmWaveErrorCode, &subsysErrorCode);
-            System_printf ("Error: mmWave Open failed [Error code: %d Subsystem: %d]\n",
-                            mmWaveErrorCode, subsysErrorCode);
+            MMWave_decodeError(errCode, &errorLevel, &mmWaveErrorCode, &subsysErrorCode);
+            System_printf("Error: mmWave Open failed [Error code: %d Subsystem: %d]\n", mmWaveErrorCode,
+                          subsysErrorCode);
             return -1;
         }
 
-	 /* Save calibration data in flash */
-	 if(gMmwMssMCB.calibCfg.saveEnable != 0)
+        /* Save calibration data in flash */
+        if (gMmwMssMCB.calibCfg.saveEnable != 0)
         {
-
             retVal = rlRfCalibDataStore(RL_DEVICE_MAP_INTERNAL_BSS, &gCalibDataStorage.calibData);
-            if(retVal != RL_RET_CODE_OK)
+            if (retVal != RL_RET_CODE_OK)
             {
                 /* Error: Calibration data restore failed */
-	         System_printf("MSS demo failed rlRfCalibDataStore with Error[%d]\n", retVal);
+                System_printf("MSS demo failed rlRfCalibDataStore with Error[%d]\n", retVal);
                 return -1;
             }
 
 #if (defined(SOC_XWR18XX) || defined(SOC_XWR68XX))
 
-        /* update txIndex in all chunks to get data from all Tx.
-           This should be done regardless of num TX channels enabled in MMWave_OpenCfg_t::chCfg or number of Tx
-           application is interested in. Data for all existing Tx channels should be retrieved
-           from RadarSS and in the order as shown below.
-           RadarSS will return non-zero phase shift values for all the channels enabled via
-           MMWave_OpenCfg_t::chCfg and zero phase shift values for channels disabled in MMWave_OpenCfg_t::chCfg */
+            /* update txIndex in all chunks to get data from all Tx.
+               This should be done regardless of num TX channels enabled in MMWave_OpenCfg_t::chCfg or number of Tx
+               application is interested in. Data for all existing Tx channels should be retrieved
+               from RadarSS and in the order as shown below.
+               RadarSS will return non-zero phase shift values for all the channels enabled via
+               MMWave_OpenCfg_t::chCfg and zero phase shift values for channels disabled in MMWave_OpenCfg_t::chCfg */
             gCalibDataStorage.phaseShiftCalibData.PhShiftcalibChunk[0].txIndex = 0;
             gCalibDataStorage.phaseShiftCalibData.PhShiftcalibChunk[1].txIndex = 1;
             gCalibDataStorage.phaseShiftCalibData.PhShiftcalibChunk[2].txIndex = 2;
@@ -3546,22 +3385,22 @@ int32_t MmwDemo_openSensor(bool isFirstTimeOpen)
             if (retVal != RL_RET_CODE_OK)
             {
                 /* Error: Phase shift Calibration data restore failed */
-	         System_printf("MSS demo failed rlRfPhShiftCalibDataStore with Error[%d]\n", retVal);
+                System_printf("MSS demo failed rlRfPhShiftCalibDataStore with Error[%d]\n", retVal);
                 return retVal;
             }
 #endif
             /* Save data in flash */
             retVal = MmwDemo_calibSave(&gMmwMssMCB.calibCfg.calibDataHdr, &gCalibDataStorage);
-            if(retVal < 0)
+            if (retVal < 0)
             {
                 return retVal;
             }
         }
 
         /*Set up HSI clock*/
-        if(MmwDemo_mssSetHsiClk() < 0)
+        if (MmwDemo_mssSetHsiClk() < 0)
         {
-            System_printf ("Error: MmwDemo_mssSetHsiClk failed.\n");
+            System_printf("Error: MmwDemo_mssSetHsiClk failed.\n");
             return -1;
         }
 
@@ -3584,26 +3423,25 @@ int32_t MmwDemo_openSensor(bool isFirstTimeOpen)
  */
 int32_t MmwDemo_configSensor(void)
 {
-    int32_t     errCode = 0;
+    int32_t errCode = 0;
 
     /* Prepare BPM configuration */
-    if(MmwDemo_bpmConfig() < 0)
+    if (MmwDemo_bpmConfig() < 0)
     {
-        System_printf ("Error: MMWDemoMSS mmWave BPM Configuration failed\n");
+        System_printf("Error: MMWDemoMSS mmWave BPM Configuration failed\n");
         return -1;
     }
 
     /* Configure the mmWave module: */
-    if (MMWave_config (gMmwMssMCB.ctrlHandle, &gMmwMssMCB.cfg.ctrlCfg, &errCode) < 0)
+    if (MMWave_config(gMmwMssMCB.ctrlHandle, &gMmwMssMCB.cfg.ctrlCfg, &errCode) < 0)
     {
-        MMWave_ErrorLevel   errorLevel;
-        int16_t             mmWaveErrorCode;
-        int16_t             subsysErrorCode;
+        MMWave_ErrorLevel errorLevel;
+        int16_t mmWaveErrorCode;
+        int16_t subsysErrorCode;
 
         /* Error: Report the error */
-        MMWave_decodeError (errCode, &errorLevel, &mmWaveErrorCode, &subsysErrorCode);
-        System_printf ("Error: mmWave Config failed [Error code: %d Subsystem: %d]\n",
-                        mmWaveErrorCode, subsysErrorCode);
+        MMWave_decodeError(errCode, &errorLevel, &mmWaveErrorCode, &subsysErrorCode);
+        System_printf("Error: mmWave Config failed [Error code: %d Subsystem: %d]\n", mmWaveErrorCode, subsysErrorCode);
     }
     else
     {
@@ -3625,11 +3463,11 @@ int32_t MmwDemo_configSensor(void)
  */
 int32_t MmwDemo_startSensor(void)
 {
-    int32_t     errCode;
-    MMWave_CalibrationCfg   calibrationCfg;
+    int32_t errCode;
+    MMWave_CalibrationCfg calibrationCfg;
 
-    memset(gts,0,100*sizeof(uint32_t));
-    gtsIdx=0;
+    memset(gts, 0, 100 * sizeof(uint32_t));
+    gtsIdx = 0;
     /*****************************************************************************
      * Data path :: start data path first - this will pend for DPC to ack
      *****************************************************************************/
@@ -3639,11 +3477,11 @@ int32_t MmwDemo_startSensor(void)
      * RF :: now start the RF and the real time ticking
      *****************************************************************************/
     /* Initialize the calibration configuration: */
-    memset ((void *)&calibrationCfg, 0, sizeof(MMWave_CalibrationCfg));
+    memset((void *)&calibrationCfg, 0, sizeof(MMWave_CalibrationCfg));
     /* Populate the calibration configuration: */
     calibrationCfg.dfeDataOutputMode = gMmwMssMCB.cfg.ctrlCfg.dfeDataOutputMode;
-    calibrationCfg.u.chirpCalibrationCfg.enableCalibration    = true;
-    calibrationCfg.u.chirpCalibrationCfg.enablePeriodicity    = true;
+    calibrationCfg.u.chirpCalibrationCfg.enableCalibration = true;
+    calibrationCfg.u.chirpCalibrationCfg.enablePeriodicity = true;
     calibrationCfg.u.chirpCalibrationCfg.periodicTimeInFrames = 10U;
 
     DebugP_log0("App: MMWave_start Issued\n");
@@ -3653,23 +3491,23 @@ int32_t MmwDemo_startSensor(void)
     /* Start the mmWave module: The configuration has been applied successfully. */
     if (MMWave_start(gMmwMssMCB.ctrlHandle, &calibrationCfg, &errCode) < 0)
     {
-        MMWave_ErrorLevel   errorLevel;
-        int16_t             mmWaveErrorCode;
-        int16_t             subsysErrorCode;
+        MMWave_ErrorLevel errorLevel;
+        int16_t mmWaveErrorCode;
+        int16_t subsysErrorCode;
 
         /* Error/Warning: Unable to start the mmWave module */
-        MMWave_decodeError (errCode, &errorLevel, &mmWaveErrorCode, &subsysErrorCode);
-        System_printf ("Error: mmWave Start failed [mmWave Error: %d Subsys: %d]\n", mmWaveErrorCode, subsysErrorCode);        
+        MMWave_decodeError(errCode, &errorLevel, &mmWaveErrorCode, &subsysErrorCode);
+        System_printf("Error: mmWave Start failed [mmWave Error: %d Subsys: %d]\n", mmWaveErrorCode, subsysErrorCode);
         /* datapath has already been moved to start state; so either we initiate a cleanup of start sequence or
-           assert here and re-start from the beginning. For now, choosing the latter path */ 
+           assert here and re-start from the beginning. For now, choosing the latter path */
         MmwDemo_debugAssert(0);
         return -1;
     }
 
     /*****************************************************************************
-     * The sensor has been started successfully. Switch on the LED 
+     * The sensor has been started successfully. Switch on the LED
      *****************************************************************************/
-    GPIO_write (gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 1U);
+    GPIO_write(gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 1U);
 
     gMmwMssMCB.sensorStartCount++;
     return 0;
@@ -3699,16 +3537,13 @@ static void MmwDemo_sensorStopEpilog(void)
 
 
     Task_stat(gMmwMssMCB.taskHandles.initTask, &stat);
-    System_printf("%20s %12d %12d %12d\n", "Init",
-                  stat.stackSize, stat.used, stat.stackSize - stat.used);
+    System_printf("%20s %12d %12d %12d\n", "Init", stat.stackSize, stat.used, stat.stackSize - stat.used);
 
     Task_stat(gMmwMssMCB.taskHandles.mmwaveCtrl, &stat);
-    System_printf("%20s %12d %12d %12d\n", "Mmwave Control",
-                  stat.stackSize, stat.used, stat.stackSize - stat.used);
+    System_printf("%20s %12d %12d %12d\n", "Mmwave Control", stat.stackSize, stat.used, stat.stackSize - stat.used);
 
     Task_stat(gMmwMssMCB.taskHandles.objDetDpmTask, &stat);
-    System_printf("%20s %12d %12d %12d\n", "ObjDet DPM",
-                  stat.stackSize, stat.used, stat.stackSize - stat.used);
+    System_printf("%20s %12d %12d %12d\n", "ObjDet DPM", stat.stackSize, stat.used, stat.stackSize - stat.used);
 
     System_printf("HWI Stack (same as System Stack) Usage ============\n");
     stackOverflow = Hwi_getStackInfo(&stackInfo, TRUE);
@@ -3720,8 +3555,7 @@ static void MmwDemo_sensorStopEpilog(void)
     else
     {
         System_printf("%20s %12s %12s %12s\n", " ", "Size", "Used", "Free");
-        System_printf("%20s %12d %12d %12d\n", " ",
-                      stackInfo.hwiStackSize, stackInfo.hwiStackPeak,
+        System_printf("%20s %12d %12d %12d\n", " ", stackInfo.hwiStackSize, stackInfo.hwiStackPeak,
                       stackInfo.hwiStackSize - stackInfo.hwiStackPeak);
     }
 }
@@ -3746,7 +3580,7 @@ void MmwDemo_stopSensor(void)
     Semaphore_pend(gMmwMssMCB.DPMstopSemHandle, BIOS_WAIT_FOREVER);
 
     /* Delete any active streaming session */
-    if(gMmwMssMCB.lvdsStream.hwSessionHandle != NULL)
+    if (gMmwMssMCB.lvdsStream.hwSessionHandle != NULL)
     {
         /* Evaluate need to deactivate h/w session:
          * One sub-frame case:
@@ -3762,8 +3596,7 @@ void MmwDemo_stopSensor(void)
          */
         if ((gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames == 1) ||
             ((gMmwMssMCB.objDetCommonCfg.preStartCommonCfg.numSubFrames > 1) &&
-             (gMmwMssMCB.subFrameCfg[0].lvdsStreamCfg.dataFmt != MMW_DEMO_LVDS_STREAM_CFG_DATAFMT_DISABLED))
-           )
+             (gMmwMssMCB.subFrameCfg[0].lvdsStreamCfg.dataFmt != MMW_DEMO_LVDS_STREAM_CFG_DATAFMT_DISABLED)))
         {
             if (CBUFF_deactivateSession(gMmwMssMCB.lvdsStream.hwSessionHandle, &errCode) < 0)
             {
@@ -3777,7 +3610,7 @@ void MmwDemo_stopSensor(void)
     /* Delete s/w session if it exists. S/w session never needs to be deactivated in stop because
      * it always (unconditionally) deactivates itself upon completion.
      */
-    if(gMmwMssMCB.lvdsStream.swSessionHandle != NULL)
+    if (gMmwMssMCB.lvdsStream.swSessionHandle != NULL)
     {
         MmwDemo_LVDSStreamDeleteSwSession();
     }
@@ -3786,13 +3619,13 @@ void MmwDemo_stopSensor(void)
     MmwDemo_sensorStopEpilog();
 
     /* The sensor has been stopped successfully. Switch off the LED */
-    GPIO_write (gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
+    GPIO_write(gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
 
     gMmwMssMCB.sensorStopCount++;
 
     /* print for user */
-    System_printf("Sensor has been stopped: startCount: %d stopCount %d\n",
-                  gMmwMssMCB.sensorStartCount,gMmwMssMCB.sensorStopCount);
+    System_printf("Sensor has been stopped: startCount: %d stopCount %d\n", gMmwMssMCB.sensorStartCount,
+                  gMmwMssMCB.sensorStopCount);
 }
 
 /**
@@ -3847,11 +3680,10 @@ static void MmwDemo_DPC_ObjectDetection_processInterFrameCallBackFxn(uint8_t sub
  */
 static void MmwDemo_platformInit(MmwDemo_platformCfg *config)
 {
-
     /* Setup the PINMUX to bring out the UART-1 */
-    Pinmux_Set_OverrideCtrl(SOC_XWR68XX_PINN5_PADBE, PINMUX_OUTEN_RETAIN_HW_CTRL, PINMUX_INPEN_RETAIN_HW_CTRL);    
+    Pinmux_Set_OverrideCtrl(SOC_XWR68XX_PINN5_PADBE, PINMUX_OUTEN_RETAIN_HW_CTRL, PINMUX_INPEN_RETAIN_HW_CTRL);
     Pinmux_Set_FuncSel(SOC_XWR68XX_PINN5_PADBE, SOC_XWR68XX_PINN5_PADBE_MSS_UARTA_TX);
-    Pinmux_Set_OverrideCtrl(SOC_XWR68XX_PINN4_PADBD, PINMUX_OUTEN_RETAIN_HW_CTRL, PINMUX_INPEN_RETAIN_HW_CTRL);    
+    Pinmux_Set_OverrideCtrl(SOC_XWR68XX_PINN4_PADBD, PINMUX_OUTEN_RETAIN_HW_CTRL, PINMUX_INPEN_RETAIN_HW_CTRL);
     Pinmux_Set_FuncSel(SOC_XWR68XX_PINN4_PADBD, SOC_XWR68XX_PINN4_PADBD_MSS_UARTA_RX);
 
     /* Setup the PINMUX to bring out the UART-3 */
@@ -3891,17 +3723,17 @@ static void MmwDemo_platformInit(MmwDemo_platformCfg *config)
      * Setup the GPIO:
      * - GPIO Output: Configure pin K13 as GPIO_2 output
      **********************************************************************/
-    config->SensorStatusGPIO    = SOC_XWR68XX_GPIO_2;
+    config->SensorStatusGPIO = SOC_XWR68XX_GPIO_2;
 
     /* Initialize the DEMO configuration: */
-    config->sysClockFrequency   = MSS_SYS_VCLK;
-    config->loggingBaudRate     = 921600;
-    config->commandBaudRate     = 115200;
+    config->sysClockFrequency = MSS_SYS_VCLK;
+    config->loggingBaudRate = 921600;
+    config->commandBaudRate = 115200;
 
     /**********************************************************************
      * Setup the DS3 LED on the EVM connected to GPIO_2
      **********************************************************************/
-    GPIO_setConfig (config->SensorStatusGPIO, GPIO_CFG_OUTPUT);
+    GPIO_setConfig(config->SensorStatusGPIO, GPIO_CFG_OUTPUT);
 }
 
 /**
@@ -3916,8 +3748,8 @@ static void MmwDemo_platformInit(MmwDemo_platformCfg *config)
  */
 static int32_t MmwDemo_calibInit(void)
 {
-    int32_t          retVal = 0;
-    rlVersion_t    verArgs;
+    int32_t retVal = 0;
+    rlVersion_t verArgs;
 
     /* Initialize verArgs */
     memset((void *)&verArgs, 0, sizeof(rlVersion_t));
@@ -3926,35 +3758,34 @@ static int32_t MmwDemo_calibInit(void)
     retVal = rlDeviceGetVersion(RL_DEVICE_MAP_INTERNAL_BSS, &verArgs);
     if (retVal < 0)
     {
-        System_printf ("Error: Unable to get the device version from mmWave link [Error %d]\n", retVal);
+        System_printf("Error: Unable to get the device version from mmWave link [Error %d]\n", retVal);
         return -1;
     }
 
     /* Calibration save/restore init */
     gMmwMssMCB.calibCfg.sizeOfCalibDataStorage = sizeof(MmwDemo_calibData);
     gMmwMssMCB.calibCfg.calibDataHdr.magic = MMWDEMO_CALIB_STORE_MAGIC;
-    memcpy((void *)& gMmwMssMCB.calibCfg.calibDataHdr.linkVer, (void *)&verArgs.mmWaveLink, sizeof(rlSwVersionParam_t));
-    memcpy((void *)& gMmwMssMCB.calibCfg.calibDataHdr.radarSSVer, (void *)&verArgs.rf, sizeof(rlFwVersionParam_t));
+    memcpy((void *)&gMmwMssMCB.calibCfg.calibDataHdr.linkVer, (void *)&verArgs.mmWaveLink, sizeof(rlSwVersionParam_t));
+    memcpy((void *)&gMmwMssMCB.calibCfg.calibDataHdr.radarSSVer, (void *)&verArgs.rf, sizeof(rlFwVersionParam_t));
 
     /* Check if Calibration data is over the Reserved storage */
-    if(gMmwMssMCB.calibCfg.sizeOfCalibDataStorage   <= MMWDEMO_CALIB_FLASH_SIZE)
+    if (gMmwMssMCB.calibCfg.sizeOfCalibDataStorage <= MMWDEMO_CALIB_FLASH_SIZE)
     {
-	    gMmwMssMCB.calibCfg.calibDataHdr.hdrLen = sizeof(MmwDemo_calibDataHeader);
-	    gMmwMssMCB.calibCfg.calibDataHdr.dataLen= sizeof(MmwDemo_calibData) - sizeof(MmwDemo_calibDataHeader);
+        gMmwMssMCB.calibCfg.calibDataHdr.hdrLen = sizeof(MmwDemo_calibDataHeader);
+        gMmwMssMCB.calibCfg.calibDataHdr.dataLen = sizeof(MmwDemo_calibData) - sizeof(MmwDemo_calibDataHeader);
 
-           /* Resets calibration data */
-           memset((void *)&gCalibDataStorage, 0, sizeof(MmwDemo_calibData));
+        /* Resets calibration data */
+        memset((void *)&gCalibDataStorage, 0, sizeof(MmwDemo_calibData));
 
-	    retVal = mmwDemo_flashInit();
+        retVal = mmwDemo_flashInit();
     }
     else
     {
-        System_printf ("Error: Calibration data size is bigger than reserved size\n");
+        System_printf("Error: Calibration data size is bigger than reserved size\n");
         retVal = -1;
     }
 
     return retVal;
-
 }
 
 /**
@@ -3970,10 +3801,10 @@ static int32_t MmwDemo_calibInit(void)
  *  @retval
  *      Error   -   <0
  */
-static int32_t MmwDemo_calibSave(MmwDemo_calibDataHeader *ptrCalibDataHdr, MmwDemo_calibData  *ptrCalibrationData)
+static int32_t MmwDemo_calibSave(MmwDemo_calibDataHeader *ptrCalibDataHdr, MmwDemo_calibData *ptrCalibrationData)
 {
-    uint32_t				flashOffset;
-    int32_t 				retVal = 0;
+    uint32_t flashOffset;
+    int32_t retVal = 0;
 
     /* Calculate the read size in bytes */
     flashOffset = gMmwMssMCB.calibCfg.flashOffset;
@@ -3983,13 +3814,13 @@ static int32_t MmwDemo_calibSave(MmwDemo_calibDataHeader *ptrCalibDataHdr, MmwDe
 
     /* Flash calibration data */
     retVal = mmwDemo_flashWrite(flashOffset, (uint32_t *)ptrCalibrationData, sizeof(MmwDemo_calibData));
-    if(retVal < 0)
+    if (retVal < 0)
     {
         /* Flash Header failed */
-        System_printf ("Error: MmwDemo failed flashing calibration data with error[%d].\n", retVal);
+        System_printf("Error: MmwDemo failed flashing calibration data with error[%d].\n", retVal);
     }
 
-    return(retVal);
+    return (retVal);
 }
 
 /**
@@ -4004,11 +3835,11 @@ static int32_t MmwDemo_calibSave(MmwDemo_calibDataHeader *ptrCalibDataHdr, MmwDe
  *  @retval
  *      Error   -   <0
  */
-static int32_t MmwDemo_calibRestore(MmwDemo_calibData  *ptrCalibData)
+static int32_t MmwDemo_calibRestore(MmwDemo_calibData *ptrCalibData)
 {
-    MmwDemo_calibDataHeader    *pDataHdr;
-    int32_t 				retVal = 0;
-    uint32_t				flashOffset;
+    MmwDemo_calibDataHeader *pDataHdr;
+    int32_t retVal = 0;
+    uint32_t flashOffset;
 
     pDataHdr = &(ptrCalibData->calibDataHdr);
 
@@ -4016,20 +3847,20 @@ static int32_t MmwDemo_calibRestore(MmwDemo_calibData  *ptrCalibData)
     flashOffset = gMmwMssMCB.calibCfg.flashOffset;
 
     /* Read calibration data header */
-    if(mmwDemo_flashRead(flashOffset, (uint32_t *)pDataHdr, sizeof(MmwDemo_calibData) )< 0)
+    if (mmwDemo_flashRead(flashOffset, (uint32_t *)pDataHdr, sizeof(MmwDemo_calibData)) < 0)
     {
         /* Error: only one can be enable at at time */
-        System_printf ("Error: MmwDemo failed when reading calibration data from flash.\n");
+        System_printf("Error: MmwDemo failed when reading calibration data from flash.\n");
         return -1;
     }
 
     /* Validate data header */
-    if( (pDataHdr->magic != MMWDEMO_CALIB_STORE_MAGIC) ||
-         (pDataHdr->hdrLen != gMmwMssMCB.calibCfg.calibDataHdr.hdrLen) ||
-         (pDataHdr->dataLen != gMmwMssMCB.calibCfg.calibDataHdr.dataLen) )
+    if ((pDataHdr->magic != MMWDEMO_CALIB_STORE_MAGIC) ||
+        (pDataHdr->hdrLen != gMmwMssMCB.calibCfg.calibDataHdr.hdrLen) ||
+        (pDataHdr->dataLen != gMmwMssMCB.calibCfg.calibDataHdr.dataLen))
     {
         /* Header validation failed */
-        System_printf ("Error: MmwDemo calibration data header validation failed.\n");
+        System_printf("Error: MmwDemo calibration data header validation failed.\n");
         retVal = -1;
     }
     /* Matching mmwLink version:
@@ -4037,17 +3868,19 @@ static int32_t MmwDemo_calibRestore(MmwDemo_calibData  *ptrCalibData)
          However, this logic can be changed to use data saved from previous mmwLink and FW releases,
          as long as the data format of the calibration data matches.
      */
-    else if(memcmp((void *)&pDataHdr->linkVer, (void *)&gMmwMssMCB.calibCfg.calibDataHdr.linkVer, sizeof(rlSwVersionParam_t)) != 0)
+    else if (memcmp((void *)&pDataHdr->linkVer, (void *)&gMmwMssMCB.calibCfg.calibDataHdr.linkVer,
+                    sizeof(rlSwVersionParam_t)) != 0)
     {
-        System_printf ("Error: MmwDemo failed mmwLink version validation when restoring calibration data.\n");
+        System_printf("Error: MmwDemo failed mmwLink version validation when restoring calibration data.\n");
         retVal = -1;
     }
-    else if(memcmp((void *)&pDataHdr->radarSSVer, (void *)&gMmwMssMCB.calibCfg.calibDataHdr.radarSSVer, sizeof(rlFwVersionParam_t)) != 0)
+    else if (memcmp((void *)&pDataHdr->radarSSVer, (void *)&gMmwMssMCB.calibCfg.calibDataHdr.radarSSVer,
+                    sizeof(rlFwVersionParam_t)) != 0)
     {
-        System_printf ("Error: MmwDemo failed RF FW version validation when restoring calibration data.\n");
+        System_printf("Error: MmwDemo failed RF FW version validation when restoring calibration data.\n");
         retVal = -1;
     }
-    return(retVal);
+    return (retVal);
 }
 /**
  *  @b Description
@@ -4060,14 +3893,14 @@ static int32_t MmwDemo_calibRestore(MmwDemo_calibData  *ptrCalibData)
  */
 static void MmwDemo_initTask(UArg arg0, UArg arg1)
 {
-    int32_t             errCode;
-    MMWave_InitCfg      initCfg;
-    UART_Params         uartParams;
-    Task_Params         taskParams;
-    Semaphore_Params    semParams;
-    DPM_InitCfg         dpmInitCfg;
+    int32_t errCode;
+    MMWave_InitCfg initCfg;
+    UART_Params uartParams;
+    Task_Params taskParams;
+    Semaphore_Params semParams;
+    DPM_InitCfg dpmInitCfg;
     DPC_ObjectDetectionRangeHWA_InitParams objDetInitParams;
-    int32_t             i;
+    int32_t i;
 
     /* Debug Message: */
     System_printf("Debug: Launched the Initialization Task\n");
@@ -4085,18 +3918,18 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     Mailbox_init(MAILBOX_TYPE_MSS);
 
     /* Initialize LVDS streaming components */
-    if ((errCode = MmwDemo_LVDSStreamInit()) < 0 )
+    if ((errCode = MmwDemo_LVDSStreamInit()) < 0)
     {
-        System_printf ("Error: MMWDemoDSS LVDS stream init failed with Error[%d]\n",errCode);
+        System_printf("Error: MMWDemoDSS LVDS stream init failed with Error[%d]\n", errCode);
         return;
     }
 
     /* initialize cq configs to invalid profile index to be able to detect
      * unconfigured state of these when monitors for them are enabled.
      */
-    for(i = 0; i < RL_MAX_PROFILES_CNT; i++)
+    for (i = 0; i < RL_MAX_PROFILES_CNT; i++)
     {
-        gMmwMssMCB.cqSatMonCfg[i].profileIndx    = (RL_MAX_PROFILES_CNT + 1);
+        gMmwMssMCB.cqSatMonCfg[i].profileIndx = (RL_MAX_PROFILES_CNT + 1);
         gMmwMssMCB.cqSigImgMonCfg[i].profileIndx = (RL_MAX_PROFILES_CNT + 1);
     }
 
@@ -4109,14 +3942,14 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     /* Setup the default UART Parameters */
     UART_Params_init(&uartParams);
     uartParams.clockFrequency = gMmwMssMCB.cfg.platformCfg.sysClockFrequency;
-    uartParams.baudRate       = gMmwMssMCB.cfg.platformCfg.commandBaudRate;
-    uartParams.isPinMuxDone   = 1;
+    uartParams.baudRate = gMmwMssMCB.cfg.platformCfg.commandBaudRate;
+    uartParams.isPinMuxDone = 1;
 
     /* Open the UART Instance */
     gMmwMssMCB.commandUartHandle = UART_open(0, &uartParams);
     if (gMmwMssMCB.commandUartHandle == NULL)
     {
-        MmwDemo_debugAssert (0);
+        MmwDemo_debugAssert(0);
         return;
     }
 
@@ -4125,15 +3958,15 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     uartParams.writeDataMode = UART_DATA_BINARY;
     uartParams.readDataMode = UART_DATA_BINARY;
     uartParams.clockFrequency = gMmwMssMCB.cfg.platformCfg.sysClockFrequency;
-    uartParams.baudRate       = gMmwMssMCB.cfg.platformCfg.loggingBaudRate;
-    uartParams.isPinMuxDone   = 1U;
+    uartParams.baudRate = gMmwMssMCB.cfg.platformCfg.loggingBaudRate;
+    uartParams.isPinMuxDone = 1U;
 
     /* Open the Logging UART Instance: */
     gMmwMssMCB.loggingUartHandle = UART_open(1, &uartParams);
     if (gMmwMssMCB.loggingUartHandle == NULL)
     {
         System_printf("Error: Unable to open the Logging UART Instance\n");
-        MmwDemo_debugAssert (0);
+        MmwDemo_debugAssert(0);
         return;
     }
 
@@ -4141,10 +3974,10 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      * to the sensor management task. The signalling (Semaphore_post) will be done
      * from DPM registered report function (which will execute in the DPM execute task context). */
     Semaphore_Params_init(&semParams);
-    semParams.mode              = Semaphore_Mode_BINARY;
-    gMmwMssMCB.DPMstartSemHandle   = Semaphore_create(0, &semParams, NULL);
-    gMmwMssMCB.DPMstopSemHandle   = Semaphore_create(0, &semParams, NULL);
-    gMmwMssMCB.DPMioctlSemHandle   = Semaphore_create(0, &semParams, NULL);
+    semParams.mode = Semaphore_Mode_BINARY;
+    gMmwMssMCB.DPMstartSemHandle = Semaphore_create(0, &semParams, NULL);
+    gMmwMssMCB.DPMstopSemHandle = Semaphore_create(0, &semParams, NULL);
+    gMmwMssMCB.DPMioctlSemHandle = Semaphore_create(0, &semParams, NULL);
 
     /* Open EDMA driver */
     MmwDemo_edmaInit(&gMmwMssMCB.dataPathObj, DPC_OBJDET_R4F_EDMA_INSTANCE);
@@ -4160,38 +3993,38 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      *****************************************************************************/
 
     /* Initialize the mmWave control init configuration */
-    memset ((void*)&initCfg, 0 , sizeof(MMWave_InitCfg));
+    memset((void *)&initCfg, 0, sizeof(MMWave_InitCfg));
 
     /* Populate the init configuration: */
-    initCfg.domain                  = MMWave_Domain_MSS;
-    initCfg.socHandle               = gMmwMssMCB.socHandle;
-    initCfg.eventFxn                = MmwDemo_eventCallbackFxn;
+    initCfg.domain = MMWave_Domain_MSS;
+    initCfg.socHandle = gMmwMssMCB.socHandle;
+    initCfg.eventFxn = MmwDemo_eventCallbackFxn;
     initCfg.linkCRCCfg.useCRCDriver = 1U;
-    initCfg.linkCRCCfg.crcChannel   = CRC_Channel_CH1;
-    initCfg.cfgMode                 = MMWave_ConfigurationMode_FULL;
-    initCfg.executionMode           = MMWave_ExecutionMode_ISOLATION;
+    initCfg.linkCRCCfg.crcChannel = CRC_Channel_CH1;
+    initCfg.cfgMode = MMWave_ConfigurationMode_FULL;
+    initCfg.executionMode = MMWave_ExecutionMode_ISOLATION;
 
     /* Initialize and setup the mmWave Control module */
-    gMmwMssMCB.ctrlHandle = MMWave_init (&initCfg, &errCode);
+    gMmwMssMCB.ctrlHandle = MMWave_init(&initCfg, &errCode);
     if (gMmwMssMCB.ctrlHandle == NULL)
     {
         /* Error: Unable to initialize the mmWave control module */
-        System_printf ("Error: mmWave Control Initialization failed [Error code %d]\n", errCode);
-        MmwDemo_debugAssert (0);
+        System_printf("Error: mmWave Control Initialization failed [Error code %d]\n", errCode);
+        MmwDemo_debugAssert(0);
         return;
     }
-    System_printf ("Debug: mmWave Control Initialization was successful\n");
+    System_printf("Debug: mmWave Control Initialization was successful\n");
 
     /* Synchronization: This will synchronize the execution of the control module
      * between the domains. This is a prerequiste and always needs to be invoked. */
-    if (MMWave_sync (gMmwMssMCB.ctrlHandle, &errCode) < 0)
+    if (MMWave_sync(gMmwMssMCB.ctrlHandle, &errCode) < 0)
     {
         /* Error: Unable to synchronize the mmWave control module */
-        System_printf ("Error: mmWave Control Synchronization failed [Error code %d]\n", errCode);
-        MmwDemo_debugAssert (0);
+        System_printf("Error: mmWave Control Synchronization failed [Error code %d]\n", errCode);
+        MmwDemo_debugAssert(0);
         return;
     }
-    System_printf ("Debug: mmWave Control Synchronization was successful\n");
+    System_printf("Debug: mmWave Control Synchronization was successful\n");
 
     /*****************************************************************************
      * Launch the mmWave control execution task
@@ -4199,14 +4032,14 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      *   mmWave control API
      *****************************************************************************/
     Task_Params_init(&taskParams);
-    taskParams.priority  = MMWDEMO_MMWAVE_CTRL_TASK_PRIORITY;
-    taskParams.stackSize = 3*1024;
+    taskParams.priority = MMWDEMO_MMWAVE_CTRL_TASK_PRIORITY;
+    taskParams.stackSize = 3 * 1024;
     gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_mmWaveCtrlTask, &taskParams, NULL);
 
     /*****************************************************************************
      * Initialization of the DPM Module:
      *****************************************************************************/
-    memset ((void *)&objDetInitParams, 0, sizeof(DPC_ObjectDetectionRangeHWA_InitParams));
+    memset((void *)&objDetInitParams, 0, sizeof(DPC_ObjectDetectionRangeHWA_InitParams));
 
     /* Note this must be after MmwDemo_dataPathOpen() above which opens the hwa */
     objDetInitParams.L3ramCfg.addr = (void *)&gMmwL3[0];
@@ -4224,21 +4057,22 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
         MmwDemo_DPC_ObjectDetection_processFrameBeginCallBackFxn;
 
     /* Setup the configuration: */
-    memset ((void *)&dpmInitCfg, 0, sizeof(DPM_InitCfg));
-    dpmInitCfg.socHandle        = gMmwMssMCB.socHandle;
-    dpmInitCfg.ptrProcChainCfg  = &gDPC_ObjDetRangeHWACfg;;
-    dpmInitCfg.instanceId       = DPC_OBJDET_R4F_INSTANCEID;
-    dpmInitCfg.domain           = DPM_Domain_DISTRIBUTED;
-    dpmInitCfg.reportFxn        = MmwDemo_DPC_ObjectDetection_reportFxn;
-    dpmInitCfg.arg              = &objDetInitParams;
-    dpmInitCfg.argSize          = sizeof(DPC_ObjectDetectionRangeHWA_InitParams);
+    memset((void *)&dpmInitCfg, 0, sizeof(DPM_InitCfg));
+    dpmInitCfg.socHandle = gMmwMssMCB.socHandle;
+    dpmInitCfg.ptrProcChainCfg = &gDPC_ObjDetRangeHWACfg;
+    ;
+    dpmInitCfg.instanceId = DPC_OBJDET_R4F_INSTANCEID;
+    dpmInitCfg.domain = DPM_Domain_DISTRIBUTED;
+    dpmInitCfg.reportFxn = MmwDemo_DPC_ObjectDetection_reportFxn;
+    dpmInitCfg.arg = &objDetInitParams;
+    dpmInitCfg.argSize = sizeof(DPC_ObjectDetectionRangeHWA_InitParams);
 
     /* Initialize the DPM Module: */
-    gMmwMssMCB.objDetDpmHandle = DPM_init (&dpmInitCfg, &errCode);
+    gMmwMssMCB.objDetDpmHandle = DPM_init(&dpmInitCfg, &errCode);
     if (gMmwMssMCB.objDetDpmHandle == NULL)
     {
-        System_printf ("Error: Unable to initialize the DPM Module [Error: %d]\n", errCode);
-        MmwDemo_debugAssert (0);
+        System_printf("Error: Unable to initialize the DPM Module [Error: %d]\n", errCode);
+        MmwDemo_debugAssert(0);
         return;
     }
 
@@ -4249,12 +4083,12 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
         int32_t syncStatus;
 
         /* Get the synchronization status: */
-        syncStatus = DPM_synch (gMmwMssMCB.objDetDpmHandle, &errCode);
+        syncStatus = DPM_synch(gMmwMssMCB.objDetDpmHandle, &errCode);
         if (syncStatus < 0)
         {
             /* Error: Unable to synchronize the framework */
-            System_printf ("Error: DPM Synchronization failed [Error code %d]\n", errCode);
-            MmwDemo_debugAssert (0);
+            System_printf("Error: DPM Synchronization failed [Error code %d]\n", errCode);
+            MmwDemo_debugAssert(0);
             return;
         }
         if (syncStatus == 1)
@@ -4268,15 +4102,15 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
 
     /* Launch the DPM Task */
     Task_Params_init(&taskParams);
-    taskParams.priority  = MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY;
-    taskParams.stackSize = 4*1024;
+    taskParams.priority = MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY;
+    taskParams.stackSize = 4 * 1024;
     gMmwMssMCB.taskHandles.objDetDpmTask = Task_create(mmwDemo_mssDPMTask, &taskParams, NULL);
 
     /* Calibration save/restore initialization */
-    if(MmwDemo_calibInit()<0)
+    if (MmwDemo_calibInit() < 0)
     {
         System_printf("Error: Calibration data initialization failed \n");
-        MmwDemo_debugAssert (0);
+        MmwDemo_debugAssert(0);
     }
 
     /*****************************************************************************
@@ -4338,154 +4172,144 @@ void MmwDemo_sleep(void)
  *
  *  @retval  None
  */
-void idle_power_cycle(IdleModeCfg   idleModeCfg)
+void idle_power_cycle(IdleModeCfg idleModeCfg)
 {
-    int32_t             errCode;
-    rlReturnVal_t             retVal;
-    rlPowerSaveModeCfg_t        data_rf_down;
-    rlPowerSaveModeCfg_t        data_rf_up;
-    rlPowerSaveModeCfg_t        data_apll_down;
-    rlPowerSaveModeCfg_t        data_apll_up;
+    int32_t errCode;
+    rlReturnVal_t retVal;
+    rlPowerSaveModeCfg_t data_rf_down;
+    rlPowerSaveModeCfg_t data_rf_up;
+    rlPowerSaveModeCfg_t data_apll_down;
+    rlPowerSaveModeCfg_t data_apll_up;
 
-    //Enable DSP Shutdown
+    // Enable DSP Shutdown
     int8_t enDSPpowerdown = idleModeCfg.enDSPpowerdown;
-    //Enable DSS Clock Gate (No Shutdown)
+    // Enable DSS Clock Gate (No Shutdown)
     int8_t enDSSclkgate = idleModeCfg.enDSSclkgate;
-    //Enable switching of MSS VCLK
+    // Enable switching of MSS VCLK
     int8_t enMSSvclkgate = idleModeCfg.enMSSvclkgate;
-    //Enable BSS Clock Gate
+    // Enable BSS Clock Gate
     int8_t enBSSclkgate = idleModeCfg.enBSSclkgate;
-    //Enable Power switching of RF
+    // Enable Power switching of RF
     int8_t enRFpowerdown = idleModeCfg.enRFpowerdown;
-    //Enable Power switching of APLL
+    // Enable Power switching of APLL
     int8_t enAPLLpowerdown = idleModeCfg.enAPLLpowerdown;
-    //Enable Power switching of APLL
+    // Enable Power switching of APLL
     int8_t enAPLLGPADCpowerdown = idleModeCfg.enAPLLGPADCpowerdown;
 
-       //OPTIONAL: Delay between successive
-       // in microseconds. (Recommended is 0)
+    // OPTIONAL: Delay between successive
+    //  in microseconds. (Recommended is 0)
     uint32_t ttime = idleModeCfg.idleModeMicroDelay;
 
-       //OPTIONAL: Delay after power down sequence
-       // in microseconds. (Recommended is 1000000)
+    // OPTIONAL: Delay after power down sequence
+    //  in microseconds. (Recommended is 1000000)
     uint32_t offtime = idleModeCfg.idleModeMicroDelay;
 
 
-    if(enMSSvclkgate||enAPLLpowerdown||enAPLLGPADCpowerdown)
+    if (enMSSvclkgate || enAPLLpowerdown || enAPLLGPADCpowerdown)
     {
-        //MSSvclkgate and APLLpowerdown components slow
-        //system clock from 200 MHz to 40 MHz, so adjusting delays
-        //by a factor of 5
+        // MSSvclkgate and APLLpowerdown components slow
+        // system clock from 200 MHz to 40 MHz, so adjusting delays
+        // by a factor of 5
         ttime /= 5;
-        offtime /=5;
+        offtime /= 5;
     }
 
-       gMmwMssMCB.sensorState = MmwDemo_SensorState_INIT;
-       MMWave_close(gMmwMssMCB.ctrlHandle,&errCode);
+    gMmwMssMCB.sensorState = MmwDemo_SensorState_INIT;
+    MMWave_close(gMmwMssMCB.ctrlHandle, &errCode);
 
-       // The sensor has been stopped successfully. Switch off the LED
-           GPIO_write (gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
-
-
-     //BEGIN POWER DOWN SEQUENCE
+    // The sensor has been stopped successfully. Switch off the LED
+    GPIO_write(gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
 
 
-       /* The sensor has been stopped successfully. Switch off the LED */
-           GPIO_write (gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
+    // BEGIN POWER DOWN SEQUENCE
 
-       //DSP Powered Off (There is no power on)
-      if(enDSPpowerdown == 1)
-      {
+
+    /* The sensor has been stopped successfully. Switch off the LED */
+    GPIO_write(gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
+
+    // DSP Powered Off (There is no power on)
+    if (enDSPpowerdown == 1)
+    {
         xWR6843_dss_power_down();
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-      }
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
+    }
 
-      //DSS Clock Gate
-      if(enDSSclkgate == 1)
-      {
-          xWR6843_dss_clock_gate();
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-      }
+    // DSS Clock Gate
+    if (enDSSclkgate == 1)
+    {
+        xWR6843_dss_clock_gate();
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
+    }
 
-      // MSS VCLK slowed to 40 MHz
-      if(enMSSvclkgate == 1)
-      {
+    // MSS VCLK slowed to 40 MHz
+    if (enMSSvclkgate == 1)
+    {
         xWR6843_mss_vclk_40M();
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-      }
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
+    }
 
-      //RF Analog Power Down
-     if(enRFpowerdown == 1)
-     {
-
-
-         data_rf_down.lowPwrStateTransCmd = 1;
-         retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_rf_down);
-         if (retVal != 0)
-         {
-             System_printf("RF Off Failed Err: %d\n", retVal);
-
-         }
+    // RF Analog Power Down
+    if (enRFpowerdown == 1)
+    {
+        data_rf_down.lowPwrStateTransCmd = 1;
+        retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_rf_down);
+        if (retVal != 0)
+        {
+            System_printf("RF Off Failed Err: %d\n", retVal);
+        }
 
 
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
+    }
 
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-     }
-
-    //APLL + GPADC Power Down
-    if(enAPLLGPADCpowerdown == 1)
+    // APLL + GPADC Power Down
+    if (enAPLLGPADCpowerdown == 1)
     {
         data_apll_down.lowPwrStateTransCmd = 5;
         retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_apll_down);
-       if (retVal != 0)
+        if (retVal != 0)
         {
             System_printf("APLL + GPADC Off Failed Err: %d\n", retVal);
-
         }
 
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
-    //APLL Power Down
-    else if(enAPLLpowerdown == 1)
+    // APLL Power Down
+    else if (enAPLLpowerdown == 1)
     {
+        data_apll_down.lowPwrStateTransCmd = 3;
+        retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_apll_down);
+        if (retVal != 0)
+        {
+            System_printf("APLL Off Failed Err: %d\n", retVal);
+        }
 
-            data_apll_down.lowPwrStateTransCmd = 3;
-            retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_apll_down);
-           if (retVal != 0)
-            {
-                System_printf("APLL Off Failed Err: %d\n", retVal);
-
-            }
-
-            SOC_microDelay(ttime); //delay function (default 0 microsecond)
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
 
 
-    //BSS Clock gate
+    // BSS Clock gate
     //(Performed last because RF/APLL functions require BSS Clock)
-    if(enBSSclkgate== 1)
+    if (enBSSclkgate == 1)
     {
-    SOC_haltBSS(gMmwMssMCB.socHandle, &errCode);
+        SOC_haltBSS(gMmwMssMCB.socHandle, &errCode);
     }
-
 
 
     // Optional delay
     SOC_microDelay(offtime);
 
 
+    // BEGIN POWER UP SEQUENCE
+    // BSS Clock Ungate
 
-    //BEGIN POWER UP SEQUENCE
-    //BSS Clock Ungate
-
-    if(enBSSclkgate== 1)
+    if (enBSSclkgate == 1)
     {
-    SOC_unhaltBSS(gMmwMssMCB.socHandle, &errCode);
+        SOC_unhaltBSS(gMmwMssMCB.socHandle, &errCode);
     }
 
-    //APLL + GPADC Power Down
-    if(enAPLLGPADCpowerdown == 1)
+    // APLL + GPADC Power Down
+    if (enAPLLGPADCpowerdown == 1)
     {
         data_apll_up.lowPwrStateTransCmd = 6;
         retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_apll_up);
@@ -4494,12 +4318,11 @@ void idle_power_cycle(IdleModeCfg   idleModeCfg)
             System_printf("APLL ON Failed Err: %d\n", retVal);
         }
 
-      SOC_microDelay(ttime); //delay function (default 0 microsecond)
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
-    //APLL Power Up
-    else if(enAPLLpowerdown == 1)
+    // APLL Power Up
+    else if (enAPLLpowerdown == 1)
     {
-
         data_apll_up.lowPwrStateTransCmd = 4;
         retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_apll_up);
         if (retVal != 0)
@@ -4507,47 +4330,43 @@ void idle_power_cycle(IdleModeCfg   idleModeCfg)
             System_printf("APLL ON Failed Err: %d\n", retVal);
         }
 
-      SOC_microDelay(ttime); //delay function (default 0 microsecond)
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
 
-    //RF Analog Power Up
-    if(enRFpowerdown == 1)
+    // RF Analog Power Up
+    if (enRFpowerdown == 1)
     {
+        data_rf_up.lowPwrStateTransCmd = 2;
+        retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_rf_up);
+        if (retVal != 0)
+        {
+            System_printf("RF On Failed Err: %d\n", retVal);
+        }
 
-     data_rf_up.lowPwrStateTransCmd = 2;
-     retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_rf_up);
-      if (retVal != 0)
-      {
-          System_printf("RF On Failed Err: %d\n", retVal);
-      }
-
-      SOC_microDelay(ttime); //delay function (default 0 microsecond)
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
 
-    //MSS VCLK sped up to 200 MHz
-    if(enMSSvclkgate == 1)
+    // MSS VCLK sped up to 200 MHz
+    if (enMSSvclkgate == 1)
     {
         xWR6843_mss_vclk_200M();
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
 
-    //DSS Clock Ungate
-    if(enDSSclkgate == 1)
+    // DSS Clock Ungate
+    if (enDSSclkgate == 1)
     {
         xWR6843_dss_clock_ungate();
-      SOC_microDelay(ttime); //delay function (default 0 microsecond)
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
 
 
+    // END POWER UP SEQUENCE
 
-    //END POWER UP SEQUENCE
 
-
-    //Turn LED back on
-        GPIO_write (gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 1U);
-
+    // Turn LED back on
+    GPIO_write(gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 1U);
 }
-
 
 
 /**
@@ -4573,145 +4392,135 @@ void idle_power_cycle(IdleModeCfg   idleModeCfg)
  *
  *  @retval  None
  */
-void idle_power_down(IdleModeCfg   idleModeCfg)
+void idle_power_down(IdleModeCfg idleModeCfg)
 {
-    int32_t             errCode;
-    rlReturnVal_t             retVal;
-    rlPowerSaveModeCfg_t        data_rf_down;
-    rlPowerSaveModeCfg_t        data_apll_down;
+    int32_t errCode;
+    rlReturnVal_t retVal;
+    rlPowerSaveModeCfg_t data_rf_down;
+    rlPowerSaveModeCfg_t data_apll_down;
 
-    //Enable DSP Shutdown
+    // Enable DSP Shutdown
     int8_t enDSPpowerdown = idleModeCfg.enDSPpowerdown;
-    //Enable DSS Clock Gate (No Shutdown)
+    // Enable DSS Clock Gate (No Shutdown)
     int8_t enDSSclkgate = idleModeCfg.enDSSclkgate;
-    //Enable switching of MSS VCLK
+    // Enable switching of MSS VCLK
     int8_t enMSSvclkgate = idleModeCfg.enMSSvclkgate;
-    //Enable BSS Clock Gate
+    // Enable BSS Clock Gate
     int8_t enBSSclkgate = idleModeCfg.enBSSclkgate;
-    //Enable Power switching of RF
+    // Enable Power switching of RF
     int8_t enRFpowerdown = idleModeCfg.enRFpowerdown;
-    //Enable Power switching of APLL
+    // Enable Power switching of APLL
     int8_t enAPLLpowerdown = idleModeCfg.enAPLLpowerdown;
-    //Enable Power switching of APLL
+    // Enable Power switching of APLL
     int8_t enAPLLGPADCpowerdown = idleModeCfg.enAPLLGPADCpowerdown;
 
-       //OPTIONAL: Delay between successive
-       // in microseconds. (Recommended is 0)
+    // OPTIONAL: Delay between successive
+    //  in microseconds. (Recommended is 0)
     uint32_t ttime = idleModeCfg.idleModeMicroDelay;
 
-       //OPTIONAL: Delay after power down sequence
-       // in microseconds. (Recommended is 1000000)
+    // OPTIONAL: Delay after power down sequence
+    //  in microseconds. (Recommended is 1000000)
     uint32_t offtime = idleModeCfg.idleModeMicroDelay;
 
 
-    if(enMSSvclkgate||enAPLLpowerdown||enAPLLGPADCpowerdown)
+    if (enMSSvclkgate || enAPLLpowerdown || enAPLLGPADCpowerdown)
     {
-        //MSSvclkgate and APLLpowerdown components slow
-        //system clock from 200 MHz to 40 MHz, so adjusting delays
-        //by a factor of 5
+        // MSSvclkgate and APLLpowerdown components slow
+        // system clock from 200 MHz to 40 MHz, so adjusting delays
+        // by a factor of 5
         ttime /= 5;
-        offtime /=5;
+        offtime /= 5;
     }
 
-       gMmwMssMCB.sensorState = MmwDemo_SensorState_INIT;
-       MMWave_close(gMmwMssMCB.ctrlHandle,&errCode);
+    gMmwMssMCB.sensorState = MmwDemo_SensorState_INIT;
+    MMWave_close(gMmwMssMCB.ctrlHandle, &errCode);
 
-       // The sensor has been stopped successfully. Switch off the LED
-           GPIO_write (gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
-
-
-     //BEGIN POWER DOWN SEQUENCE
+    // The sensor has been stopped successfully. Switch off the LED
+    GPIO_write(gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
 
 
-       /* The sensor has been stopped successfully. Switch off the LED */
-           GPIO_write (gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
+    // BEGIN POWER DOWN SEQUENCE
 
-       //DSP Powered Off (There is no power on)
-      if(enDSPpowerdown == 1)
-      {
+
+    /* The sensor has been stopped successfully. Switch off the LED */
+    GPIO_write(gMmwMssMCB.cfg.platformCfg.SensorStatusGPIO, 0U);
+
+    // DSP Powered Off (There is no power on)
+    if (enDSPpowerdown == 1)
+    {
         xWR6843_dss_power_down();
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-      }
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
+    }
 
-      //DSS Clock Gate
-      if(enDSSclkgate == 1)
-      {
-          xWR6843_dss_clock_gate();
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-      }
+    // DSS Clock Gate
+    if (enDSSclkgate == 1)
+    {
+        xWR6843_dss_clock_gate();
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
+    }
 
-      // MSS VCLK slowed to 40 MHz
-      if(enMSSvclkgate == 1)
-      {
+    // MSS VCLK slowed to 40 MHz
+    if (enMSSvclkgate == 1)
+    {
         xWR6843_mss_vclk_40M();
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-      }
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
+    }
 
-      //RF Analog Power Down
-     if(enRFpowerdown == 1)
-     {
-
-
-         data_rf_down.lowPwrStateTransCmd = 1;
-         retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_rf_down);
-         if (retVal != 0)
-         {
-             System_printf("RF Off Failed Err: %d\n", retVal);
-
-         }
+    // RF Analog Power Down
+    if (enRFpowerdown == 1)
+    {
+        data_rf_down.lowPwrStateTransCmd = 1;
+        retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_rf_down);
+        if (retVal != 0)
+        {
+            System_printf("RF Off Failed Err: %d\n", retVal);
+        }
 
 
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
+    }
 
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-     }
-
-    //APLL + GPADC Power Down
-    if(enAPLLGPADCpowerdown == 1)
+    // APLL + GPADC Power Down
+    if (enAPLLGPADCpowerdown == 1)
     {
         data_apll_down.lowPwrStateTransCmd = 5;
         retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_apll_down);
-       if (retVal != 0)
+        if (retVal != 0)
         {
             System_printf("APLL + GPADC Off Failed Err: %d\n", retVal);
-
         }
 
-        SOC_microDelay(ttime); //delay function (default 0 microsecond)
-
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
-    //APLL Power Down
-    else if(enAPLLpowerdown == 1)
+    // APLL Power Down
+    else if (enAPLLpowerdown == 1)
     {
+        data_apll_down.lowPwrStateTransCmd = 3;
+        retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_apll_down);
+        if (retVal != 0)
+        {
+            System_printf("APLL Off Failed Err: %d\n", retVal);
+        }
 
-            data_apll_down.lowPwrStateTransCmd = 3;
-            retVal = rlSetPowerSaveModeConfig(RL_DEVICE_INDEX_INTERNAL_DSS_MSS, &data_apll_down);
-           if (retVal != 0)
-            {
-                System_printf("APLL Off Failed Err: %d\n", retVal);
-
-            }
-
-            SOC_microDelay(ttime); //delay function (default 0 microsecond)
+        SOC_microDelay(ttime); // delay function (default 0 microsecond)
     }
 
 
-    //BSS Clock gate
+    // BSS Clock gate
     //(Performed last because RF/APLL functions require BSS Clock)
-    if(enBSSclkgate== 1)
+    if (enBSSclkgate == 1)
     {
-    SOC_haltBSS(gMmwMssMCB.socHandle, &errCode);
+        SOC_haltBSS(gMmwMssMCB.socHandle, &errCode);
     }
-
 
 
     // Optional delay
     SOC_microDelay(offtime);
 
 
-    //END OF POWER DOWN SEQUENCE
-    //WILL NOT POWER BACK ON
-    //UNLESS HARD RESET OF DEVICE
-
+    // END OF POWER DOWN SEQUENCE
+    // WILL NOT POWER BACK ON
+    // UNLESS HARD RESET OF DEVICE
 }
 #endif /* SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN */
 
@@ -4723,18 +4532,18 @@ void idle_power_down(IdleModeCfg   idleModeCfg)
  *  @retval
  *      Not Applicable.
  */
-int main (void)
+int main(void)
 {
-    Task_Params     taskParams;
-    int32_t         errCode;
-    SOC_Handle      socHandle;
-    SOC_Cfg         socCfg;
+    Task_Params taskParams;
+    int32_t errCode;
+    SOC_Handle socHandle;
+    SOC_Cfg socCfg;
 
     /* Initialize the ESM: Dont clear errors as TI RTOS does it */
     ESM_init(0U);
 
     /* Initialize the SOC confiugration: */
-    memset ((void *)&socCfg, 0, sizeof(SOC_Cfg));
+    memset((void *)&socCfg, 0, sizeof(SOC_Cfg));
 
     /* Populate the SOC configuration: */
     socCfg.clockCfg = SOC_SysClock_INIT;
@@ -4743,11 +4552,11 @@ int main (void)
 
     /* Initialize the SOC Module: This is done as soon as the application is started
      * to ensure that the MPU is correctly configured. */
-    socHandle = SOC_init (&socCfg, &errCode);
+    socHandle = SOC_init(&socCfg, &errCode);
     if (socHandle == NULL)
     {
-        System_printf ("Error: SOC Module Initialization failed [Error code %d]\n", errCode);
-        MmwDemo_debugAssert (0);
+        System_printf("Error: SOC Module Initialization failed [Error code %d]\n", errCode);
+        MmwDemo_debugAssert(0);
         return -1;
     }
 
@@ -4755,7 +4564,7 @@ int main (void)
     if (SOC_waitBSSPowerUp(socHandle, &errCode) < 0)
     {
         /* Debug Message: */
-        System_printf ("Debug: SOC_waitBSSPowerUp failed with Error [%d]\n", errCode);
+        System_printf("Debug: SOC_waitBSSPowerUp failed with Error [%d]\n", errCode);
         return 0;
     }
 
@@ -4763,21 +4572,19 @@ int main (void)
     if (SOC_isSecureDevice(socHandle, &errCode))
     {
         /* Disable firewall for JTAG and LOGGER (UART) which is needed by all unit tests */
-        SOC_controlSecureFirewall(socHandle, 
-                                  (uint32_t)(SOC_SECURE_FIREWALL_JTAG | SOC_SECURE_FIREWALL_LOGGER),
-                                  SOC_SECURE_FIREWALL_DISABLE,
-                                  &errCode);
+        SOC_controlSecureFirewall(socHandle, (uint32_t)(SOC_SECURE_FIREWALL_JTAG | SOC_SECURE_FIREWALL_LOGGER),
+                                  SOC_SECURE_FIREWALL_DISABLE, &errCode);
     }
 
     /* Initialize and populate the demo MCB */
-    memset ((void*)&gMmwMssMCB, 0, sizeof(MmwDemo_MSS_MCB));
+    memset((void *)&gMmwMssMCB, 0, sizeof(MmwDemo_MSS_MCB));
 
     gMmwMssMCB.socHandle = socHandle;
 
     /* Debug Message: */
-    System_printf ("**********************************************\n");
-    System_printf ("Debug: Launching the MMW Demo on MSS\n");
-    System_printf ("**********************************************\n");
+    System_printf("**********************************************\n");
+    System_printf("Debug: Launching the MMW Demo on MSS\n");
+    System_printf("**********************************************\n");
 
     /* Initialize the Task Parameters. */
     Task_Params_init(&taskParams);
@@ -4787,4 +4594,3 @@ int main (void)
     BIOS_start();
     return 0;
 }
-

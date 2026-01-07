@@ -21,90 +21,90 @@
  * Outputs full I/Q data for all range bins
  * Bandwidth: ~1040 bytes/frame at 256 bins
  */
-#define MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE  1
+#define MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE 1
 
 /**
  * Enable Target I/Q output (TLV 0x0510)
  * Outputs I/Q only for selected target bins
  * Bandwidth: ~40 bytes/frame for 4 bins
  */
-#define MMWDEMO_OUTPUT_TARGET_IQ_ENABLE          0  /* Phase 2 */
+#define MMWDEMO_OUTPUT_TARGET_IQ_ENABLE 0 /* Phase 2 */
 
 /**
  * Enable Phase output (TLV 0x0520)
  * Outputs computed phase + magnitude for target bins
  * Bandwidth: ~20 bytes/frame for 4 bins
  */
-#define MMWDEMO_OUTPUT_PHASE_ENABLE              0  /* Phase 2 */
+#define MMWDEMO_OUTPUT_PHASE_ENABLE 0 /* Phase 2 */
 
 /**
  * Enable Presence detection (TLV 0x0540)
  * Simple presence/absence flag
  * Bandwidth: ~8 bytes/frame
  */
-#define MMWDEMO_OUTPUT_PRESENCE_ENABLE           0  /* Phase 2 */
+#define MMWDEMO_OUTPUT_PRESENCE_ENABLE 0 /* Phase 2 */
 
 /**
  * Enable Motion detection (TLV 0x0550)
  * Motion status and magnitude
  * Bandwidth: ~12 bytes/frame
  */
-#define MMWDEMO_OUTPUT_MOTION_ENABLE             0  /* Phase 2 */
+#define MMWDEMO_OUTPUT_MOTION_ENABLE 0 /* Phase 2 */
 
 /**
  * Enable Target info output (TLV 0x0560)
  * Target selection metadata
  * Bandwidth: ~24 bytes/frame
  */
-#define MMWDEMO_OUTPUT_TARGET_INFO_ENABLE        0  /* Phase 2 */
+#define MMWDEMO_OUTPUT_TARGET_INFO_ENABLE 0 /* Phase 2 */
 
 /* ==========================================================================
  * Target Selection Configuration
  * ========================================================================== */
 
 /** Default minimum range for target search (meters) */
-#define TARGET_RANGE_MIN_DEFAULT     0.5f
+#define TARGET_RANGE_MIN_DEFAULT 0.5f
 
 /** Default maximum range for target search (meters) */
-#define TARGET_RANGE_MAX_DEFAULT     2.5f
+#define TARGET_RANGE_MAX_DEFAULT 2.5f
 
 /** Hysteresis threshold for target switching (dB) */
-#define TARGET_HYSTERESIS_DB         3.0f
+#define TARGET_HYSTERESIS_DB 3.0f
 
 /** Number of bins to track around primary target */
-#define TARGET_TRACK_BINS            4
+#define TARGET_TRACK_BINS 4
 
 /* ==========================================================================
  * Motion Detection Configuration
  * ========================================================================== */
 
 /** Default motion detection threshold (dB) */
-#define MOTION_THRESHOLD_DEFAULT     6.0f
+#define MOTION_THRESHOLD_DEFAULT 6.0f
 
 /** Number of frames to average for motion baseline */
-#define MOTION_BASELINE_FRAMES       10
+#define MOTION_BASELINE_FRAMES 10
 
 /* ==========================================================================
  * Power Management Configuration
  * ========================================================================== */
 
 /** Enable duty cycling (Phase 3) */
-#define POWER_MGMT_ENABLE            0
+#define POWER_MGMT_ENABLE 0
 
 /** Default active frames before sleep */
-#define POWER_ACTIVE_FRAMES          100
+#define POWER_ACTIVE_FRAMES 100
 
 /** Default sleep frames */
-#define POWER_SLEEP_FRAMES           100
+#define POWER_SLEEP_FRAMES 100
 
 /* ==========================================================================
  * Debug Configuration
  * ========================================================================== */
 
 /** Enable debug output via UART */
-#define DEBUG_OUTPUT_ENABLE          0
+#define DEBUG_OUTPUT_ENABLE 0
 
 /** Enable timing measurements */
-#define DEBUG_TIMING_ENABLE          0
+#define DEBUG_TIMING_ENABLE 0
 
 #endif /* CHIRP_FIRMWARE_CONFIG_H */

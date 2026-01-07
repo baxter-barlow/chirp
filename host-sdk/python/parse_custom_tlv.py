@@ -19,6 +19,7 @@ from typing import Optional, Sequence
 
 try:
     import numpy as np
+
     HAS_NUMPY = True
 except ImportError:
     HAS_NUMPY = False
@@ -26,6 +27,7 @@ except ImportError:
 
 try:
     import serial
+
     HAS_SERIAL = True
 except ImportError:
     HAS_SERIAL = False
@@ -77,6 +79,7 @@ HEADER_CANDIDATES = [
 # =============================================================================
 # Data Classes
 # =============================================================================
+
 
 @dataclass
 class FrameHeader:
@@ -363,7 +366,9 @@ class FrameReader:
         else:
             self.serial.close()
 
-    def read_frame(self, timeout: float = 1.0, iq_order: str = "reim") -> Optional[ParsedFrame]:
+    def read_frame(
+        self, timeout: float = 1.0, iq_order: str = "reim"
+    ) -> Optional[ParsedFrame]:
         start_time = time.time()
 
         while time.time() - start_time < timeout:
@@ -500,7 +505,9 @@ def dump_iq(frame: ParsedFrame, output_path: Path) -> Path:
     if base.suffix:
         base = base.with_suffix("")
 
-    out_path = base.with_name(f"{base.name}_frame{frame.header.frame_number:06d}{suffix}")
+    out_path = base.with_name(
+        f"{base.name}_frame{frame.header.frame_number:06d}{suffix}"
+    )
 
     if suffix.lower() == ".npz":
         _dump_iq_to_npz(out_path, fft)
@@ -591,7 +598,9 @@ def main() -> int:
     parser.add_argument("--filter", type=str, help="Filter TLV type (hex, e.g., 0x500)")
     parser.add_argument("--count", type=int, default=0, help="Number of frames to read")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
-    parser.add_argument("--quiet", "-q", action="store_true", help="Suppress unfiltered output")
+    parser.add_argument(
+        "--quiet", "-q", action="store_true", help="Suppress unfiltered output"
+    )
     parser.add_argument("--self-test", action="store_true", help="Run self-test")
     parser.add_argument("--dump", type=str, help="Dump complex I/Q to .csv or .npz")
     parser.add_argument(
@@ -608,7 +617,9 @@ def main() -> int:
 
     tlv_filter = None
     if args.filter:
-        tlv_filter = int(args.filter, 16) if args.filter.startswith("0x") else int(args.filter)
+        tlv_filter = (
+            int(args.filter, 16) if args.filter.startswith("0x") else int(args.filter)
+        )
 
     if args.file:
         source = args.file

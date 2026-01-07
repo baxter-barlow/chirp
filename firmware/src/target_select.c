@@ -7,6 +7,7 @@
  */
 
 #include "target_select.h"
+
 #include <string.h>
 
 /*******************************************************************************
@@ -16,10 +17,7 @@
 /**
  * @brief Find local maximum (peak) in range profile
  */
-static int32_t findPeak(const uint16_t *magnitude,
-                        uint16_t startBin,
-                        uint16_t endBin,
-                        uint16_t *peakBin,
+static int32_t findPeak(const uint16_t *magnitude, uint16_t startBin, uint16_t endBin, uint16_t *peakBin,
                         uint16_t *peakValue)
 {
     uint16_t i;
@@ -50,10 +48,7 @@ static int32_t findPeak(const uint16_t *magnitude,
  * @brief Calculate SNR in dB (approximate, using integer math)
  * Signal is peak, noise is average of surrounding bins
  */
-static uint8_t calculateSNR(const uint16_t *magnitude,
-                            uint16_t numBins,
-                            uint16_t peakBin,
-                            uint16_t peakValue)
+static uint8_t calculateSNR(const uint16_t *magnitude, uint16_t numBins, uint16_t peakBin, uint16_t peakValue)
 {
     uint32_t noiseSum = 0;
     uint32_t noiseCount = 0;
@@ -89,12 +84,18 @@ static uint8_t calculateSNR(const uint16_t *magnitude,
 
     /* Approximate dB: 10 log10(x) ≈ 3.3 * log2(x) */
     /* Simple approximation: count bits for log2 */
-    if (snrLinear >= 1000) return 30;
-    if (snrLinear >= 316)  return 25;
-    if (snrLinear >= 100)  return 20;
-    if (snrLinear >= 31)   return 15;
-    if (snrLinear >= 10)   return 10;
-    if (snrLinear >= 3)    return 5;
+    if (snrLinear >= 1000)
+        return 30;
+    if (snrLinear >= 316)
+        return 25;
+    if (snrLinear >= 100)
+        return 20;
+    if (snrLinear >= 31)
+        return 15;
+    if (snrLinear >= 10)
+        return 10;
+    if (snrLinear >= 3)
+        return 5;
 
     return 0;
 }
@@ -124,11 +125,8 @@ void Chirp_TargetSelect_init(Chirp_TargetConfig *config, Chirp_TargetState *stat
     }
 }
 
-int32_t Chirp_TargetSelect_configure(Chirp_TargetConfig *config,
-                                      float minRange,
-                                      float maxRange,
-                                      uint8_t minSNR,
-                                      uint8_t numBins)
+int32_t Chirp_TargetSelect_configure(Chirp_TargetConfig *config, float minRange, float maxRange, uint8_t minSNR,
+                                     uint8_t numBins)
 {
     if (config == NULL)
     {
@@ -153,12 +151,9 @@ int32_t Chirp_TargetSelect_configure(Chirp_TargetConfig *config,
     return 0;
 }
 
-int32_t Chirp_TargetSelect_process(const Chirp_TargetConfig *config,
-                                    Chirp_TargetState *state,
-                                    const uint16_t *rangeMagnitude,
-                                    uint16_t numBins,
-                                    float rangeResolution,
-                                    Chirp_TargetResult *result)
+int32_t Chirp_TargetSelect_process(const Chirp_TargetConfig *config, Chirp_TargetState *state,
+                                   const uint16_t *rangeMagnitude, uint16_t numBins, float rangeResolution,
+                                   Chirp_TargetResult *result)
 {
     uint16_t minBin, maxBin;
     uint16_t peakBin, peakValue;
@@ -184,8 +179,10 @@ int32_t Chirp_TargetSelect_process(const Chirp_TargetConfig *config,
     maxBin = Chirp_TargetSelect_rangeToBin(config->maxRange_m, rangeResolution);
 
     /* Clamp to valid range */
-    if (minBin >= numBins) minBin = 0;
-    if (maxBin >= numBins) maxBin = numBins - 1;
+    if (minBin >= numBins)
+        minBin = 0;
+    if (maxBin >= numBins)
+        maxBin = numBins - 1;
     if (minBin >= maxBin)
     {
         result->valid = 0;
@@ -209,8 +206,7 @@ int32_t Chirp_TargetSelect_process(const Chirp_TargetConfig *config,
     }
 
     /* Apply hysteresis - don't switch target if within hysteresis range */
-    if (state->locked &&
-        peakBin >= state->prevPrimaryBin - config->hysteresisBins &&
+    if (state->locked && peakBin >= state->prevPrimaryBin - config->hysteresisBins &&
         peakBin <= state->prevPrimaryBin + config->hysteresisBins)
     {
         /* Keep previous target if new peak is close */
@@ -251,8 +247,10 @@ int32_t Chirp_TargetSelect_process(const Chirp_TargetConfig *config,
     endTrack = startTrack + (int16_t)config->numTrackBins;
 
     /* Clamp to valid range */
-    if (startTrack < 0) startTrack = 0;
-    if (endTrack > (int16_t)numBins) endTrack = (int16_t)numBins;
+    if (startTrack < 0)
+        startTrack = 0;
+    if (endTrack > (int16_t)numBins)
+        endTrack = (int16_t)numBins;
 
     result->numTrackBinsUsed = 0;
     for (i = startTrack; i < endTrack && result->numTrackBinsUsed < CHIRP_TARGET_MAX_TRACK_BINS; i++)

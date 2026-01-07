@@ -7,6 +7,7 @@
  */
 
 #include "chirp.h"
+
 #include <string.h>
 
 /*******************************************************************************
@@ -43,9 +44,7 @@ void Chirp_configure(float rangeResolution, uint16_t numRangeBins)
     gChirpState.numRangeBins = numRangeBins;
 }
 
-int32_t Chirp_processFrame(const int16_t *radarCubeData,
-                           uint16_t numRangeBins,
-                           uint32_t timestamp_us)
+int32_t Chirp_processFrame(const int16_t *radarCubeData, uint16_t numRangeBins, uint32_t timestamp_us)
 {
     uint16_t i;
     uint16_t magnitude[CHIRP_MOTION_MAX_BINS];
@@ -68,8 +67,7 @@ int32_t Chirp_processFrame(const int16_t *radarCubeData,
     /* Compute magnitude for each range bin (for target selection & motion) */
     if (mode >= CHIRP_OUTPUT_MODE_TARGET_IQ)
     {
-        uint16_t binsToProcess = (numRangeBins < CHIRP_MOTION_MAX_BINS) ?
-                                  numRangeBins : CHIRP_MOTION_MAX_BINS;
+        uint16_t binsToProcess = (numRangeBins < CHIRP_MOTION_MAX_BINS) ? numRangeBins : CHIRP_MOTION_MAX_BINS;
 
         for (i = 0; i < binsToProcess; i++)
         {
@@ -78,35 +76,23 @@ int32_t Chirp_processFrame(const int16_t *radarCubeData,
             real = radarCubeData[i * 2 + 1];
 
             /* Compute magnitude using our integer sqrt */
-            magnitude[i] = Chirp_Phase_sqrt((uint32_t)real * real +
-                                            (uint32_t)imag * imag);
+            magnitude[i] = Chirp_Phase_sqrt((uint32_t)real * real + (uint32_t)imag * imag);
         }
 
         /* Run target selection */
-        Chirp_TargetSelect_process(&gChirpState.targetConfig,
-                                   &gChirpState.targetState,
-                                   magnitude,
-                                   binsToProcess,
-                                   gChirpState.rangeResolution,
-                                   &gChirpState.targetResult);
+        Chirp_TargetSelect_process(&gChirpState.targetConfig, &gChirpState.targetState, magnitude, binsToProcess,
+                                   gChirpState.rangeResolution, &gChirpState.targetResult);
 
         /* Run motion detection */
-        Chirp_Motion_process(&gChirpState.motionConfig,
-                             &gChirpState.motionState,
-                             magnitude,
-                             binsToProcess,
+        Chirp_Motion_process(&gChirpState.motionConfig, &gChirpState.motionState, magnitude, binsToProcess,
                              &gChirpState.motionResult);
 
         /* Extract phase for selected bins */
-        if (gChirpState.targetResult.valid &&
-            gChirpState.targetResult.numTrackBinsUsed > 0)
+        if (gChirpState.targetResult.valid && gChirpState.targetResult.numTrackBinsUsed > 0)
         {
-            Chirp_Phase_extractBins(radarCubeData,
-                                    gChirpState.targetResult.trackBins,
-                                    gChirpState.targetResult.numTrackBinsUsed,
-                                    gChirpState.targetResult.primaryBin,
-                                    timestamp_us,
-                                    &gChirpState.phaseOutput);
+            Chirp_Phase_extractBins(radarCubeData, gChirpState.targetResult.trackBins,
+                                    gChirpState.targetResult.numTrackBinsUsed, gChirpState.targetResult.primaryBin,
+                                    timestamp_us, &gChirpState.phaseOutput);
 
             /* Mark motion flag in phase output */
             if (gChirpState.motionResult.motionDetected)
@@ -183,15 +169,12 @@ uint32_t Chirp_getOutputSize(void)
         case CHIRP_OUTPUT_MODE_TARGET_IQ:
             /* Header + bins */
             size = sizeof(Chirp_output_targetIQ_header) +
-                   gChirpState.targetResult.numTrackBinsUsed *
-                   sizeof(Chirp_output_targetIQ_bin);
+                   gChirpState.targetResult.numTrackBinsUsed * sizeof(Chirp_output_targetIQ_bin);
             break;
 
         case CHIRP_OUTPUT_MODE_PHASE:
             /* Header + bins */
-            size = sizeof(Chirp_output_phase_header) +
-                   gChirpState.phaseOutput.numBins *
-                   sizeof(Chirp_output_phase_bin);
+            size = sizeof(Chirp_output_phase_header) + gChirpState.phaseOutput.numBins * sizeof(Chirp_output_phase_bin);
             break;
 
         case CHIRP_OUTPUT_MODE_PRESENCE:

@@ -107,4 +107,3 @@ dssDemoClean:
 # Dependency handling
 ###################################################################################
 -include $(DSS_MMW_DEMO_DEPENDS)
-

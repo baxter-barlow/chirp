@@ -7,6 +7,7 @@
  */
 
 #include "motion_detect.h"
+
 #include <string.h>
 
 /*******************************************************************************
@@ -30,11 +31,8 @@ void Chirp_Motion_init(Chirp_MotionConfig *config, Chirp_MotionState *state)
     }
 }
 
-int32_t Chirp_Motion_configure(Chirp_MotionConfig *config,
-                                uint8_t enabled,
-                                uint16_t threshold,
-                                uint16_t minBin,
-                                uint16_t maxBin)
+int32_t Chirp_Motion_configure(Chirp_MotionConfig *config, uint8_t enabled, uint16_t threshold, uint16_t minBin,
+                               uint16_t maxBin)
 {
     if (config == NULL)
     {
@@ -54,11 +52,8 @@ int32_t Chirp_Motion_configure(Chirp_MotionConfig *config,
     return 0;
 }
 
-int32_t Chirp_Motion_process(const Chirp_MotionConfig *config,
-                              Chirp_MotionState *state,
-                              const uint16_t *magnitude,
-                              uint16_t numBins,
-                              Chirp_MotionResult *result)
+int32_t Chirp_Motion_process(const Chirp_MotionConfig *config, Chirp_MotionState *state, const uint16_t *magnitude,
+                             uint16_t numBins, Chirp_MotionResult *result)
 {
     uint16_t i;
     uint16_t startBin, endBin;
@@ -144,7 +139,8 @@ int32_t Chirp_Motion_process(const Chirp_MotionConfig *config,
         uint32_t avgMotion = motionSum / motionBinCount;
         /* Scale to 0-255 based on threshold */
         uint32_t level = (avgMotion * 255) / (config->threshold * 4);
-        if (level > 255) level = 255;
+        if (level > 255)
+            level = 255;
         result->motionLevel = (uint8_t)level;
     }
 

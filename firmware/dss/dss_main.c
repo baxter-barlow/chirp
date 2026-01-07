@@ -42,46 +42,45 @@
  **************************************************************************/
 
 /* Standard Include Files. */
-#include <stdint.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <string.h>
-#include <stdio.h>
 #include <math.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* BIOS/XDC Include Files. */
-#include <xdc/std.h>
-#include <xdc/cfg/global.h>
-#include <xdc/runtime/IHeap.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
-#include <xdc/runtime/Memory.h>
 #include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/knl/Event.h>
-#include <ti/sysbios/knl/Semaphore.h>
-#include <ti/sysbios/knl/Clock.h>
+#include <ti/sysbios/family/c64p/Hwi.h>
 #include <ti/sysbios/heaps/HeapBuf.h>
 #include <ti/sysbios/heaps/HeapMem.h>
+#include <ti/sysbios/knl/Clock.h>
 #include <ti/sysbios/knl/Event.h>
+#include <ti/sysbios/knl/Semaphore.h>
+#include <ti/sysbios/knl/Task.h>
 #include <ti/sysbios/utils/Load.h>
-#include <ti/sysbios/family/c64p/Hwi.h>
+#include <xdc/cfg/global.h>
+#include <xdc/runtime/Error.h>
+#include <xdc/runtime/IHeap.h>
+#include <xdc/runtime/Memory.h>
+#include <xdc/runtime/System.h>
+#include <xdc/std.h>
 
 /* mmWave SDK Include Files: */
-#include <ti/common/sys_common.h>
 #include <ti/common/mmwave_sdk_version.h>
+#include <ti/common/sys_common.h>
 #include <ti/control/dpm/dpm.h>
-#include <ti/drivers/soc/soc.h>
-#include <ti/drivers/esm/esm.h>
 #include <ti/drivers/crc/crc.h>
+#include <ti/drivers/esm/esm.h>
 #include <ti/drivers/osal/DebugP.h>
+#include <ti/drivers/soc/soc.h>
 
 /* Data path Include Files */
 #include <ti/datapath/dpc/objectdetection/objdetdsp/objectdetection.h>
 
 /* Demo Include Files */
-#include <ti/demo/xwr68xx/mmw/include/mmw_output.h>
 #include <ti/demo/xwr68xx/mmw/dss/mmw_dss.h>
+#include <ti/demo/xwr68xx/mmw/include/mmw_output.h>
 #include <ti/demo/xwr68xx/mmw/mmw_res.h>
 
 /* Demo Profiling Include Files */
@@ -90,27 +89,27 @@
 /**
  * @brief Task Priority settings:
  */
-#define MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY      5
+#define MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY 5
 
 /*! L3 RAM buffer for object detection DPC */
 uint8_t gMmwL3[SOC_L3RAM_SIZE];
 #pragma DATA_SECTION(gMmwL3, ".l3ram");
 
- /*! L2 RAM buffer for object detection DPC */
+/*! L2 RAM buffer for object detection DPC */
 #define MMWDEMO_OBJDET_L2RAM_SIZE (49U * 1024U)
 uint8_t gDPC_ObjDetL2Heap[MMWDEMO_OBJDET_L2RAM_SIZE];
 #pragma DATA_SECTION(gDPC_ObjDetL2Heap, ".dpc_l2Heap");
 
- /*! L1 RAM buffer for object detection DPC */
+/*! L1 RAM buffer for object detection DPC */
 #define MMWDEMO_OBJDET_L1RAM_SIZE (16U * 1024U)
 uint8_t gDPC_ObjDetL1Heap[MMWDEMO_OBJDET_L1RAM_SIZE];
 #pragma DATA_SECTION(gDPC_ObjDetL1Heap, ".dpc_l1Heap");
 
- /*! HSRAM for processing results */
+/*! HSRAM for processing results */
 #pragma DATA_SECTION(gHSRAM, ".demoSharedMem");
 #pragma DATA_ALIGN(gHSRAM, 4);
 
-#define DPC_OBJDET_DSP_INSTANCEID       (0xDEEDDEED)
+#define DPC_OBJDET_DSP_INSTANCEID (0xDEEDDEED)
 
 /**************************************************************************
  *************************** Global Definitions ***************************
@@ -120,13 +119,13 @@ uint8_t gDPC_ObjDetL1Heap[MMWDEMO_OBJDET_L1RAM_SIZE];
  * @brief
  *  Global Variable for tracking information required by the mmw Demo
  */
-MmwDemo_DSS_MCB    gMmwDssMCB;
+MmwDemo_DSS_MCB gMmwDssMCB;
 
 /**
  * @brief
  *  Global Variable for DPM result buffer
  */
-DPM_Buffer  resultBuffer;
+DPM_Buffer resultBuffer;
 
 /**
  * @brief
@@ -138,28 +137,15 @@ MmwDemo_HSRAM gHSRAM;
  ******************* Millimeter Wave Demo Functions Prototype *******************
  **************************************************************************/
 static void MmwDemo_dssInitTask(UArg arg0, UArg arg1);
-static void MmwDemo_DPC_ObjectDetection_reportFxn
-(
-    DPM_Report  reportType,
-    uint32_t    instanceId,
-    int32_t     errCode,
-    uint32_t    arg0,
-    uint32_t    arg1
-);
+static void MmwDemo_DPC_ObjectDetection_reportFxn(DPM_Report reportType, uint32_t instanceId, int32_t errCode,
+                                                  uint32_t arg0, uint32_t arg1);
 static void MmwDemo_DPC_ObjectDetection_processFrameBeginCallBackFxn(uint8_t subFrameIndx);
 static void MmwDemo_DPC_ObjectDetection_processInterFrameBeginCallBackFxn(uint8_t subFrameIndx);
-static void MmwDemo_updateObjectDetStats
-(
-    DPC_ObjectDetection_Stats       *currDpcStats,
-    MmwDemo_output_message_stats    *outputMsgStats
-);
+static void MmwDemo_updateObjectDetStats(DPC_ObjectDetection_Stats *currDpcStats,
+                                         MmwDemo_output_message_stats *outputMsgStats);
 
-static int32_t MmwDemo_copyResultToHSRAM
-(
-    MmwDemo_HSRAM           *ptrHsramBuffer,
-    DPC_ObjectDetection_ExecuteResult *result,
-    MmwDemo_output_message_stats *outStats
-);
+static int32_t MmwDemo_copyResultToHSRAM(MmwDemo_HSRAM *ptrHsramBuffer, DPC_ObjectDetection_ExecuteResult *result,
+                                         MmwDemo_output_message_stats *outStats);
 static void MmwDemo_DPC_ObjectDetection_dpmTask(UArg arg0, UArg arg1);
 static void MmwDemo_sensorStopEpilog(void);
 
@@ -183,8 +169,8 @@ void MmwDemo_edmaInit(MmwDemo_DataPathObj *obj, uint8_t instance)
     errorCode = EDMA_init(instance);
     if (errorCode != EDMA_NO_ERROR)
     {
-        //System_printf ("Debug: EDMA instance %d initialization returned error %d\n", errorCode);
-        MmwDemo_debugAssert (0);
+        // System_printf ("Debug: EDMA instance %d initialization returned error %d\n", errorCode);
+        MmwDemo_debugAssert(0);
         return;
     }
 
@@ -212,8 +198,7 @@ void MmwDemo_EDMA_errorCallbackFxn(EDMA_Handle handle, EDMA_errorInfo_t *errorIn
  *      Declare fatal error if happens, the output errorInfo can be examined if code
  *      gets trapped here.
  */
-void MmwDemo_EDMA_transferControllerErrorCallbackFxn(EDMA_Handle handle,
-                EDMA_transferControllerErrorInfo_t *errorInfo)
+void MmwDemo_EDMA_transferControllerErrorCallbackFxn(EDMA_Handle handle, EDMA_transferControllerErrorInfo_t *errorInfo)
 {
     gMmwDssMCB.dataPathObj.EDMA_transferControllerErrorInfo = *errorInfo;
     MmwDemo_debugAssert(0);
@@ -232,17 +217,14 @@ void MmwDemo_EDMA_transferControllerErrorCallbackFxn(EDMA_Handle handle,
  */
 static void MmwDemo_edmaOpen(MmwDemo_DataPathObj *obj, uint8_t instance)
 {
-    int32_t              errCode;
-    EDMA_instanceInfo_t  edmaInstanceInfo;
-    EDMA_errorConfig_t   errorConfig;
+    int32_t errCode;
+    EDMA_instanceInfo_t edmaInstanceInfo;
+    EDMA_errorConfig_t errorConfig;
 
-    obj->edmaHandle = EDMA_open(
-        instance,
-        &errCode, 
-        &edmaInstanceInfo);
+    obj->edmaHandle = EDMA_open(instance, &errCode, &edmaInstanceInfo);
     if (obj->edmaHandle == NULL)
     {
-        MmwDemo_debugAssert (0);
+        MmwDemo_debugAssert(0);
         return;
     }
 
@@ -255,8 +237,8 @@ static void MmwDemo_edmaOpen(MmwDemo_DataPathObj *obj, uint8_t instance)
     errorConfig.transferControllerCallbackFxn = MmwDemo_EDMA_transferControllerErrorCallbackFxn;
     if ((errCode = EDMA_configErrorMonitoring(obj->edmaHandle, &errorConfig)) != EDMA_NO_ERROR)
     {
-        //System_printf("Error: EDMA_configErrorMonitoring() failed with errorCode = %d\n", errCode);
-        MmwDemo_debugAssert (0);
+        // System_printf("Error: EDMA_configErrorMonitoring() failed with errorCode = %d\n", errCode);
+        MmwDemo_debugAssert(0);
         return;
     }
 }
@@ -285,9 +267,9 @@ void MmwDemo_edmaClose(MmwDemo_DataPathObj *obj)
  */
 static void MmwDemo_sensorStopEpilog(void)
 {
-    Hwi_StackInfo   stackInfo;
-    Task_Stat       stat;
-    bool            hwiStackOverflow;
+    Hwi_StackInfo stackInfo;
+    Task_Stat stat;
+    bool hwiStackOverflow;
 
     System_printf("Data Path Stopped (last frame processing done)\n");
 
@@ -295,17 +277,11 @@ static void MmwDemo_sensorStopEpilog(void)
     System_printf("DSS Task Stack Usage (Note: Task Stack Usage) ==========\n");
 
     Task_stat(gMmwDssMCB.initTaskHandle, &stat);
-    System_printf("%20s %12d %12d %12d\n", "initTask",
-                  stat.stackSize,
-                  stat.used,
-                  stat.stackSize - stat.used);
+    System_printf("%20s %12d %12d %12d\n", "initTask", stat.stackSize, stat.used, stat.stackSize - stat.used);
 
     Task_stat(gMmwDssMCB.objDetDpmTaskHandle, &stat);
     System_printf("%20s %12s %12s %12s\n", "Task Name", "Size", "Used", "Free");
-    System_printf("%20s %12d %12d %12d\n", "ObjDet DPM",
-                  stat.stackSize,
-                  stat.used,
-                  stat.stackSize - stat.used);
+    System_printf("%20s %12d %12d %12d\n", "ObjDet DPM", stat.stackSize, stat.used, stat.stackSize - stat.used);
 
     System_printf("HWI Stack (same as System Stack) Usage ============\n");
     hwiStackOverflow = Hwi_getStackInfo(&stackInfo, TRUE);
@@ -317,9 +293,7 @@ static void MmwDemo_sensorStopEpilog(void)
     else
     {
         System_printf("%20s %12s %12s %12s\n", " ", "Size", "Used", "Free");
-        System_printf("%20s %12d %12d %12d\n", " ",
-                      stackInfo.hwiStackSize,
-                      stackInfo.hwiStackPeak,
+        System_printf("%20s %12d %12d %12d\n", " ", stackInfo.hwiStackSize, stackInfo.hwiStackPeak,
                       stackInfo.hwiStackSize - stackInfo.hwiStackPeak);
     }
 }
@@ -344,23 +318,16 @@ static void MmwDemo_sensorStopEpilog(void)
  *  @retval
  *      Not Applicable.
  */
-static void MmwDemo_DPC_ObjectDetection_reportFxn
-(
-    DPM_Report  reportType,
-    uint32_t    instanceId,
-    int32_t     errCode,
-    uint32_t    arg0,
-    uint32_t    arg1
-)
+static void MmwDemo_DPC_ObjectDetection_reportFxn(DPM_Report reportType, uint32_t instanceId, int32_t errCode,
+                                                  uint32_t arg0, uint32_t arg1)
 {
-
     /* Only errors are logged on the console: */
     if (errCode != 0)
     {
         /* Error: Detected log on the console and die all errors are FATAL currently. */
-        System_printf ("Error: DPM Report %d received with error:%d arg0:0x%x arg1:0x%x\n",
-                        reportType, errCode, arg0, arg1);
-        DebugP_assert (0);
+        System_printf("Error: DPM Report %d received with error:%d arg0:0x%x arg1:0x%x\n", reportType, errCode, arg0,
+                      arg1);
+        DebugP_assert(0);
     }
 
     /* Processing further is based on the reports received: This is the control of the profile
@@ -409,16 +376,15 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
         }
         case DPM_Report_DPC_ASSERT:
         {
-            DPM_DPCAssert*  ptrAssert;
+            DPM_DPCAssert *ptrAssert;
 
             /*****************************************************************
              * DPC Fault has been detected:
              * - This implies that the DPC has crashed.
              * - The argument0 points to the DPC assertion information
              *****************************************************************/
-            ptrAssert = (DPM_DPCAssert*)arg0;
-            System_printf ("DSS Exception: %s, line %d.\n", ptrAssert->fileName,
-                       ptrAssert->lineNum);
+            ptrAssert = (DPM_DPCAssert *)arg0;
+            System_printf("DSS Exception: %s, line %d.\n", ptrAssert->fileName, ptrAssert->lineNum);
             break;
         }
         case DPM_Report_DPC_STOPPED:
@@ -430,9 +396,9 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
              *****************************************************************/
             DebugP_log0("DSSApp: DPM Report stop\n");
             gMmwDssMCB.dpmStopEvents++;
-            /* every sensor stop should cause 2 DPM stop events due to distributed domain 
+            /* every sensor stop should cause 2 DPM stop events due to distributed domain
                Its safe to start printing logs on the first event as RF/RadarSS chirp/frame are already stopped */
-            if (gMmwDssMCB.dpmStopEvents % 2 == 1) 
+            if (gMmwDssMCB.dpmStopEvents % 2 == 1)
             {
                 MmwDemo_sensorStopEpilog();
             }
@@ -445,7 +411,7 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
         }
         default:
         {
-            DebugP_assert (0);
+            DebugP_assert(0);
             break;
         }
     }
@@ -457,7 +423,7 @@ static void MmwDemo_DPC_ObjectDetection_reportFxn
  *  @n
  *      Call back function that was registered during config time and is going
  *      to be called in DPC processing at the beginning of frame/sub-frame processing.
- *      Note: In this demo objdetdsp DPC only have inter-frame processing, hence this 
+ *      Note: In this demo objdetdsp DPC only have inter-frame processing, hence this
  *      callback function won't be called.
  *
  *  @param[in] subFrameIndx     Sub-frame index of the sub-frame during which processing
@@ -495,28 +461,26 @@ static void MmwDemo_DPC_ObjectDetection_processInterFrameBeginCallBackFxn(uint8_
  *      Update stats based on the stats from DPC
  *
  *  @param[in]  currDpcStats        Pointer to DPC status
- *  @param[in]  outputMsgStats      Pointer to Output message stats 
+ *  @param[in]  outputMsgStats      Pointer to Output message stats
  *
  *  @retval
  *      Not Applicable.
  */
- void MmwDemo_updateObjectDetStats
-(
-    DPC_ObjectDetection_Stats       *currDpcStats,
-    MmwDemo_output_message_stats    *outputMsgStats
-)
+void MmwDemo_updateObjectDetStats(DPC_ObjectDetection_Stats *currDpcStats, MmwDemo_output_message_stats *outputMsgStats)
 {
     static uint32_t prevInterFrameEndTimeStamp = 0U;
 
     /* Calculate interframe proc time */
     outputMsgStats->interFrameProcessingTime =
-            (currDpcStats->interFrameEndTimeStamp - currDpcStats->interFrameStartTimeStamp)/DSP_CLOCK_MHZ; /* In micro seconds */
+        (currDpcStats->interFrameEndTimeStamp - currDpcStats->interFrameStartTimeStamp) /
+        DSP_CLOCK_MHZ; /* In micro seconds */
 
-    outputMsgStats->interChirpProcessingMargin = currDpcStats->interChirpProcessingMargin/DSP_CLOCK_MHZ;
+    outputMsgStats->interChirpProcessingMargin = currDpcStats->interChirpProcessingMargin / DSP_CLOCK_MHZ;
 
     /* Calculate interFrame processing Margin for previous frame, but saved to current frame */
     outputMsgStats->interFrameProcessingMargin =
-        (currDpcStats->frameStartTimeStamp - prevInterFrameEndTimeStamp - currDpcStats->subFramePreparationCycles)/DSP_CLOCK_MHZ;
+        (currDpcStats->frameStartTimeStamp - prevInterFrameEndTimeStamp - currDpcStats->subFramePreparationCycles) /
+        DSP_CLOCK_MHZ;
 
     prevInterFrameEndTimeStamp = currDpcStats->interFrameEndTimeStamp;
 }
@@ -534,25 +498,21 @@ static void MmwDemo_DPC_ObjectDetection_processInterFrameBeginCallBackFxn(uint8_
  *  @retval
  *      Not Applicable.
  */
-static int32_t MmwDemo_copyResultToHSRAM
-(
-    MmwDemo_HSRAM           *ptrHsramBuffer,
-    DPC_ObjectDetection_ExecuteResult *result,
-    MmwDemo_output_message_stats *outStats
-)
+static int32_t MmwDemo_copyResultToHSRAM(MmwDemo_HSRAM *ptrHsramBuffer, DPC_ObjectDetection_ExecuteResult *result,
+                                         MmwDemo_output_message_stats *outStats)
 {
-    uint8_t             *ptrCurrBuffer;
-    uint32_t            totalHsramSize;
-    uint32_t            itemPayloadLen;
+    uint8_t *ptrCurrBuffer;
+    uint32_t totalHsramSize;
+    uint32_t itemPayloadLen;
 
     /* Save result in HSRAM */
-    if(ptrHsramBuffer == NULL)
+    if (ptrHsramBuffer == NULL)
     {
         return -1;
     }
 
     /* Save result in HSRAM */
-    if(result != NULL)
+    if (result != NULL)
     {
         itemPayloadLen = sizeof(DPC_ObjectDetection_ExecuteResult);
         memcpy((void *)&ptrHsramBuffer->result, (void *)result, itemPayloadLen);
@@ -563,7 +523,7 @@ static int32_t MmwDemo_copyResultToHSRAM
     }
 
     /* Save output Stats in HSRAM */
-    if(outStats != NULL)
+    if (outStats != NULL)
     {
         itemPayloadLen = sizeof(MmwDemo_output_message_stats);
         memcpy((void *)&ptrHsramBuffer->outStats, (void *)outStats, itemPayloadLen);
@@ -574,16 +534,16 @@ static int32_t MmwDemo_copyResultToHSRAM
     totalHsramSize = MMWDEMO_HSRAM_PAYLOAD_SIZE;
 
     /* Save ObjOut in HSRAM */
-    if(result->objOut != NULL)
+    if (result->objOut != NULL)
     {
         itemPayloadLen = sizeof(DPIF_PointCloudCartesian) * result->numObjOut;
-        if((totalHsramSize- itemPayloadLen) > 0)
+        if ((totalHsramSize - itemPayloadLen) > 0)
         {
             memcpy(ptrCurrBuffer, (void *)result->objOut, itemPayloadLen);
 
             ptrHsramBuffer->result.objOut = (DPIF_PointCloudCartesian *)ptrCurrBuffer;
-            ptrCurrBuffer+= itemPayloadLen;
-            totalHsramSize -=itemPayloadLen;
+            ptrCurrBuffer += itemPayloadLen;
+            totalHsramSize -= itemPayloadLen;
         }
         else
         {
@@ -592,15 +552,15 @@ static int32_t MmwDemo_copyResultToHSRAM
     }
 
     /* Save ObjOutSideInfo in HSRAM */
-    if(result->objOutSideInfo != NULL)
+    if (result->objOutSideInfo != NULL)
     {
         itemPayloadLen = sizeof(DPIF_PointCloudSideInfo) * result->numObjOut;
-        if((totalHsramSize- itemPayloadLen) > 0)
+        if ((totalHsramSize - itemPayloadLen) > 0)
         {
             memcpy(ptrCurrBuffer, (void *)result->objOutSideInfo, itemPayloadLen);
             ptrHsramBuffer->result.objOutSideInfo = (DPIF_PointCloudSideInfo *)ptrCurrBuffer;
-            ptrCurrBuffer+= itemPayloadLen;
-            totalHsramSize -=itemPayloadLen;
+            ptrCurrBuffer += itemPayloadLen;
+            totalHsramSize -= itemPayloadLen;
         }
         else
         {
@@ -609,15 +569,15 @@ static int32_t MmwDemo_copyResultToHSRAM
     }
 
     /* Save DPC_ObjectDetection_Stats in HSRAM */
-    if(result->stats != NULL)
+    if (result->stats != NULL)
     {
         itemPayloadLen = sizeof(DPC_ObjectDetection_Stats);
-        if((totalHsramSize- itemPayloadLen) > 0)
+        if ((totalHsramSize - itemPayloadLen) > 0)
         {
             memcpy(ptrCurrBuffer, (void *)result->stats, itemPayloadLen);
             ptrHsramBuffer->result.stats = (DPC_ObjectDetection_Stats *)ptrCurrBuffer;
-            ptrCurrBuffer+= itemPayloadLen;
-            totalHsramSize -=itemPayloadLen;
+            ptrCurrBuffer += itemPayloadLen;
+            totalHsramSize -= itemPayloadLen;
         }
         else
         {
@@ -626,15 +586,15 @@ static int32_t MmwDemo_copyResultToHSRAM
     }
 
     /* Save compRxChanBiasMeasurement in HSRAM */
-    if(result->compRxChanBiasMeasurement != NULL)
+    if (result->compRxChanBiasMeasurement != NULL)
     {
         itemPayloadLen = sizeof(DPU_AoAProc_compRxChannelBiasCfg);
-        if((totalHsramSize- itemPayloadLen) > 0)
+        if ((totalHsramSize - itemPayloadLen) > 0)
         {
             memcpy(ptrCurrBuffer, (void *)result->compRxChanBiasMeasurement, itemPayloadLen);
             ptrHsramBuffer->result.compRxChanBiasMeasurement = (DPU_AoAProc_compRxChannelBiasCfg *)ptrCurrBuffer;
-            ptrCurrBuffer+= itemPayloadLen;
-            totalHsramSize -=itemPayloadLen;
+            ptrCurrBuffer += itemPayloadLen;
+            totalHsramSize -= itemPayloadLen;
         }
         else
         {
@@ -658,17 +618,18 @@ static int32_t MmwDemo_copyResultToHSRAM
  */
 static void MmwDemo_DPC_ObjectDetection_dpmTask(UArg arg0, UArg arg1)
 {
-    int32_t     retVal;
+    int32_t retVal;
     DPC_ObjectDetection_ExecuteResult *result;
-    volatile uint32_t              startTime;
+    volatile uint32_t startTime;
 
     while (1)
     {
         /* Execute the DPM module: */
-        retVal = DPM_execute (gMmwDssMCB.dataPathObj.objDetDpmHandle, &resultBuffer);
-        if (retVal < 0) {
-            System_printf ("Error: DPM execution failed [Error code %d]\n", retVal);
-            MmwDemo_debugAssert (0);
+        retVal = DPM_execute(gMmwDssMCB.dataPathObj.objDetDpmHandle, &resultBuffer);
+        if (retVal < 0)
+        {
+            System_printf("Error: DPM execution failed [Error code %d]\n", retVal);
+            MmwDemo_debugAssert(0);
         }
         else
         {
@@ -680,14 +641,15 @@ static void MmwDemo_DPC_ObjectDetection_dpmTask(UArg arg0, UArg arg1)
                 startTime = Cycleprofiler_getTimeStamp();
 
                 /* Update processing stats and added it to buffer 1*/
-                MmwDemo_updateObjectDetStats(result->stats,
-                                                &gMmwDssMCB.dataPathObj.subFrameStats[result->subFrameIdx]);
+                MmwDemo_updateObjectDetStats(result->stats, &gMmwDssMCB.dataPathObj.subFrameStats[result->subFrameIdx]);
 
                 /* Copy result data to HSRAM */
-                if ((retVal = MmwDemo_copyResultToHSRAM(&gHSRAM, result, &gMmwDssMCB.dataPathObj.subFrameStats[result->subFrameIdx])) >= 0)
+                if ((retVal = MmwDemo_copyResultToHSRAM(
+                         &gHSRAM, result, &gMmwDssMCB.dataPathObj.subFrameStats[result->subFrameIdx])) >= 0)
                 {
                     /* Update interframe margin with HSRAM copy time */
-                    gHSRAM.outStats.interFrameProcessingMargin -= ((Cycleprofiler_getTimeStamp() - startTime)/DSP_CLOCK_MHZ);
+                    gHSRAM.outStats.interFrameProcessingMargin -=
+                        ((Cycleprofiler_getTimeStamp() - startTime) / DSP_CLOCK_MHZ);
 
                     /* Update DPM buffer */
                     resultBuffer.ptrBuffer[0] = (uint8_t *)&gHSRAM.result;
@@ -695,16 +657,16 @@ static void MmwDemo_DPC_ObjectDetection_dpmTask(UArg arg0, UArg arg1)
                     resultBuffer.size[1] = sizeof(MmwDemo_output_message_stats);
 
                     /* YES: Results are available send them. */
-                    retVal = DPM_sendResult (gMmwDssMCB.dataPathObj.objDetDpmHandle, true, &resultBuffer);
+                    retVal = DPM_sendResult(gMmwDssMCB.dataPathObj.objDetDpmHandle, true, &resultBuffer);
                     if (retVal < 0)
                     {
-                        System_printf ("Error: Failed to send results [Error: %d] to remote\n", retVal);
+                        System_printf("Error: Failed to send results [Error: %d] to remote\n", retVal);
                     }
                 }
                 else
                 {
-                    System_printf ("Error: Failed to copy processing results to HSRAM, error=%d\n", retVal);
-                    MmwDemo_debugAssert (0);
+                    System_printf("Error: Failed to copy processing results to HSRAM, error=%d\n", retVal);
+                    MmwDemo_debugAssert(0);
                 }
             }
         }
@@ -722,10 +684,10 @@ static void MmwDemo_DPC_ObjectDetection_dpmTask(UArg arg0, UArg arg1)
  */
 static void MmwDemo_dssInitTask(UArg arg0, UArg arg1)
 {
-    int32_t             errCode;
-    Task_Params         taskParams;
-    DPM_InitCfg         dpmInitCfg;
-    DPC_ObjectDetection_InitParams      objDetInitParams;
+    int32_t errCode;
+    Task_Params taskParams;
+    DPM_InitCfg dpmInitCfg;
+    DPC_ObjectDetection_InitParams objDetInitParams;
 
     /*****************************************************************************
      * Driver Init:
@@ -746,7 +708,7 @@ static void MmwDemo_dssInitTask(UArg arg0, UArg arg1)
     /*****************************************************************************
      * Initialization of the DPM Module:
      *****************************************************************************/
-    memset ((void *)&objDetInitParams, 0, sizeof(DPC_ObjectDetection_InitParams));
+    memset((void *)&objDetInitParams, 0, sizeof(DPC_ObjectDetection_InitParams));
 
     objDetInitParams.L3ramCfg.addr = (void *)&gMmwL3[0];
     objDetInitParams.L3ramCfg.size = sizeof(gMmwL3);
@@ -764,23 +726,23 @@ static void MmwDemo_dssInitTask(UArg arg0, UArg arg1)
     objDetInitParams.processCallBackCfg.processInterFrameBeginCallBackFxn =
         MmwDemo_DPC_ObjectDetection_processInterFrameBeginCallBackFxn;
 
-    memset ((void *)&dpmInitCfg, 0, sizeof(DPM_InitCfg));
+    memset((void *)&dpmInitCfg, 0, sizeof(DPM_InitCfg));
 
     /* Setup the configuration: */
-    dpmInitCfg.socHandle        = gMmwDssMCB.socHandle;
-    dpmInitCfg.ptrProcChainCfg  = &gDPC_ObjectDetectionCfg;
-    dpmInitCfg.instanceId       = DPC_OBJDET_DSP_INSTANCEID;
-    dpmInitCfg.domain           = DPM_Domain_DISTRIBUTED;
-    dpmInitCfg.reportFxn        = MmwDemo_DPC_ObjectDetection_reportFxn;
-    dpmInitCfg.arg              = &objDetInitParams;
-    dpmInitCfg.argSize          = sizeof(DPC_ObjectDetection_InitParams);
+    dpmInitCfg.socHandle = gMmwDssMCB.socHandle;
+    dpmInitCfg.ptrProcChainCfg = &gDPC_ObjectDetectionCfg;
+    dpmInitCfg.instanceId = DPC_OBJDET_DSP_INSTANCEID;
+    dpmInitCfg.domain = DPM_Domain_DISTRIBUTED;
+    dpmInitCfg.reportFxn = MmwDemo_DPC_ObjectDetection_reportFxn;
+    dpmInitCfg.arg = &objDetInitParams;
+    dpmInitCfg.argSize = sizeof(DPC_ObjectDetection_InitParams);
 
     /* Initialize the DPM Module: */
-    gMmwDssMCB.dataPathObj.objDetDpmHandle = DPM_init (&dpmInitCfg, &errCode);
+    gMmwDssMCB.dataPathObj.objDetDpmHandle = DPM_init(&dpmInitCfg, &errCode);
     if (gMmwDssMCB.dataPathObj.objDetDpmHandle == NULL)
     {
-        System_printf ("Error: Unable to initialize the DPM Module [Error: %d]\n", errCode);
-        MmwDemo_debugAssert (0);
+        System_printf("Error: Unable to initialize the DPM Module [Error: %d]\n", errCode);
+        MmwDemo_debugAssert(0);
         return;
     }
 
@@ -791,12 +753,12 @@ static void MmwDemo_dssInitTask(UArg arg0, UArg arg1)
         int32_t syncStatus;
 
         /* Get the synchronization status: */
-        syncStatus = DPM_synch (gMmwDssMCB.dataPathObj.objDetDpmHandle, &errCode);
+        syncStatus = DPM_synch(gMmwDssMCB.dataPathObj.objDetDpmHandle, &errCode);
         if (syncStatus < 0)
         {
             /* Error: Unable to synchronize the framework */
-            System_printf ("Error: DPM Synchronization failed [Error code %d]\n", errCode);
-            MmwDemo_debugAssert (0);
+            System_printf("Error: DPM Synchronization failed [Error code %d]\n", errCode);
+            MmwDemo_debugAssert(0);
             return;
         }
         if (syncStatus == 1)
@@ -807,12 +769,12 @@ static void MmwDemo_dssInitTask(UArg arg0, UArg arg1)
         /* Sleep and poll again: */
         Task_sleep(1);
     }
-    System_printf ("Debug: DPM Module Sync is done\n");
+    System_printf("Debug: DPM Module Sync is done\n");
 
     /* Launch the DPM Task */
     Task_Params_init(&taskParams);
     taskParams.priority = MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY;
-    taskParams.stackSize = 4*1024;
+    taskParams.stackSize = 4 * 1024;
     gMmwDssMCB.objDetDpmTaskHandle = Task_create(MmwDemo_DPC_ObjectDetection_dpmTask, &taskParams, NULL);
 
     return;
@@ -842,29 +804,29 @@ void MmwDemo_sleep(void)
  *  @retval
  *      Not Applicable.
  */
-int main (void)
+int main(void)
 {
-    Task_Params     taskParams;
-    int32_t         errCode;
-    SOC_Handle      socHandle;
-    SOC_Cfg         socCfg;
+    Task_Params taskParams;
+    int32_t errCode;
+    SOC_Handle socHandle;
+    SOC_Cfg socCfg;
 
     /* Initialize and populate the demo MCB */
-    memset ((void*)&gMmwDssMCB, 0, sizeof(MmwDemo_DSS_MCB));
+    memset((void *)&gMmwDssMCB, 0, sizeof(MmwDemo_DSS_MCB));
 
     /* Initialize the SOC confiugration: */
-    memset ((void *)&socCfg, 0, sizeof(SOC_Cfg));
+    memset((void *)&socCfg, 0, sizeof(SOC_Cfg));
 
     /* Populate the SOC configuration: */
     socCfg.clockCfg = SOC_SysClock_BYPASS_INIT;
 
     /* Initialize the SOC Module: This is done as soon as the application is started
      * to ensure that the MPU is correctly configured. */
-    socHandle = SOC_init (&socCfg, &errCode);
+    socHandle = SOC_init(&socCfg, &errCode);
     if (socHandle == NULL)
     {
-        System_printf ("Error: SOC Module Initialization failed [Error code %d]\n", errCode);
-        MmwDemo_debugAssert (0);
+        System_printf("Error: SOC Module Initialization failed [Error code %d]\n", errCode);
+        MmwDemo_debugAssert(0);
         return -1;
     }
 
@@ -872,7 +834,7 @@ int main (void)
 
     /* Initialize the Task Parameters. */
     Task_Params_init(&taskParams);
-    taskParams.stackSize = 4*1024;
+    taskParams.stackSize = 4 * 1024;
     gMmwDssMCB.initTaskHandle = Task_create(MmwDemo_dssInitTask, &taskParams, NULL);
 
     /* Start BIOS */

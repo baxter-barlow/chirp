@@ -8,14 +8,18 @@ import sys
 import os
 
 # Add mmWave flash module to path
-UNIFLASH_MMWAVE_PATH = "/opt/ti/uniflash_9.4.0/deskdb/content/TICloudAgent/linux/ccs_base/mmWave/gen1"
+UNIFLASH_MMWAVE_PATH = (
+    "/opt/ti/uniflash_9.4.0/deskdb/content/TICloudAgent/linux/ccs_base/mmWave/gen1"
+)
 sys.path.insert(0, UNIFLASH_MMWAVE_PATH)
 os.chdir(UNIFLASH_MMWAVE_PATH)
 
-from mmWaveProgFlash import BootLdr, FilesObject
+from mmWaveProgFlash import BootLdr, FilesObject  # noqa: E402
+
 
 class SimpleCallback:
     """Simple callback class for progress updates"""
+
     def update_progress(self, msg, percent):
         print(f"[{percent:3d}%] {msg}")
 
@@ -27,6 +31,7 @@ class SimpleCallback:
 
     def check_is_cancel_set(self):
         return False
+
 
 def flash_firmware(com_port, firmware_path):
     """Flash firmware to IWR6843 via UART bootloader"""
@@ -88,7 +93,7 @@ def flash_firmware(com_port, firmware_path):
         mirror_enabled=0,
         max_size=file_size,
         storage="SFLASH",
-        imageProgList=image_prog_list
+        imageProgList=image_prog_list,
     )
 
     # Disconnect
@@ -108,6 +113,7 @@ def flash_firmware(com_port, firmware_path):
         print("FLASH FAILED!")
         print("=" * 60)
         return False
+
 
 if __name__ == "__main__":
     COM_PORT = "/dev/ttyUSB0"

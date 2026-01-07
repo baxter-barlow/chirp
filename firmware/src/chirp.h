@@ -11,124 +11,123 @@
 #ifndef CHIRP_H
 #define CHIRP_H
 
-#include "version.h"
-#include "firmware_config.h"
-#include "output_modes.h"
-#include "target_select.h"
-#include "phase_extract.h"
-#include "motion_detect.h"
 #include "../include/mmw_output.h"
+#include "firmware_config.h"
+#include "motion_detect.h"
+#include "output_modes.h"
+#include "phase_extract.h"
+#include "target_select.h"
+#include "version.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/*******************************************************************************
- * Chirp Runtime State
- ******************************************************************************/
+    /*******************************************************************************
+     * Chirp Runtime State
+     ******************************************************************************/
 
-/**
- * @brief Complete chirp runtime state
- */
-typedef struct Chirp_State_t
-{
-    /** Output mode configuration */
-    Chirp_OutputConfig outputConfig;
+    /**
+     * @brief Complete chirp runtime state
+     */
+    typedef struct Chirp_State_t
+    {
+        /** Output mode configuration */
+        Chirp_OutputConfig outputConfig;
 
-    /** Target selection configuration */
-    Chirp_TargetConfig targetConfig;
+        /** Target selection configuration */
+        Chirp_TargetConfig targetConfig;
 
-    /** Target selection state */
-    Chirp_TargetState targetState;
+        /** Target selection state */
+        Chirp_TargetState targetState;
 
-    /** Target selection result (updated each frame) */
-    Chirp_TargetResult targetResult;
+        /** Target selection result (updated each frame) */
+        Chirp_TargetResult targetResult;
 
-    /** Motion detection configuration */
-    Chirp_MotionConfig motionConfig;
+        /** Motion detection configuration */
+        Chirp_MotionConfig motionConfig;
 
-    /** Motion detection state */
-    Chirp_MotionState motionState;
+        /** Motion detection state */
+        Chirp_MotionState motionState;
 
-    /** Motion detection result (updated each frame) */
-    Chirp_MotionResult motionResult;
+        /** Motion detection result (updated each frame) */
+        Chirp_MotionResult motionResult;
 
-    /** Phase output (updated each frame) */
-    Chirp_PhaseOutput phaseOutput;
+        /** Phase output (updated each frame) */
+        Chirp_PhaseOutput phaseOutput;
 
-    /** Range resolution in meters (from radar config) */
-    float rangeResolution;
+        /** Range resolution in meters (from radar config) */
+        float rangeResolution;
 
-    /** Number of range bins (from radar config) */
-    uint16_t numRangeBins;
+        /** Number of range bins (from radar config) */
+        uint16_t numRangeBins;
 
-    /** Initialization flag */
-    uint8_t initialized;
+        /** Initialization flag */
+        uint8_t initialized;
 
-    /** Reserved */
-    uint8_t reserved;
+        /** Reserved */
+        uint8_t reserved;
 
-} Chirp_State;
+    } Chirp_State;
 
-/*******************************************************************************
- * Global State (defined in chirp.c)
- ******************************************************************************/
+    /*******************************************************************************
+     * Global State (defined in chirp.c)
+     ******************************************************************************/
 
-extern Chirp_State gChirpState;
+    extern Chirp_State gChirpState;
 
-/*******************************************************************************
- * Initialization and Configuration
- ******************************************************************************/
+    /*******************************************************************************
+     * Initialization and Configuration
+     ******************************************************************************/
 
-/**
- * @brief Initialize chirp state with defaults
- */
-void Chirp_init(void);
+    /**
+     * @brief Initialize chirp state with defaults
+     */
+    void Chirp_init(void);
 
-/**
- * @brief Configure chirp with radar parameters
- * @param rangeResolution Range resolution in meters
- * @param numRangeBins Number of range bins
- */
-void Chirp_configure(float rangeResolution, uint16_t numRangeBins);
+    /**
+     * @brief Configure chirp with radar parameters
+     * @param rangeResolution Range resolution in meters
+     * @param numRangeBins Number of range bins
+     */
+    void Chirp_configure(float rangeResolution, uint16_t numRangeBins);
 
-/*******************************************************************************
- * Frame Processing
- ******************************************************************************/
+    /*******************************************************************************
+     * Frame Processing
+     ******************************************************************************/
 
-/**
- * @brief Process a frame of radar data
- * @param radarCubeData Pointer to radar cube data (cmplx16ImRe_t)
- * @param numRangeBins Number of range bins
- * @param timestamp_us Current timestamp in microseconds
- * @return 0 on success
- */
-int32_t Chirp_processFrame(const int16_t *radarCubeData,
-                           uint16_t numRangeBins,
-                           uint32_t timestamp_us);
+    /**
+     * @brief Process a frame of radar data
+     * @param radarCubeData Pointer to radar cube data (cmplx16ImRe_t)
+     * @param numRangeBins Number of range bins
+     * @param timestamp_us Current timestamp in microseconds
+     * @return 0 on success
+     */
+    int32_t Chirp_processFrame(const int16_t *radarCubeData, uint16_t numRangeBins, uint32_t timestamp_us);
 
-/*******************************************************************************
- * TLV Output Generation
- ******************************************************************************/
+    /*******************************************************************************
+     * TLV Output Generation
+     ******************************************************************************/
 
-/**
- * @brief Get number of TLVs to output based on current mode
- * @return Number of TLVs that will be generated
- */
-uint32_t Chirp_getNumOutputTLVs(void);
+    /**
+     * @brief Get number of TLVs to output based on current mode
+     * @return Number of TLVs that will be generated
+     */
+    uint32_t Chirp_getNumOutputTLVs(void);
 
-/**
- * @brief Get total size of TLV output data
- * @return Size in bytes
- */
-uint32_t Chirp_getOutputSize(void);
+    /**
+     * @brief Get total size of TLV output data
+     * @return Size in bytes
+     */
+    uint32_t Chirp_getOutputSize(void);
 
-/**
- * @brief Check if specific TLV type should be output
- * @param tlvType TLV type to check
- * @return 1 if should output, 0 otherwise
- */
-uint8_t Chirp_shouldOutputTLV(uint32_t tlvType);
+    /**
+     * @brief Check if specific TLV type should be output
+     * @param tlvType TLV type to check
+     * @return 1 if should output, 0 otherwise
+     */
+    uint8_t Chirp_shouldOutputTLV(uint32_t tlvType);
 
 #ifdef __cplusplus
 }

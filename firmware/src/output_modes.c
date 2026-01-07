@@ -7,19 +7,14 @@
  */
 
 #include "output_modes.h"
+
 #include <string.h>
 
 /*******************************************************************************
  * Private Data
  ******************************************************************************/
 
-static const char* outputModeNames[CHIRP_OUTPUT_MODE_COUNT] = {
-    "RAW_IQ",
-    "RANGE_FFT",
-    "TARGET_IQ",
-    "PHASE",
-    "PRESENCE"
-};
+static const char *outputModeNames[CHIRP_OUTPUT_MODE_COUNT] = {"RAW_IQ", "RANGE_FFT", "TARGET_IQ", "PHASE", "PRESENCE"};
 
 /*******************************************************************************
  * Public Functions
@@ -65,7 +60,7 @@ Chirp_OutputMode Chirp_OutputMode_get(const Chirp_OutputConfig *config)
     return config->mode;
 }
 
-const char* Chirp_OutputMode_getName(Chirp_OutputMode mode)
+const char *Chirp_OutputMode_getName(Chirp_OutputMode mode)
 {
     if (mode >= CHIRP_OUTPUT_MODE_COUNT)
     {

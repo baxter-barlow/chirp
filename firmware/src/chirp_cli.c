@@ -9,9 +9,10 @@
  * target selection, and motion detection.
  */
 
-#include "chirp.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "chirp.h"
 
 /* Forward declaration of CLI_write from SDK */
 extern void CLI_write(const char *format, ...);
@@ -21,7 +22,7 @@ extern void CLI_write(const char *format, ...);
  * Usage: chirpOutputMode <mode> [enableMotion] [enableTargetInfo]
  * mode: 0=RAW_IQ, 1=RANGE_FFT, 2=TARGET_IQ, 3=PHASE, 4=PRESENCE
  ******************************************************************************/
-int32_t Chirp_CLI_outputMode(int32_t argc, char* argv[])
+int32_t Chirp_CLI_outputMode(int32_t argc, char *argv[])
 {
     int32_t mode;
     int32_t retVal;
@@ -55,8 +56,7 @@ int32_t Chirp_CLI_outputMode(int32_t argc, char* argv[])
         gChirpState.outputConfig.enableTargetInfo = (uint8_t)atoi(argv[3]);
     }
 
-    CLI_write("Output mode set to %s\n",
-              Chirp_OutputMode_getName((Chirp_OutputMode)mode));
+    CLI_write("Output mode set to %s\n", Chirp_OutputMode_getName((Chirp_OutputMode)mode));
 
     return 0;
 }
@@ -65,7 +65,7 @@ int32_t Chirp_CLI_outputMode(int32_t argc, char* argv[])
  * CLI Command: chirpTargetCfg
  * Usage: chirpTargetCfg <minRange_m> <maxRange_m> <minSNR_dB> <numTrackBins>
  ******************************************************************************/
-int32_t Chirp_CLI_targetCfg(int32_t argc, char* argv[])
+int32_t Chirp_CLI_targetCfg(int32_t argc, char *argv[])
 {
     float minRange, maxRange;
     uint8_t minSNR, numBins;
@@ -83,17 +83,14 @@ int32_t Chirp_CLI_targetCfg(int32_t argc, char* argv[])
     minSNR = (uint8_t)atoi(argv[3]);
     numBins = (uint8_t)atoi(argv[4]);
 
-    retVal = Chirp_TargetSelect_configure(&gChirpState.targetConfig,
-                                          minRange, maxRange,
-                                          minSNR, numBins);
+    retVal = Chirp_TargetSelect_configure(&gChirpState.targetConfig, minRange, maxRange, minSNR, numBins);
     if (retVal != 0)
     {
         CLI_write("Error: Invalid target configuration\n");
         return -1;
     }
 
-    CLI_write("Target config: range %.2f-%.2f m, SNR %d dB, %d bins\n",
-              minRange, maxRange, minSNR, numBins);
+    CLI_write("Target config: range %.2f-%.2f m, SNR %d dB, %d bins\n", minRange, maxRange, minSNR, numBins);
 
     return 0;
 }
@@ -102,7 +99,7 @@ int32_t Chirp_CLI_targetCfg(int32_t argc, char* argv[])
  * CLI Command: chirpMotionCfg
  * Usage: chirpMotionCfg <enabled> <threshold> <minBin> <maxBin>
  ******************************************************************************/
-int32_t Chirp_CLI_motionCfg(int32_t argc, char* argv[])
+int32_t Chirp_CLI_motionCfg(int32_t argc, char *argv[])
 {
     uint8_t enabled;
     uint16_t threshold, minBin, maxBin;
@@ -120,18 +117,15 @@ int32_t Chirp_CLI_motionCfg(int32_t argc, char* argv[])
     minBin = (uint16_t)atoi(argv[3]);
     maxBin = (uint16_t)atoi(argv[4]);
 
-    retVal = Chirp_Motion_configure(&gChirpState.motionConfig,
-                                    enabled, threshold,
-                                    minBin, maxBin);
+    retVal = Chirp_Motion_configure(&gChirpState.motionConfig, enabled, threshold, minBin, maxBin);
     if (retVal != 0)
     {
         CLI_write("Error: Invalid motion configuration\n");
         return -1;
     }
 
-    CLI_write("Motion config: %s, threshold %d, bins %d-%d\n",
-              enabled ? "enabled" : "disabled",
-              threshold, minBin, maxBin);
+    CLI_write("Motion config: %s, threshold %d, bins %d-%d\n", enabled ? "enabled" : "disabled", threshold, minBin,
+              maxBin);
 
     return 0;
 }
@@ -140,36 +134,30 @@ int32_t Chirp_CLI_motionCfg(int32_t argc, char* argv[])
  * CLI Command: chirpStatus
  * Usage: chirpStatus
  ******************************************************************************/
-int32_t Chirp_CLI_status(int32_t argc, char* argv[])
+int32_t Chirp_CLI_status(int32_t argc, char *argv[])
 {
     (void)argc;
     (void)argv;
 
     CLI_write("=== Chirp Status ===\n");
     CLI_write("Initialized: %s\n", gChirpState.initialized ? "yes" : "no");
-    CLI_write("Output mode: %s\n",
-              Chirp_OutputMode_getName(gChirpState.outputConfig.mode));
-    CLI_write("Motion output: %s\n",
-              gChirpState.outputConfig.enableMotionOutput ? "enabled" : "disabled");
-    CLI_write("Target info: %s\n",
-              gChirpState.outputConfig.enableTargetInfo ? "enabled" : "disabled");
+    CLI_write("Output mode: %s\n", Chirp_OutputMode_getName(gChirpState.outputConfig.mode));
+    CLI_write("Motion output: %s\n", gChirpState.outputConfig.enableMotionOutput ? "enabled" : "disabled");
+    CLI_write("Target info: %s\n", gChirpState.outputConfig.enableTargetInfo ? "enabled" : "disabled");
     CLI_write("Range bins: %d\n", gChirpState.numRangeBins);
     CLI_write("Range resolution: %.4f m\n", gChirpState.rangeResolution);
 
     if (gChirpState.targetResult.valid)
     {
-        CLI_write("Target: bin %d (%.2f m), confidence %d%%\n",
-                  gChirpState.targetResult.primaryBin,
-                  (float)gChirpState.targetResult.primaryRange_Q8 / 256.0f,
-                  gChirpState.targetResult.confidence);
+        CLI_write("Target: bin %d (%.2f m), confidence %d%%\n", gChirpState.targetResult.primaryBin,
+                  (float)gChirpState.targetResult.primaryRange_Q8 / 256.0f, gChirpState.targetResult.confidence);
     }
     else
     {
         CLI_write("Target: none\n");
     }
 
-    CLI_write("Motion: %s (level %d)\n",
-              gChirpState.motionResult.motionDetected ? "detected" : "none",
+    CLI_write("Motion: %s (level %d)\n", gChirpState.motionResult.motionDetected ? "detected" : "none",
               gChirpState.motionResult.motionLevel);
 
     return 0;
@@ -179,7 +167,7 @@ int32_t Chirp_CLI_status(int32_t argc, char* argv[])
  * CLI Command: chirpReset
  * Usage: chirpReset
  ******************************************************************************/
-int32_t Chirp_CLI_reset(int32_t argc, char* argv[])
+int32_t Chirp_CLI_reset(int32_t argc, char *argv[])
 {
     (void)argc;
     (void)argv;
