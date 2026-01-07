@@ -1,6 +1,6 @@
 # API Reference
 
-Complete CLI command reference for chirp firmware v1.0.0.
+Complete CLI command reference for chirp firmware v1.1.1.
 
 ## Standard TI mmWave Commands
 

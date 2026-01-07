@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/baxter-barlow/chirp/actions/workflows/ci.yml/badge.svg)](https://github.com/baxter-barlow/chirp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/baxter-barlow/chirp/releases/tag/v1.0.0)
+[![Version](https://img.shields.io/badge/version-1.1.1-green.svg)](https://github.com/baxter-barlow/chirp/releases/tag/v1.1.1)
 
 Open source firmware for TI mmWave radar sensors. A modern, flexible alternative to TI's out-of-box demo.
 

@@ -44,7 +44,7 @@ Chirp provides a general-purpose mmWave radar platform. This guide shows how to 
 
 ```bash
 # Flash chirp firmware to IWR6843AOPEVM
-python tools/flash/uart_flash.py /dev/ttyUSB0 releases/v1.0.0/chirp_firmware.bin
+python tools/flash/uart_flash.py /dev/ttyUSB0 firmware/xwr68xx_mmw_demo.bin
 ```
 
 ### 2. Connect Host

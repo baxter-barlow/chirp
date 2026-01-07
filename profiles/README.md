@@ -49,9 +49,6 @@ Optimized for respiratory and heart rate detection.
 ### Method 1: UART Configuration
 Send the profile contents to the radar's command port:
 ```bash
-# Using Python
-python tools/send_config.py /dev/ttyUSB0 profiles/development.cfg
-
 # Using terminal
 cat profiles/low_power.cfg > /dev/ttyUSB0
 ```
