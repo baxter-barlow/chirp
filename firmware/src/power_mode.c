@@ -16,8 +16,8 @@
 
 static const char *POWER_MODE_NAMES[] = {"FULL", "BALANCED", "LOW_POWER", "ULTRA_LOW", "CUSTOM"};
 
-static const char *SENSOR_STATE_NAMES[] = {"STOPPED", "STARTING", "RUNNING", "SLEEPING", "ASLEEP", "WAKING", "STOPPING",
-                                           "ERROR"};
+static const char *SENSOR_STATE_NAMES[] = {"STOPPED", "STARTING", "RUNNING",  "SLEEPING",
+                                           "ASLEEP",  "WAKING",   "STOPPING", "ERROR"};
 
 /* Default timing for each power mode */
 static const uint32_t DEFAULT_ACTIVE_MS[] = {

@@ -85,19 +85,19 @@ extern "C"
 
 /** Full power: continuous operation */
 #define CHIRP_POWER_FULL_ACTIVE_MS 0xFFFFFFFF
-#define CHIRP_POWER_FULL_SLEEP_MS 0
+#define CHIRP_POWER_FULL_SLEEP_MS  0
 
 /** Balanced: 500ms active, 500ms sleep (50% duty cycle) */
 #define CHIRP_POWER_BALANCED_ACTIVE_MS 500
-#define CHIRP_POWER_BALANCED_SLEEP_MS 500
+#define CHIRP_POWER_BALANCED_SLEEP_MS  500
 
 /** Low power: 200ms active, 800ms sleep (20% duty cycle) */
 #define CHIRP_POWER_LOW_ACTIVE_MS 200
-#define CHIRP_POWER_LOW_SLEEP_MS 800
+#define CHIRP_POWER_LOW_SLEEP_MS  800
 
 /** Ultra low: 100ms active, 2000ms sleep (~5% duty cycle) */
 #define CHIRP_POWER_ULTRA_ACTIVE_MS 100
-#define CHIRP_POWER_ULTRA_SLEEP_MS 2000
+#define CHIRP_POWER_ULTRA_SLEEP_MS  2000
 
     /*******************************************************************************
      * Data Types
