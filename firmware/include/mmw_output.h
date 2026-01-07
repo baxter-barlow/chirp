@@ -92,12 +92,32 @@ typedef enum MmwDemo_output_message_type_e
 } MmwDemo_output_message_type;
 
 /*******************************************************************************
- * CUSTOM TLV: Complex Range FFT (0x0500)
- * Outputs raw I/Q data for vital signs phase extraction.
+ * CHIRP CUSTOM TLV TYPES
  * Defined outside enum to avoid SDK version conflicts.
+ * TLV types 0x0500-0x05FF reserved for chirp firmware.
  ******************************************************************************/
+
+/** TLV 0x0500: Complex Range FFT - Full I/Q for all range bins */
 #define MMWDEMO_OUTPUT_MSG_COMPLEX_RANGE_FFT     0x0500
 
+/** TLV 0x0510: Target I/Q - I/Q for selected target bins only */
+#define MMWDEMO_OUTPUT_MSG_TARGET_IQ             0x0510
+
+/** TLV 0x0520: Phase Output - Phase + magnitude for selected bins */
+#define MMWDEMO_OUTPUT_MSG_PHASE_OUTPUT          0x0520
+
+/** TLV 0x0540: Presence - Presence detection result */
+#define MMWDEMO_OUTPUT_MSG_PRESENCE              0x0540
+
+/** TLV 0x0550: Motion Status - Motion detection result */
+#define MMWDEMO_OUTPUT_MSG_MOTION_STATUS         0x0550
+
+/** TLV 0x0560: Target Info - Target selection metadata */
+#define MMWDEMO_OUTPUT_MSG_TARGET_INFO           0x0560
+
+/*******************************************************************************
+ * TLV 0x0500: Complex Range FFT Header
+ ******************************************************************************/
 /*!
  * @brief   Header for Complex Range FFT TLV payload (8 bytes, 4-byte aligned).
  * @details Data format: cmplx16ImRe_t (imag first, then real, each int16_t)
@@ -109,6 +129,103 @@ typedef struct MmwDemo_output_complexRangeFFT_header_t
     uint16_t    rxAntenna;      /*!< RX antenna index (0-based) */
     uint16_t    reserved;       /*!< Padding to 8 bytes */
 } MmwDemo_output_complexRangeFFT_header;
+
+/*******************************************************************************
+ * TLV 0x0510: Target I/Q Header
+ ******************************************************************************/
+/*!
+ * @brief   Header for Target I/Q TLV payload
+ * @details Contains I/Q data for selected bins only (from target selection)
+ */
+typedef struct Chirp_output_targetIQ_header_t
+{
+    uint16_t    numBins;        /*!< Number of bins in payload (1-8) */
+    uint16_t    centerBin;      /*!< Primary target bin index */
+    uint32_t    timestamp_us;   /*!< Timestamp in microseconds */
+} Chirp_output_targetIQ_header;
+
+/*!
+ * @brief   Per-bin data for Target I/Q TLV (follows header)
+ */
+typedef struct Chirp_output_targetIQ_bin_t
+{
+    uint16_t    binIndex;       /*!< Range bin index */
+    int16_t     imag;           /*!< Imaginary (Q) component */
+    int16_t     real;           /*!< Real (I) component */
+    uint16_t    reserved;       /*!< Padding */
+} Chirp_output_targetIQ_bin;
+
+/*******************************************************************************
+ * TLV 0x0520: Phase Output Header
+ ******************************************************************************/
+/*!
+ * @brief   Header for Phase Output TLV payload
+ */
+typedef struct Chirp_output_phase_header_t
+{
+    uint16_t    numBins;        /*!< Number of bins (1-8) */
+    uint16_t    centerBin;      /*!< Primary target bin index */
+    uint32_t    timestamp_us;   /*!< Timestamp in microseconds */
+} Chirp_output_phase_header;
+
+/*!
+ * @brief   Per-bin data for Phase Output TLV (follows header)
+ * @details Phase is fixed-point: -32768 to +32767 = -pi to +pi
+ */
+typedef struct Chirp_output_phase_bin_t
+{
+    uint16_t    binIndex;       /*!< Range bin index */
+    int16_t     phase;          /*!< Phase (fixed-point, pi/32768 scale) */
+    uint16_t    magnitude;      /*!< Magnitude (linear) */
+    uint16_t    flags;          /*!< Flags: bit0=motion, bit1=valid */
+} Chirp_output_phase_bin;
+
+/*******************************************************************************
+ * TLV 0x0540: Presence Detection
+ ******************************************************************************/
+/*!
+ * @brief   Presence detection result payload
+ */
+typedef struct Chirp_output_presence_t
+{
+    uint8_t     presence;       /*!< 0=absent, 1=present, 2=motion */
+    uint8_t     confidence;     /*!< Confidence 0-100 */
+    uint16_t    range_Q8;       /*!< Range in meters (Q8 fixed point) */
+    uint16_t    targetBin;      /*!< Target range bin */
+    uint16_t    reserved;       /*!< Padding */
+} Chirp_output_presence;
+
+/*******************************************************************************
+ * TLV 0x0550: Motion Status
+ ******************************************************************************/
+/*!
+ * @brief   Motion detection result payload
+ */
+typedef struct Chirp_output_motion_t
+{
+    uint8_t     motionDetected; /*!< Motion detected flag */
+    uint8_t     motionLevel;    /*!< Motion level 0-255 */
+    uint16_t    motionBinCount; /*!< Number of bins with motion */
+    uint16_t    peakMotionBin;  /*!< Bin with highest motion */
+    uint16_t    peakMotionDelta;/*!< Peak motion magnitude delta */
+} Chirp_output_motion;
+
+/*******************************************************************************
+ * TLV 0x0560: Target Info
+ ******************************************************************************/
+/*!
+ * @brief   Target selection information payload
+ */
+typedef struct Chirp_output_targetInfo_t
+{
+    uint16_t    primaryBin;     /*!< Primary target bin index */
+    uint16_t    primaryMagnitude; /*!< Primary target magnitude */
+    uint16_t    primaryRange_Q8;/*!< Primary range (Q8 fixed point meters) */
+    uint8_t     confidence;     /*!< Confidence 0-100 */
+    uint8_t     numTargets;     /*!< Number of targets detected */
+    uint16_t    secondaryBin;   /*!< Secondary target bin (if present) */
+    uint16_t    reserved;       /*!< Padding */
+} Chirp_output_targetInfo;
 
 /*!
  * @brief
