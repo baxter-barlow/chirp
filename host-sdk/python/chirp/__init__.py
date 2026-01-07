@@ -21,30 +21,6 @@ Example usage:
 __version__ = "0.3.0"
 
 # TLV type constants
-from .tlv import (
-    TLV_COMPLEX_RANGE_FFT,
-    TLV_DETECTED_POINTS,
-    TLV_MOTION_STATUS,
-    TLV_PHASE_OUTPUT,
-    TLV_PRESENCE,
-    TLV_RANGE_PROFILE,
-    TLV_TARGET_IQ,
-    TLV_TARGET_INFO,
-    tlv_name,
-)
-
-# Data classes for parsed TLVs
-from .tlv import (
-    ComplexRangeFFT,
-    MotionStatus,
-    PhaseBin,
-    PhaseOutput,
-    Presence,
-    TargetIQ,
-    TargetIQBin,
-    TargetInfo,
-)
-
 # Parser classes
 from .parser import (
     FrameHeader,
@@ -54,6 +30,27 @@ from .parser import (
     find_magic_word,
     parse_frame,
     parse_header,
+)
+
+# Data classes for parsed TLVs
+from .tlv import (
+    TLV_COMPLEX_RANGE_FFT,
+    TLV_DETECTED_POINTS,
+    TLV_MOTION_STATUS,
+    TLV_PHASE_OUTPUT,
+    TLV_PRESENCE,
+    TLV_RANGE_PROFILE,
+    TLV_TARGET_INFO,
+    TLV_TARGET_IQ,
+    ComplexRangeFFT,
+    MotionStatus,
+    PhaseBin,
+    PhaseOutput,
+    Presence,
+    TargetInfo,
+    TargetIQ,
+    TargetIQBin,
+    tlv_name,
 )
 
 __all__ = [

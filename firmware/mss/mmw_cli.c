@@ -1510,6 +1510,12 @@ void MmwDemo_CLIInit(uint8_t taskPriority)
     cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_reset;
     cnt++;
 
+    cliCfg.tableEntry[cnt].cmd = "chirpPowerMode";
+    cliCfg.tableEntry[cnt].helpString =
+        "<mode> [activeMs] [sleepMs] (mode: 0=FULL, 1=BALANCED, 2=LOW_POWER, 3=ULTRA_LOW, 4=CUSTOM)";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_powerMode;
+    cnt++;
+
 #ifdef SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN
     cliCfg.tableEntry[cnt].cmd = "idlePowerCycle";
     cliCfg.tableEntry[cnt].helpString =

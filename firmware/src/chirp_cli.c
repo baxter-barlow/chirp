@@ -160,6 +160,14 @@ int32_t Chirp_CLI_status(int32_t argc, char *argv[])
     CLI_write("Motion: %s (level %d)\n", gChirpState.motionResult.motionDetected ? "detected" : "none",
               gChirpState.motionResult.motionLevel);
 
+    CLI_write("Power mode: %s\n", Chirp_Power_getModeName(gChirpState.powerConfig.mode));
+    CLI_write("Sensor state: %s\n", Chirp_Power_getStateName(gChirpState.powerState.sensorState));
+    if (gChirpState.powerConfig.dutyCycleEnabled)
+    {
+        CLI_write("Duty cycle: %u ms active, %u ms sleep\n", gChirpState.powerConfig.activeMs,
+                  gChirpState.powerConfig.sleepMs);
+    }
+
     return 0;
 }
 
@@ -184,6 +192,64 @@ int32_t Chirp_CLI_reset(int32_t argc, char *argv[])
     memset(&gChirpState.phaseOutput, 0, sizeof(Chirp_PhaseOutput));
 
     CLI_write("Chirp state reset\n");
+
+    return 0;
+}
+
+/*******************************************************************************
+ * CLI Command: chirpPowerMode
+ * Usage: chirpPowerMode <mode> [activeMs] [sleepMs]
+ * mode: 0=FULL, 1=BALANCED, 2=LOW_POWER, 3=ULTRA_LOW, 4=CUSTOM
+ ******************************************************************************/
+int32_t Chirp_CLI_powerMode(int32_t argc, char *argv[])
+{
+    int32_t mode;
+    int32_t retVal;
+
+    if (argc < 2)
+    {
+        CLI_write("Error: chirpPowerMode requires at least 1 argument\n");
+        CLI_write("Usage: chirpPowerMode <mode> [activeMs] [sleepMs]\n");
+        CLI_write("  mode: 0=FULL, 1=BALANCED, 2=LOW_POWER, 3=ULTRA_LOW, 4=CUSTOM\n");
+        return -1;
+    }
+
+    mode = atoi(argv[1]);
+
+    /* Check for custom mode with active/sleep parameters */
+    if (mode == CHIRP_POWER_MODE_CUSTOM || argc >= 4)
+    {
+        uint32_t activeMs, sleepMs;
+
+        if (argc < 4)
+        {
+            CLI_write("Error: CUSTOM mode requires activeMs and sleepMs\n");
+            return -1;
+        }
+
+        activeMs = (uint32_t)atoi(argv[2]);
+        sleepMs = (uint32_t)atoi(argv[3]);
+
+        retVal = Chirp_Power_setCustomDutyCycle(&gChirpState.powerConfig, activeMs, sleepMs);
+        if (retVal != 0)
+        {
+            CLI_write("Error: Invalid custom duty cycle\n");
+            return -1;
+        }
+
+        CLI_write("Power mode: CUSTOM (active %u ms, sleep %u ms)\n", activeMs, sleepMs);
+    }
+    else
+    {
+        retVal = Chirp_Power_setMode(&gChirpState.powerConfig, (Chirp_PowerMode)mode);
+        if (retVal != 0)
+        {
+            CLI_write("Error: Invalid power mode %d\n", mode);
+            return -1;
+        }
+
+        CLI_write("Power mode: %s\n", Chirp_Power_getModeName((Chirp_PowerMode)mode));
+    }
 
     return 0;
 }

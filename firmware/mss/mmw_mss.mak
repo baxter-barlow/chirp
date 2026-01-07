@@ -89,6 +89,7 @@ MSS_MMW_DEMO_SOURCES     = \
                        target_select.c \
                        phase_extract.c \
                        motion_detect.c \
+                       power_mode.c \
                        chirp.c \
                        chirp_cli.c
 

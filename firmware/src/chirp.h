@@ -16,6 +16,7 @@
 #include "motion_detect.h"
 #include "output_modes.h"
 #include "phase_extract.h"
+#include "power_mode.h"
 #include "target_select.h"
 #include "version.h"
 
@@ -56,6 +57,12 @@ extern "C"
 
         /** Phase output (updated each frame) */
         Chirp_PhaseOutput phaseOutput;
+
+        /** Power management configuration */
+        Chirp_PowerConfig powerConfig;
+
+        /** Power management state */
+        Chirp_PowerState powerState;
 
         /** Range resolution in meters (from radar config) */
         float rangeResolution;

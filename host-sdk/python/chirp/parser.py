@@ -13,8 +13,8 @@ from .tlv import (
     MotionStatus,
     PhaseOutput,
     Presence,
-    TargetIQ,
     TargetInfo,
+    TargetIQ,
     parse_tlv_payload,
     tlv_name,
 )
@@ -262,7 +262,7 @@ class FrameParser:
             header = parse_header(bytes(self._buffer))
             if header is None:
                 # Invalid header, skip magic word and try again
-                del self._buffer[:len(MAGIC_WORD)]
+                del self._buffer[: len(MAGIC_WORD)]
                 continue
 
             # Check if we have complete frame

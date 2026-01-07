@@ -34,6 +34,9 @@ void Chirp_init(void)
     /* Initialize motion detection */
     Chirp_Motion_init(&gChirpState.motionConfig, &gChirpState.motionState);
 
+    /* Initialize power management */
+    Chirp_Power_init(&gChirpState.powerConfig, &gChirpState.powerState);
+
     /* Mark as initialized */
     gChirpState.initialized = 1;
 }

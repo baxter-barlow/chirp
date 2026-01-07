@@ -23,13 +23,19 @@ except ImportError:
 # Add parent directory to path for development
 sys.path.insert(0, str(__file__).rsplit("/", 2)[0])
 
-from chirp import FrameParser
+from chirp import FrameParser  # noqa: E402
 
 
 def main():
     parser = argparse.ArgumentParser(description="Stream phase data from chirp radar")
     parser.add_argument("port", help="Serial port (e.g., /dev/ttyUSB1, COM3)")
-    parser.add_argument("baudrate", type=int, default=921600, nargs="?", help="Baud rate (default: 921600)")
+    parser.add_argument(
+        "baudrate",
+        type=int,
+        default=921600,
+        nargs="?",
+        help="Baud rate (default: 921600)",
+    )
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     parser.add_argument("--csv", type=str, help="Output CSV file")
     args = parser.parse_args()
@@ -70,7 +76,9 @@ def main():
                 # Check for phase output
                 if frame.phase_output:
                     po = frame.phase_output
-                    print(f"Frame {frame_num}: Phase output with {po.num_bins} bins, center={po.center_bin}")
+                    print(
+                        f"Frame {frame_num}: Phase output with {po.num_bins} bins, center={po.center_bin}"
+                    )
 
                     for bin_data in po.bins:
                         phase_rad = bin_data.phase_radians
@@ -94,17 +102,23 @@ def main():
                 # Check for presence detection
                 if frame.presence:
                     p = frame.presence
-                    print(f"Frame {frame_num}: Presence={p.presence_str}, range={p.range_meters:.2f}m, conf={p.confidence}%")
+                    print(
+                        f"Frame {frame_num}: Presence={p.presence_str}, range={p.range_meters:.2f}m, conf={p.confidence}%"
+                    )
 
                 # Check for motion status
                 if frame.motion_status and frame.motion_status.motion_detected:
                     ms = frame.motion_status
-                    print(f"Frame {frame_num}: Motion detected! level={ms.motion_level}, bin={ms.peak_motion_bin}")
+                    print(
+                        f"Frame {frame_num}: Motion detected! level={ms.motion_level}, bin={ms.peak_motion_bin}"
+                    )
 
                 # Check for target info
                 if frame.target_info and args.verbose:
                     ti = frame.target_info
-                    print(f"Frame {frame_num}: Target bin={ti.primary_bin}, range={ti.range_meters:.2f}m")
+                    print(
+                        f"Frame {frame_num}: Target bin={ti.primary_bin}, range={ti.range_meters:.2f}m"
+                    )
 
             # Periodic status
             elapsed = time.time() - start_time
@@ -122,7 +136,9 @@ def main():
 
         elapsed = time.time() - start_time
         if elapsed > 0:
-            print(f"Received {frame_count} frames in {elapsed:.1f}s ({frame_count / elapsed:.1f} fps)")
+            print(
+                f"Received {frame_count} frames in {elapsed:.1f}s ({frame_count / elapsed:.1f} fps)"
+            )
 
 
 if __name__ == "__main__":

@@ -80,7 +80,9 @@ class ComplexRangeFFT:
         iq_data = data[8:]
 
         if len(iq_data) < num_bins * 4:
-            raise ValueError(f"Not enough I/Q data: expected {num_bins * 4}, got {len(iq_data)}")
+            raise ValueError(
+                f"Not enough I/Q data: expected {num_bins * 4}, got {len(iq_data)}"
+            )
 
         # cmplx16ImRe_t format: imag first, then real
         imag = []
@@ -131,7 +133,9 @@ class TargetIQ:
             offset = i * 8
             if offset + 8 > len(bin_data):
                 break
-            bin_idx, im, re, reserved = struct.unpack("<Hhhh", bin_data[offset : offset + 8])
+            bin_idx, im, re, reserved = struct.unpack(
+                "<Hhhh", bin_data[offset : offset + 8]
+            )
             bins.append(TargetIQBin(bin_index=bin_idx, imag=im, real=re))
 
         return cls(
@@ -190,8 +194,12 @@ class PhaseOutput:
             offset = i * 8
             if offset + 8 > len(bin_data):
                 break
-            bin_idx, phase, mag, flags = struct.unpack("<HhHH", bin_data[offset : offset + 8])
-            bins.append(PhaseBin(bin_index=bin_idx, phase=phase, magnitude=mag, flags=flags))
+            bin_idx, phase, mag, flags = struct.unpack(
+                "<HhHH", bin_data[offset : offset + 8]
+            )
+            bins.append(
+                PhaseBin(bin_index=bin_idx, phase=phase, magnitude=mag, flags=flags)
+            )
 
         return cls(
             num_bins=num_bins,
@@ -227,7 +235,9 @@ class Presence:
         if len(data) < 8:
             raise ValueError("Presence payload too short")
 
-        presence, confidence, range_q8, target_bin, reserved = struct.unpack("<BBHHH", data[:8])
+        presence, confidence, range_q8, target_bin, reserved = struct.unpack(
+            "<BBHHH", data[:8]
+        )
 
         return cls(
             presence=presence,
@@ -253,7 +263,9 @@ class MotionStatus:
         if len(data) < 8:
             raise ValueError("MotionStatus payload too short")
 
-        detected, level, bin_count, peak_bin, peak_delta = struct.unpack("<BBHHH", data[:8])
+        detected, level, bin_count, peak_bin, peak_delta = struct.unpack(
+            "<BBHHH", data[:8]
+        )
 
         return cls(
             motion_detected=bool(detected),
@@ -286,9 +298,15 @@ class TargetInfo:
         if len(data) < 12:
             raise ValueError("TargetInfo payload too short")
 
-        primary_bin, primary_mag, primary_range, confidence, num_targets, secondary_bin, reserved = struct.unpack(
-            "<HHHBBHH", data[:12]
-        )
+        (
+            primary_bin,
+            primary_mag,
+            primary_range,
+            confidence,
+            num_targets,
+            secondary_bin,
+            reserved,
+        ) = struct.unpack("<HHHBBHH", data[:12])
 
         return cls(
             primary_bin=primary_bin,

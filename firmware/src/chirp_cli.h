@@ -52,6 +52,13 @@ extern "C"
      */
     int32_t Chirp_CLI_reset(int32_t argc, char *argv[]);
 
+    /**
+     * @brief Set power mode
+     * Usage: chirpPowerMode <mode> [activeMs] [sleepMs]
+     * mode: 0=FULL, 1=BALANCED, 2=LOW_POWER, 3=ULTRA_LOW, 4=CUSTOM
+     */
+    int32_t Chirp_CLI_powerMode(int32_t argc, char *argv[]);
+
 #ifdef __cplusplus
 }
 #endif
