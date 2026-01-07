@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chirp-radar"
+version = "0.3.0"
+description = "Host-side SDK for chirp mmWave radar firmware"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Baxter Barlow", email = "baxter.m.barlow@gmail.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: System :: Hardware :: Hardware Drivers",
+]
+keywords = ["radar", "mmwave", "iwr6843", "ti", "fmcw", "vital-signs"]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+serial = ["pyserial>=3.5"]
+numpy = ["numpy>=1.24"]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1.0",
+    "black>=23.0",
+]
+all = [
+    "pyserial>=3.5",
+    "numpy>=1.24",
+]
+
+[project.urls]
+Homepage = "https://github.com/baxter-barlow/chirp"
+Documentation = "https://github.com/baxter-barlow/chirp/tree/main/host-sdk/python"
+Repository = "https://github.com/baxter-barlow/chirp"
+Issues = "https://github.com/baxter-barlow/chirp/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["chirp*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.black]
+line-length = 120
+target-version = ["py310", "py311", "py312"]
