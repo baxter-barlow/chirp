@@ -56,8 +56,9 @@ The SOP (Sense On Power) switches control boot mode.
 
 ## Mounting
 
-For vital signs monitoring:
-- Mount radar facing the subject
-- Distance: 0.5 - 2.5 meters
-- Orientation: Horizontal or vertical
-- Avoid metallic objects in field of view
+General guidelines:
+- Mount radar facing the target area
+- Typical range: 0.3 - 10 meters (depends on configuration)
+- Orientation: Application-specific
+- Avoid metallic objects in direct field of view
+- Consider antenna beam pattern when positioning

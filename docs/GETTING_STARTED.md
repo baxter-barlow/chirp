@@ -23,7 +23,7 @@ Follow the flashing instructions in [BUILD.md](../BUILD.md).
 ### 2. Connect to Radar
 
 ```python
-from iwr6843 import RadarParser
+from chirp import RadarParser
 
 # Connect to data port
 parser = RadarParser('/dev/ttyACM1', baudrate=921600)
@@ -41,7 +41,7 @@ Send configuration via CLI port (`/dev/ttyACM0`):
 import serial
 
 cli = serial.Serial('/dev/ttyACM0', 115200)
-with open('profiles/vital_signs.cfg') as f:
+with open('profiles/default.cfg') as f:
     for line in f:
         cli.write(line.encode())
         cli.readline()  # Wait for response

@@ -1,6 +1,6 @@
-# IWR6843 Optimized Firmware Development Plan
+# chirp Development Plan
 
-**Project:** Open Source Radar Firmware for Health Monitoring
+**Project:** Open Source mmWave Radar Firmware Platform
 **Target Device:** IWR6843AOPEVM (60-64 GHz mmWave Radar)
 **Version:** 1.0 Draft
 **Date:** 2026-01-07
@@ -27,32 +27,36 @@
 
 ### 1.1 Vision
 
-Create a **production-quality, open-source firmware** for the IWR6843 mmWave radar that:
+Create a **production-quality, open-source firmware platform** for TI mmWave radar sensors that:
 
-- Provides optimized data output for health monitoring applications
-- Supports multiple output modes (raw, processed, vital signs)
+- Serves as a modern, flexible alternative to TI's out-of-box demo
+- Provides multiple efficient output modes (raw I/Q to minimal processed data)
+- Enables runtime configuration without reflashing
 - Minimizes bandwidth while maximizing signal quality
-- Enables sleep tracking and continuous health monitoring
-- Serves as a foundation for community development
+- Acts as a foundation layer for application-specific development
+- Supports the community in building diverse mmWave applications
 
 ### 1.2 Goals
 
 | Goal | Metric | Target |
 |------|--------|--------|
-| **Bandwidth Efficiency** | Bytes/frame for vital signs | < 100 bytes (vs 1040 current) |
-| **Power Efficiency** | Active duty cycle | < 25% for sleep monitoring |
+| **Bandwidth Efficiency** | Bytes/frame (PHASE mode) | < 100 bytes (vs 1040 OOB) |
+| **Power Efficiency** | Configurable duty cycle | 10-100% |
 | **Latency** | Frame-to-output delay | < 10ms |
-| **Accuracy** | Breathing rate error | ±1 BPM |
 | **Flexibility** | Runtime configurable modes | 5+ modes |
 | **Reliability** | Continuous operation | 8+ hours without reset |
+| **Extensibility** | Clean API for applications | Documented interfaces |
 
-### 1.3 Non-Goals (Host SDK Responsibility)
+### 1.3 Non-Goals (Application Layer Responsibility)
 
-- ML-based sleep stage classification
-- Long-term data storage
-- Multi-night trend analysis
+These belong in applications built ON TOP of chirp:
+
+- Application-specific algorithms (vital signs, gesture recognition, etc.)
+- ML-based classification
+- Long-term data storage and trend analysis
 - Cloud connectivity
-- User interface
+- User interfaces
+- Domain-specific signal processing
 
 ---
 
@@ -486,27 +490,29 @@ Total: 8 bytes per update (@ 1 Hz = 8 bytes/second)
 
 ---
 
-### Phase 4: Sleep Tracking Profile (Week 8-9)
+### Phase 4: Application Profiles (Week 8-9)
 
-**Goal:** Optimized configuration for sleep monitoring
+**Goal:** Preset configurations for common use cases
 
 #### Tasks
 
 | Task | Description | Effort | Deliverable |
 |------|-------------|--------|-------------|
-| 4.1 | Design sleep-optimized chirp configuration | 8h | sleep_profile.cfg |
-| 4.2 | Tune target selection for bedroom scenarios | 8h | Parameter tuning |
-| 4.3 | Implement profile presets | 8h | Profile system |
-| 4.4 | Add profile switching CLI | 4h | CLI extension |
-| 4.5 | Validate with real sleep sessions | 24h | Validation data |
-| 4.6 | Document sleep tracking setup | 4h | SLEEP_TRACKING.md |
+| 4.1 | Design profile system architecture | 8h | Profile framework |
+| 4.2 | Create DEVELOPMENT profile (full data) | 4h | development.cfg |
+| 4.3 | Create LOW_BANDWIDTH profile | 8h | low_bandwidth.cfg |
+| 4.4 | Create LOW_POWER profile (duty cycling) | 8h | low_power.cfg |
+| 4.5 | Create PRESENCE profile (minimal) | 4h | presence.cfg |
+| 4.6 | Add profile switching CLI | 4h | CLI extension |
+| 4.7 | Document profile system | 8h | PROFILES.md |
 
 #### Deliverables
-- [ ] Sleep profile preset
-- [ ] Presence profile preset
-- [ ] Development profile preset
-- [ ] Validation against reference monitor
-- [ ] Version: `v0.4.0-sleep`
+- [ ] Profile framework with runtime switching
+- [ ] DEVELOPMENT profile (debugging, full data)
+- [ ] LOW_BANDWIDTH profile (efficient for constrained links)
+- [ ] LOW_POWER profile (duty cycling for battery applications)
+- [ ] PRESENCE profile (minimal occupancy detection)
+- [ ] Version: `v0.4.0-profiles`
 
 ---
 
@@ -704,8 +710,8 @@ powerMode <mode> [activeMs] [sleepMs]
 
 profile <name>
     Load preset profile
-    Names: DEVELOPMENT | PRESENCE | SLEEP | VITAL_SIGNS
-    Example: profile SLEEP
+    Names: DEVELOPMENT | LOW_BANDWIDTH | LOW_POWER | PRESENCE
+    Example: profile LOW_POWER
 
 QUERY COMMANDS
 --------------
@@ -755,8 +761,8 @@ testTLV <type>
 ### 8.2 Host SDK Interface (Python)
 
 ```python
-class IWR6843:
-    """High-level interface to IWR6843 radar with optimized firmware."""
+class ChirpRadar:
+    """High-level interface to mmWave radar running chirp firmware."""
 
     def __init__(self, cli_port: str, data_port: str):
         """Initialize radar connection."""
@@ -863,10 +869,10 @@ class TargetInfo:
 
 | Test | Reference | Target Accuracy |
 |------|-----------|-----------------|
-| Breathing Rate | Chest strap | ±1 BPM |
-| Heart Rate | Pulse oximeter | ±5 BPM |
-| Presence | Ground truth | >99% accuracy |
-| Range | Tape measure | ±5 cm |
+| Presence Detection | Ground truth | >99% accuracy |
+| Range Measurement | Tape measure | ±5 cm |
+| Phase Stability | Static target | <0.1 rad std dev |
+| Motion Detection | Video reference | >95% accuracy |
 
 ### 9.4 Stress Tests
 
@@ -913,28 +919,28 @@ class TargetInfo:
 ### 11.1 Repository Structure
 
 ```
-iwr6843-opensource-firmware/
+chirp/
 ├── README.md                 # Project overview
-├── LICENSE                   # MIT or Apache 2.0
+├── LICENSE                   # MIT
 ├── CONTRIBUTING.md           # Contribution guidelines
+├── DEVELOPMENT_PLAN.md       # This document
 ├── docs/
 │   ├── GETTING_STARTED.md    # Quick start guide
 │   ├── API_REFERENCE.md      # Complete API docs
 │   ├── HARDWARE_SETUP.md     # Hardware guide
-│   └── DEVELOPMENT.md        # Developer guide
+│   └── custom_tlv_spec.md    # TLV format specification
 ├── firmware/
-│   ├── src/                  # Source code
+│   ├── src/                  # Core modules
 │   ├── include/              # Headers
-│   ├── profiles/             # Configuration profiles
+│   ├── mss/                  # ARM Cortex-R4F code
+│   ├── dss/                  # C674x DSP code
 │   └── Makefile              # Build system
 ├── host-sdk/
-│   ├── python/               # Python SDK
-│   ├── examples/             # Example applications
-│   └── tests/                # SDK tests
+│   ├── python/               # Python parsing library
+│   └── examples/             # Example applications
 ├── tools/
-│   ├── flash/                # Flashing utilities
-│   ├── debug/                # Debug tools
-│   └── analysis/             # Signal analysis
+│   └── flash/                # Flashing utilities
+├── profiles/                 # Radar configuration profiles
 └── releases/
     └── v1.0.0/               # Binary releases
 ```
@@ -1012,6 +1018,7 @@ iwr6843-opensource-firmware/
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-01-07 | Claude | Initial development plan |
+| 1.1 | 2026-01-07 | Claude | Reframed as general-purpose platform (chirp) |
 
 ---
 

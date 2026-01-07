@@ -1,109 +1,120 @@
-# IWR6843 Open Source Firmware
+# chirp
 
-Open source mmWave radar firmware for health monitoring and sleep tracking applications.
+Open source firmware for TI mmWave radar sensors. A modern, flexible alternative to TI's out-of-box demo.
 
-**Target Device:** TI IWR6843AOPEVM (60-64 GHz mmWave Radar)
+## Why chirp?
 
-## Features
+TI's OOB demo is designed for evaluation, not production. chirp provides:
 
-- **Multiple Output Modes**: RAW_IQ, RANGE_FFT, TARGET_IQ, PHASE, PRESENCE
-- **Intelligent Target Selection**: Auto-selects strongest static reflector in configurable range
-- **On-chip Phase Extraction**: 97% bandwidth reduction vs raw I/Q output
-- **Motion Detection**: Flags frames with motion for host-side filtering
-- **Power Management**: Duty-cycling for extended battery operation
-- **Runtime Configuration**: All features configurable via CLI commands
+- **Efficient output modes** — From full radar cube to minimal processed data
+- **Runtime configuration** — Change modes and parameters without reflashing
+- **Clean architecture** — Modular, well-documented, easy to extend
+- **Bandwidth optimization** — Up to 97% reduction vs OOB demo
+- **Power management** — Duty cycling for battery/thermal-constrained applications
 
-## Project Status
+## Supported Hardware
 
-| Component | Status |
-|-----------|--------|
-| Repository Setup | In Progress |
-| Phase 1: Foundation | Not Started |
-| Phase 2: Core Optimizations | Not Started |
-| Phase 3: Power Management | Not Started |
-| Phase 4: Sleep Tracking | Not Started |
-| Phase 5: Production | Not Started |
+| Device | Status |
+|--------|--------|
+| IWR6843AOPEVM | Primary target |
+| IWR6843ISK | Planned |
+| IWR1443 | Future |
+| AWR1843 | Future |
+
+## Output Modes
+
+| Mode | Description | Bandwidth | Use Case |
+|------|-------------|-----------|----------|
+| RAW_IQ | Full radar cube | ~800 KB/s | Development, debugging |
+| RANGE_FFT | Complex range profile | 10 KB/s | Signal analysis |
+| TARGET_IQ | I/Q for selected bins | 1 KB/s | Tracking applications |
+| PHASE | Phase + magnitude | 0.5 KB/s | Micro-motion sensing |
+| PRESENCE | Occupancy flag | 0.02 KB/s | Presence detection |
 
 ## Quick Start
 
-### Building Firmware
-
-Prerequisites:
-- TI ARM Compiler 16.9.4 LTS
-- TI C6000 Compiler 8.3.3
-- XDCtools 3.50.08.24
-- SYS/BIOS 6.73.01.01
-- mmWave SDK 3.6.2 LTS
+### Building
 
 ```bash
-# Set up toolchain environment
-source toolchains/env.sh
+# Clone repository
+git clone https://github.com/baxter-barlow/chirp.git
+cd chirp
 
-# Build firmware
+# Configure toolchains (see BUILD.md for details)
+cp toolchains/env.sh.template toolchains/env.sh
+# Edit env.sh with your TI toolchain paths
+
+# Build
+source toolchains/env.sh
 cd firmware
 make all
 ```
 
-### Using Host SDK
+### Flashing
 
-```bash
-pip install -e host-sdk/python
+See [BUILD.md](BUILD.md) for detailed flashing instructions.
 
-# Parse radar data
-from iwr6843 import RadarParser
+### Using the Host SDK
+
+```python
+from chirp import RadarParser
+
 parser = RadarParser('/dev/ttyACM1')
 for frame in parser.frames():
-    print(f"Phase: {frame.phase}")
+    if frame.has_tlv(0x0520):  # PHASE output
+        phase_data = frame.get_tlv(0x0520)
+        print(f"Phase: {phase_data.phase_rad:.3f} rad")
 ```
 
-## Repository Structure
+## Project Structure
 
 ```
-iwr6843-firmware/
+chirp/
 ├── firmware/           # Embedded C firmware
-│   ├── src/           # New modular source files
-│   ├── include/       # Headers
-│   ├── mss/           # ARM Cortex-R4F (MSS) code
-│   └── dss/           # C674x DSP (DSS) code
+│   ├── src/           # Core modules (target selection, phase extraction, etc.)
+│   ├── include/       # Public headers
+│   ├── mss/           # ARM Cortex-R4F (main subsystem)
+│   └── dss/           # C674x DSP (data subsystem)
 ├── host-sdk/          # Host-side libraries
 │   └── python/        # Python parsing library
 ├── tools/             # Development utilities
-│   └── flash/         # Flashing scripts
 ├── docs/              # Documentation
 └── profiles/          # Radar configuration profiles
 ```
 
-## Documentation
+## Building on chirp
 
-- [BUILD.md](BUILD.md) - Detailed build instructions
-- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
-- [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) - Getting started guide
-- [docs/API_REFERENCE.md](docs/API_REFERENCE.md) - CLI and TLV API reference
+chirp is designed as a foundation layer. Example applications you can build:
 
-## Custom TLV Types
+- **Vital signs monitoring** — Respiration rate, heart rate from micro-motion
+- **Gesture recognition** — Hand tracking, gesture classification
+- **Object tracking** — People counting, trajectory analysis
+- **Presence detection** — Room occupancy, security systems
+- **Industrial monitoring** — Vibration analysis, level sensing
 
-| TLV Type | Name | Description |
-|----------|------|-------------|
-| 0x0500 | COMPLEX_RANGE_FFT | Full complex Range FFT (legacy) |
-| 0x0510 | TARGET_IQ | I/Q for selected bins only |
-| 0x0520 | PHASE_OUTPUT | Phase + magnitude (primary) |
-| 0x0540 | PRESENCE | Simple presence detection |
+## TLV Reference
+
+| Type | Name | Description |
+|------|------|-------------|
+| 0x0500 | COMPLEX_RANGE_FFT | Full complex I/Q for all range bins |
+| 0x0510 | TARGET_IQ | I/Q for selected target bins only |
+| 0x0520 | PHASE_OUTPUT | Computed phase + magnitude |
+| 0x0540 | PRESENCE | Presence detection result |
 | 0x0550 | MOTION_STATUS | Motion detection flags |
 | 0x0560 | TARGET_INFO | Target selection metadata |
 
-## Performance Targets
+## Documentation
 
-| Metric | Target |
-|--------|--------|
-| Bandwidth (PHASE mode) | < 100 bytes/frame |
-| Latency | < 10ms |
-| Breathing rate accuracy | ±1 BPM |
-| Continuous operation | 8+ hours |
+- [BUILD.md](BUILD.md) — Build and flash instructions
+- [CONTRIBUTING.md](CONTRIBUTING.md) — How to contribute
+- [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md) — Roadmap and architecture
+- [docs/API_REFERENCE.md](docs/API_REFERENCE.md) — CLI and TLV API
+- [docs/custom_tlv_spec.md](docs/custom_tlv_spec.md) — TLV format specification
 
 ## License
 
-MIT License - see [LICENSE](LICENSE)
+MIT — use it for anything.
 
 ## Acknowledgments
 
-Based on TI mmWave SDK 3.6.2 LTS. TI SDK components are subject to TI's license terms.
+Based on TI mmWave SDK 3.6.2 LTS. See TI's license terms for SDK components.

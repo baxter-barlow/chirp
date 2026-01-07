@@ -1,13 +1,16 @@
 /**
  * @file firmware_config.h
- * @brief Master configuration for IWR6843 firmware
+ * @brief Master configuration for chirp firmware
+ *
+ * chirp - Open source mmWave radar firmware platform
+ * https://github.com/baxter-barlow/chirp
  *
  * This file contains all compile-time configuration options.
  * Edit this file to enable/disable features before building.
  */
 
-#ifndef FIRMWARE_CONFIG_H
-#define FIRMWARE_CONFIG_H
+#ifndef CHIRP_FIRMWARE_CONFIG_H
+#define CHIRP_FIRMWARE_CONFIG_H
 
 /* ==========================================================================
  * Output Mode Configuration
@@ -104,4 +107,4 @@
 /** Enable timing measurements */
 #define DEBUG_TIMING_ENABLE          0
 
-#endif /* FIRMWARE_CONFIG_H */
+#endif /* CHIRP_FIRMWARE_CONFIG_H */

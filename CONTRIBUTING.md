@@ -1,11 +1,11 @@
-# Contributing to IWR6843 Firmware
+# Contributing to chirp
 
-Thank you for your interest in contributing to this project!
+Thank you for your interest in contributing to chirp!
 
 ## Getting Started
 
 1. Fork the repository
-2. Clone your fork: `git clone git@github.com:YOUR_USERNAME/iwr6843-firmware.git`
+2. Clone your fork: `git clone git@github.com:YOUR_USERNAME/chirp.git`
 3. Install pre-commit hooks: `pip install pre-commit && pre-commit install`
 4. Create a feature branch: `git checkout -b feat/your-feature`
 
