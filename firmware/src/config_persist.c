@@ -7,6 +7,7 @@
  */
 
 #include "config_persist.h"
+#include "chirp.h"  /* For Chirp_State and Chirp_PhaseOutput */
 
 #include <string.h>
 

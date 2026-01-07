@@ -14,8 +14,12 @@
 
 #include <stdint.h>
 
-#include "chirp.h"
+/* Include specific headers instead of chirp.h to avoid circular dependency */
 #include "error_codes.h"
+#include "output_modes.h"
+#include "target_select.h"
+#include "motion_detect.h"
+#include "power_mode.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -639,7 +639,8 @@
 #include <ti/demo/utils/mmwdemo_rfparser.h>
 #include <ti/demo/xwr68xx/mmw/include/mmw_config.h>
 #include <ti/demo/xwr68xx/mmw/mmw_res.h>
-#include <ti/demo/xwr68xx/mmw/mss/mmw_mss.h>
+/* Use local mmw_mss.h with chirp extensions (rangeStep, dmaHandle) */
+#include "mmw_mss.h"
 
 #include "../include/mmw_output.h"
 

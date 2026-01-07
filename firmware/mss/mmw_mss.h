@@ -39,12 +39,18 @@
 #ifndef MMW_MSS_H
 #define MMW_MSS_H
 
+/* SYSBIOS includes - must come before other headers that depend on them */
+#include <ti/sysbios/knl/Semaphore.h>
+#include <ti/sysbios/knl/Task.h>
+
+/* TI SDK includes */
 #include <ti/common/mmwave_error.h>
 #include <ti/datapath/dpc/objectdetection/objdetrangehwa/objdetrangehwa.h>
 #include <ti/demo/utils/mmwdemo_adcconfig.h>
 #include <ti/demo/utils/mmwdemo_monitor.h>
 #include <ti/demo/xwr68xx/mmw/include/mmw_config.h>
-#include <ti/demo/xwr68xx/mmw/include/mmw_output.h>
+/* Use local mmw_output.h with chirp TLV definitions */
+#include "../include/mmw_output.h"
 #include <ti/demo/xwr68xx/mmw/mss/mmw_lvds_stream.h>
 #include <ti/drivers/dma/dma.h>
 #include <ti/drivers/gpio/gpio.h>
@@ -52,8 +58,6 @@
 #include <ti/drivers/osal/DebugP.h>
 #include <ti/drivers/soc/soc.h>
 #include <ti/drivers/uart/UART.h>
-#include <ti/sysbios/knl/Semaphore.h>
-#include <ti/sysbios/knl/Task.h>
 
 #ifdef __cplusplus
 extern "C"
