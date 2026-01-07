@@ -1509,8 +1509,8 @@ static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDe
         if (Chirp_shouldOutputTLV(MMWDEMO_OUTPUT_MSG_PHASE_OUTPUT) && gChirpState.phaseOutput.numBins > 0)
         {
             tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_PHASE_OUTPUT;
-            tl[tlvIdx].length = sizeof(Chirp_output_phase_header) +
-                                gChirpState.phaseOutput.numBins * sizeof(Chirp_output_phase_bin);
+            tl[tlvIdx].length =
+                sizeof(Chirp_output_phase_header) + gChirpState.phaseOutput.numBins * sizeof(Chirp_output_phase_bin);
             packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
             chirpEmitPhase = 1;
             tlvIdx++;
@@ -1678,8 +1678,7 @@ static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDe
 
         UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
         UART_writePolling(uartHandle, (uint8_t *)&targetHeader, sizeof(Chirp_output_targetIQ_header));
-        UART_writePolling(uartHandle, (uint8_t *)targetBins,
-                          targetHeader.numBins * sizeof(Chirp_output_targetIQ_bin));
+        UART_writePolling(uartHandle, (uint8_t *)targetBins, targetHeader.numBins * sizeof(Chirp_output_targetIQ_bin));
         tlvIdx++;
     }
 
