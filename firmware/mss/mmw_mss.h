@@ -46,6 +46,7 @@
 #include <ti/demo/xwr68xx/mmw/include/mmw_config.h>
 #include <ti/demo/xwr68xx/mmw/include/mmw_output.h>
 #include <ti/demo/xwr68xx/mmw/mss/mmw_lvds_stream.h>
+#include <ti/drivers/dma/dma.h>
 #include <ti/drivers/gpio/gpio.h>
 #include <ti/drivers/mailbox/mailbox.h>
 #include <ti/drivers/osal/DebugP.h>
@@ -326,6 +327,9 @@ extern "C"
 
         /*! @brief   Handle of the EDMA driver. */
         EDMA_Handle edmaHandle;
+
+        /*! @brief   Handle of the DMA driver for UART DMA transfers. */
+        DMA_Handle dmaHandle;
 
         /*! @brief   Radar cube memory information from range DPC */
         DPC_ObjectDetectionRangeHWA_preStartCfg_radarCubeMem radarCubeMem;

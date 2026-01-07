@@ -67,6 +67,7 @@
 
 /* Chirp Include Files */
 #include "chirp_cli.h"
+#include "firmware_config.h"
 
 #ifdef SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN
 /* Low Power Library Functions*/
@@ -1248,6 +1249,11 @@ static int32_t MmwDemo_CLIConfigDataPort(int32_t argc, char *argv[])
         uartParams.clockFrequency = gMmwMssMCB.cfg.platformCfg.sysClockFrequency;
         uartParams.baudRate = baudrate;
         uartParams.isPinMuxDone = 1U;
+#if CHIRP_UART_DMA_ENABLE
+        uartParams.dmaHandle = gMmwMssMCB.dataPathObj.dmaHandle;
+        uartParams.txDMAChannel = CHIRP_UART_TX_DMA_CHANNEL;
+        uartParams.rxDMAChannel = CHIRP_UART_RX_DMA_CHANNEL;
+#endif
 
         /* Open the Logging UART Instance: */
         gMmwMssMCB.loggingUartHandle = UART_open(1, &uartParams);

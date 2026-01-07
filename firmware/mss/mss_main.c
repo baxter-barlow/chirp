@@ -645,6 +645,7 @@
 
 /* Chirp Include Files */
 #include "chirp.h"
+#include "firmware_config.h"
 
 /* Profiler Include Files */
 #include <ti/utils/cycleprofiler/cycle_profiler.h>
@@ -3939,6 +3940,25 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     /*****************************************************************************
      * Open the mmWave SDK components:
      *****************************************************************************/
+
+#if CHIRP_UART_DMA_ENABLE
+    /* Initialize and open DMA driver for UART DMA transfers */
+    {
+        DMA_Params dmaParams;
+        DMA_init();
+        DMA_Params_init(&dmaParams);
+        gMmwMssMCB.dataPathObj.dmaHandle = DMA_open(0, &dmaParams, &errCode);
+        if (gMmwMssMCB.dataPathObj.dmaHandle == NULL)
+        {
+            System_printf("Error: DMA_open failed [%d]\n", errCode);
+            MmwDemo_debugAssert(0);
+            return;
+        }
+    }
+#else
+    gMmwMssMCB.dataPathObj.dmaHandle = NULL;
+#endif
+
     /* Setup the default UART Parameters */
     UART_Params_init(&uartParams);
     uartParams.clockFrequency = gMmwMssMCB.cfg.platformCfg.sysClockFrequency;
@@ -3953,13 +3973,18 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
         return;
     }
 
-    /* Setup the default UART Parameters */
+    /* Setup the default UART Parameters for logging */
     UART_Params_init(&uartParams);
     uartParams.writeDataMode = UART_DATA_BINARY;
     uartParams.readDataMode = UART_DATA_BINARY;
     uartParams.clockFrequency = gMmwMssMCB.cfg.platformCfg.sysClockFrequency;
     uartParams.baudRate = gMmwMssMCB.cfg.platformCfg.loggingBaudRate;
     uartParams.isPinMuxDone = 1U;
+#if CHIRP_UART_DMA_ENABLE
+    uartParams.dmaHandle = gMmwMssMCB.dataPathObj.dmaHandle;
+    uartParams.txDMAChannel = CHIRP_UART_TX_DMA_CHANNEL;
+    uartParams.rxDMAChannel = CHIRP_UART_RX_DMA_CHANNEL;
+#endif
 
     /* Open the Logging UART Instance: */
     gMmwMssMCB.loggingUartHandle = UART_open(1, &uartParams);

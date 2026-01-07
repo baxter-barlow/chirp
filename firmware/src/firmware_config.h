@@ -98,6 +98,24 @@
 #define POWER_SLEEP_FRAMES 100
 
 /* ==========================================================================
+ * UART Configuration
+ * ========================================================================== */
+
+/**
+ * Enable DMA for UART data output
+ * When enabled, UART transfers use DMA to free CPU during transmission.
+ * The CPU is free to handle interrupts and other tasks during DMA transfer.
+ * Disable this if hardware testing reveals DMA issues.
+ */
+#define CHIRP_UART_DMA_ENABLE 1
+
+/** UART TX DMA channel (1-31, must not conflict with other DMA users) */
+#define CHIRP_UART_TX_DMA_CHANNEL 1U
+
+/** UART RX DMA channel (1-31, must not conflict with other DMA users) */
+#define CHIRP_UART_RX_DMA_CHANNEL 2U
+
+/* ==========================================================================
  * Debug Configuration
  * ========================================================================== */
 
