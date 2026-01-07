@@ -18,7 +18,7 @@ Example usage:
                 print(f"Bin {bin.bin_index}: phase={bin.phase_radians:.3f} rad")
 """
 
-__version__ = "0.3.0"
+__version__ = "1.1.1"
 
 # TLV type constants
 # Parser classes

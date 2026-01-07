@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chirp-radar"
-version = "0.3.0"
+version = "1.1.1"
 description = "Host-side SDK for chirp mmWave radar firmware"
 readme = "README.md"
 license = {text = "Apache-2.0"}

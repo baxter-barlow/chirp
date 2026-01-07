@@ -104,7 +104,7 @@ Bin Data (numBins × 8 bytes each)
 16      2     bin[0].binIndex (uint16)
 18      2     bin[0].imag (int16)
 20      2     bin[0].real (int16)
-22      2     bin[0].flags (uint16)
+22      2     bin[0].reserved (uint16)
 ...
 ```
 
@@ -118,7 +118,7 @@ Bin Data (numBins × 8 bytes each)
 | binIndex | uint16 | Bin index |
 | imag | int16 | Imaginary (Q) component |
 | real | int16 | Real (I) component |
-| flags | uint16 | bit0=motion, bit1=valid |
+| reserved | uint16 | Reserved (0) |
 
 ---
 
@@ -251,15 +251,16 @@ Offset  Size  Field
 ──────────────────────────────────────────
 TLV Header (8 bytes)
 0       4     type = 0x00000560
-4       4     length = 16
+4       4     length = 12
 
-Payload (16 bytes)
+Payload (12 bytes)
 8       2     primaryBin
-10      2     numTrackedBins
-12      2     snr_q4
-14      2     range_q8
-16      4     trackingAge
-20      4     flags
+10      2     primaryMagnitude
+12      2     range_q8
+14      1     confidence
+15      1     numTargets
+16      2     secondaryBin
+18      2     reserved
 ```
 
 ### Fields
@@ -267,16 +268,16 @@ Payload (16 bytes)
 | Field | Type | Description |
 |-------|------|-------------|
 | primaryBin | uint16 | Primary target bin index |
-| numTrackedBins | uint16 | Number of tracked bins |
-| snr_q4 | uint16 | SNR in Q4 format (dB × 16) |
+| primaryMagnitude | uint16 | Primary target magnitude (linear) |
 | range_q8 | uint16 | Range in Q8 format |
-| trackingAge | uint32 | Frames since target acquired |
-| flags | uint32 | bit0=valid, bit1=stable, bit2=motion |
+| confidence | uint8 | Confidence 0-100% |
+| numTargets | uint8 | Number of targets detected |
+| secondaryBin | uint16 | Secondary target bin index |
+| reserved | uint16 | Reserved (0) |
 
 ### Conversions
 
 ```python
-snr_db = snr_q4 / 16.0
 range_meters = range_q8 / 256.0
 ```
 
@@ -330,7 +331,7 @@ def parse_tlv(data, offset):
 | PHASE_OUTPUT (5 bins) | 56 | 0.6 KB/s | 1.1 KB/s |
 | PRESENCE | 16 | 0.2 KB/s | 0.3 KB/s |
 | MOTION_STATUS | 16 | 0.2 KB/s | 0.3 KB/s |
-| TARGET_INFO | 24 | 0.2 KB/s | 0.5 KB/s |
+| TARGET_INFO | 20 | 0.2 KB/s | 0.4 KB/s |
 
 UART limit at 921600 baud: ~92 KB/s
 

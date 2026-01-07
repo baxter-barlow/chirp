@@ -134,7 +134,7 @@ class TargetIQ:
             if offset + 8 > len(bin_data):
                 break
             bin_idx, im, re, reserved = struct.unpack(
-                "<Hhhh", bin_data[offset : offset + 8]
+                "<HhhH", bin_data[offset : offset + 8]
             )
             bins.append(TargetIQBin(bin_index=bin_idx, imag=im, real=re))
 
