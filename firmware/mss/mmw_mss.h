@@ -258,6 +258,9 @@ extern "C"
                     the minimum. */
         uint16_t numRangeBins;
 
+        /*! @brief Range resolution in meters per bin */
+        float rangeStep;
+
         /*! @brief  Number of Doppler FFT bins, this is at a minimum the next power of 2 of
                     numDopplerChirps. If Doppler zoom is supported, this can be bigger
                     than the minimum. */

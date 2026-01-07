@@ -1356,6 +1356,15 @@ static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDe
     cmplx16ImRe_t *azimuthStaticHeatMap;
     DPIF_PointCloudSideInfo *objOutSideInfo;
     DPC_ObjectDetection_Stats *stats;
+    uint8_t chirpReady = 0;
+    uint8_t chirpEmitComplex = 0;
+    uint8_t chirpEmitTargetIQ = 0;
+    uint8_t chirpEmitPhase = 0;
+    uint8_t chirpEmitPresence = 0;
+    uint8_t chirpEmitMotion = 0;
+    uint8_t chirpEmitTargetInfo = 0;
+    uint32_t chirpTimestampUs = 0;
+    const int16_t *chirpRadarData = NULL;
 
     /* Get subframe configuration */
     subFrameCfg = &gMmwMssMCB.subFrameCfg[result->subFrameIdx];
@@ -1391,6 +1400,18 @@ static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDe
         result->radarCube.data = (void *)SOC_translateAddress((uint32_t)result->radarCube.data,
                                                               SOC_TranslateAddr_Dir_FROM_OTHER_CPU, &errCode);
         DebugP_assert((uint32_t)result->radarCube.data != SOC_TRANSLATEADDR_INVALID);
+    }
+
+    if ((subFrameCfg->rangeStep > 0.0f) && (result->radarCube.data != NULL) &&
+        (result->radarCube.datafmt == DPIF_RADARCUBE_FORMAT_1))
+    {
+        chirpRadarData = (const int16_t *)result->radarCube.data;
+        chirpTimestampUs = (uint32_t)((Pmu_getCount(0) * 1000000ULL) / gMmwMssMCB.cfg.platformCfg.sysClockFrequency);
+        Chirp_configure(subFrameCfg->rangeStep, subFrameCfg->numRangeBins);
+        if (Chirp_processFrame(chirpRadarData, subFrameCfg->numRangeBins, chirpTimestampUs) == 0)
+        {
+            chirpReady = 1;
+        }
     }
 
     /* Header: */
@@ -1461,25 +1482,67 @@ static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDe
         tlvIdx++;
     }
 
-    /***************************************************************************
-     * CUSTOM TLV: Complex Range FFT for Vital Signs Processing
-     * Outputs raw I/Q data from first chirp, first RX antenna
-     * Enable by defining MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE
-     * SAFETY: Only outputs if radar cube is in FORMAT_1 (expected layout)
-     **************************************************************************/
-#ifdef MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE
+    if (chirpReady)
     {
-        /* Only output if we have valid radar cube data AND format is as expected */
-        if ((result->radarCube.data != NULL) && (result->radarCube.datafmt == DPIF_RADARCUBE_FORMAT_1))
+#ifdef MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE
+        if (Chirp_shouldOutputTLV(MMWDEMO_OUTPUT_MSG_COMPLEX_RANGE_FFT))
         {
             tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_COMPLEX_RANGE_FFT;
             tl[tlvIdx].length =
                 sizeof(MmwDemo_output_complexRangeFFT_header) + subFrameCfg->numRangeBins * sizeof(cmplx16ImRe_t);
             packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
+            chirpEmitComplex = 1;
+            tlvIdx++;
+        }
+#endif /* MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE */
+
+        if (Chirp_shouldOutputTLV(MMWDEMO_OUTPUT_MSG_TARGET_IQ) && gChirpState.targetResult.numTrackBinsUsed > 0)
+        {
+            tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_TARGET_IQ;
+            tl[tlvIdx].length = sizeof(Chirp_output_targetIQ_header) +
+                                gChirpState.targetResult.numTrackBinsUsed * sizeof(Chirp_output_targetIQ_bin);
+            packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
+            chirpEmitTargetIQ = 1;
+            tlvIdx++;
+        }
+
+        if (Chirp_shouldOutputTLV(MMWDEMO_OUTPUT_MSG_PHASE_OUTPUT) && gChirpState.phaseOutput.numBins > 0)
+        {
+            tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_PHASE_OUTPUT;
+            tl[tlvIdx].length = sizeof(Chirp_output_phase_header) +
+                                gChirpState.phaseOutput.numBins * sizeof(Chirp_output_phase_bin);
+            packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
+            chirpEmitPhase = 1;
+            tlvIdx++;
+        }
+
+        if (Chirp_shouldOutputTLV(MMWDEMO_OUTPUT_MSG_PRESENCE))
+        {
+            tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_PRESENCE;
+            tl[tlvIdx].length = sizeof(Chirp_output_presence);
+            packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
+            chirpEmitPresence = 1;
+            tlvIdx++;
+        }
+
+        if (Chirp_shouldOutputTLV(MMWDEMO_OUTPUT_MSG_MOTION_STATUS))
+        {
+            tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_MOTION_STATUS;
+            tl[tlvIdx].length = sizeof(Chirp_output_motion);
+            packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
+            chirpEmitMotion = 1;
+            tlvIdx++;
+        }
+
+        if (Chirp_shouldOutputTLV(MMWDEMO_OUTPUT_MSG_TARGET_INFO))
+        {
+            tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_TARGET_INFO;
+            tl[tlvIdx].length = sizeof(Chirp_output_targetInfo);
+            packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
+            chirpEmitTargetInfo = 1;
             tlvIdx++;
         }
     }
-#endif /* MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE */
 
     header.numTLVs = tlvIdx;
     /* Round up packet length to multiple of MMWDEMO_OUTPUT_MSG_SEGMENT_LEN */
@@ -1574,40 +1637,119 @@ static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDe
         tlvIdx++;
     }
 
-    /***************************************************************************
-     * CUSTOM TLV: Complex Range FFT Transmission
-     * Sends raw I/Q data from radar cube for vital signs phase extraction
-     * SAFETY: Only outputs if radar cube is in FORMAT_1 (expected layout)
-     **************************************************************************/
-#ifdef MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE
-    if ((result->radarCube.data != NULL) && (result->radarCube.datafmt == DPIF_RADARCUBE_FORMAT_1))
+    if (chirpEmitComplex)
     {
         MmwDemo_output_complexRangeFFT_header cplxHdr;
         cmplx16ImRe_t *radarCubePtr;
 
-        /* Prepare header */
         cplxHdr.numRangeBins = subFrameCfg->numRangeBins;
-        cplxHdr.chirpIndex = 0; /* First chirp */
-        cplxHdr.rxAntenna = 0;  /* First RX antenna */
+        cplxHdr.chirpIndex = 0;
+        cplxHdr.rxAntenna = 0;
         cplxHdr.reserved = 0;
 
-        /* Get pointer to radar cube data (already translated earlier) */
         radarCubePtr = (cmplx16ImRe_t *)result->radarCube.data;
 
-        /* Send TLV header */
         UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
-
-        /* Send complex range FFT header */
         UART_writePolling(uartHandle, (uint8_t *)&cplxHdr, sizeof(MmwDemo_output_complexRangeFFT_header));
-
-        /* Send I/Q data for first chirp, first RX antenna
-         * Format 1 layout: x[txPattern][chirp][rx][rangeBin]
-         * For TX0, Chirp0, RX0: offset = 0 */
         UART_writePolling(uartHandle, (uint8_t *)radarCubePtr, cplxHdr.numRangeBins * sizeof(cmplx16ImRe_t));
-
         tlvIdx++;
     }
-#endif /* MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE */
+
+    if (chirpEmitTargetIQ)
+    {
+        Chirp_output_targetIQ_header targetHeader;
+        Chirp_output_targetIQ_bin targetBins[CHIRP_TARGET_MAX_TRACK_BINS];
+        uint8_t binIdx;
+
+        targetHeader.numBins = gChirpState.targetResult.numTrackBinsUsed;
+        targetHeader.centerBin = gChirpState.targetResult.primaryBin;
+        targetHeader.timestamp_us = chirpTimestampUs;
+
+        for (binIdx = 0; binIdx < targetHeader.numBins; binIdx++)
+        {
+            uint16_t rangeBin = gChirpState.targetResult.trackBins[binIdx];
+            const int16_t *binData = &chirpRadarData[rangeBin * 2];
+
+            targetBins[binIdx].binIndex = rangeBin;
+            targetBins[binIdx].imag = binData[0];
+            targetBins[binIdx].real = binData[1];
+            targetBins[binIdx].reserved = 0;
+        }
+
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&targetHeader, sizeof(Chirp_output_targetIQ_header));
+        UART_writePolling(uartHandle, (uint8_t *)targetBins,
+                          targetHeader.numBins * sizeof(Chirp_output_targetIQ_bin));
+        tlvIdx++;
+    }
+
+    if (chirpEmitPhase)
+    {
+        Chirp_output_phase_header phaseHeader;
+
+        phaseHeader.numBins = gChirpState.phaseOutput.numBins;
+        phaseHeader.centerBin = gChirpState.phaseOutput.centerBin;
+        phaseHeader.timestamp_us = gChirpState.phaseOutput.timestamp_us;
+
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&phaseHeader, sizeof(Chirp_output_phase_header));
+        UART_writePolling(uartHandle, (uint8_t *)gChirpState.phaseOutput.bins,
+                          phaseHeader.numBins * sizeof(Chirp_output_phase_bin));
+        tlvIdx++;
+    }
+
+    if (chirpEmitPresence)
+    {
+        Chirp_output_presence presence = {0};
+
+        if (gChirpState.targetResult.valid)
+        {
+            presence.presence = gChirpState.motionResult.motionDetected ? 2 : 1;
+            presence.confidence = gChirpState.targetResult.confidence;
+            presence.range_Q8 = gChirpState.targetResult.primaryRange_Q8;
+            presence.targetBin = gChirpState.targetResult.primaryBin;
+        }
+
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&presence, sizeof(Chirp_output_presence));
+        tlvIdx++;
+    }
+
+    if (chirpEmitMotion)
+    {
+        Chirp_output_motion motion;
+
+        motion.motionDetected = gChirpState.motionResult.motionDetected;
+        motion.motionLevel = gChirpState.motionResult.motionLevel;
+        motion.motionBinCount = gChirpState.motionResult.motionBinCount;
+        motion.peakMotionBin = gChirpState.motionResult.peakMotionBin;
+        motion.peakMotionDelta = gChirpState.motionResult.peakMotionDelta;
+
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&motion, sizeof(Chirp_output_motion));
+        tlvIdx++;
+    }
+
+    if (chirpEmitTargetInfo)
+    {
+        Chirp_output_targetInfo targetInfo;
+
+        memset(&targetInfo, 0, sizeof(targetInfo));
+        if (gChirpState.targetResult.valid)
+        {
+            targetInfo.primaryBin = gChirpState.targetResult.primaryBin;
+            targetInfo.primaryMagnitude = gChirpState.targetResult.primaryMagnitude;
+            targetInfo.primaryRange_Q8 = gChirpState.targetResult.primaryRange_Q8;
+            targetInfo.confidence = gChirpState.targetResult.confidence;
+            targetInfo.numTargets = gChirpState.targetResult.numTargets;
+            targetInfo.secondaryBin = gChirpState.targetResult.secondaryBin;
+            targetInfo.reserved = 0;
+        }
+
+        UART_writePolling(uartHandle, (uint8_t *)&tl[tlvIdx], sizeof(MmwDemo_output_message_tl));
+        UART_writePolling(uartHandle, (uint8_t *)&targetInfo, sizeof(Chirp_output_targetInfo));
+        tlvIdx++;
+    }
 
     /* Send padding bytes */
     numPaddingBytes = MMWDEMO_OUTPUT_MSG_SEGMENT_LEN - (packetLen & (MMWDEMO_OUTPUT_MSG_SEGMENT_LEN - 1));
@@ -2080,6 +2222,7 @@ static int32_t MmwDemo_dataPathConfig(void)
             RFparserOutParams.numRangeBins = 1022;
         }
 
+        subFrameCfg->rangeStep = RFparserOutParams.rangeStep;
         subFrameCfg->numDopplerBins = RFparserOutParams.numDopplerBins;
         subFrameCfg->numChirpsPerChirpEvent = RFparserOutParams.numChirpsPerChirpEvent;
         subFrameCfg->adcBufChanDataSize = RFparserOutParams.adcBufChanDataSize;
