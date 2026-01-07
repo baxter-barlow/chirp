@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit hooks
+        run: pre-commit run --all-files
+
+  python-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install ruff black pytest
+          if [ -f host-sdk/python/requirements.txt ]; then
+            pip install -r host-sdk/python/requirements.txt
+          fi
+
+      - name: Lint with ruff
+        run: ruff check host-sdk/ tools/ || true
+
+      - name: Run tests
+        run: |
+          if [ -d host-sdk/python/tests ]; then
+            pytest host-sdk/python/tests/ -v
+          fi
+
+  # Firmware build - requires TI toolchains (manual/self-hosted runner)
+  # Uncomment when self-hosted runner with TI tools is available
+  # build-firmware:
+  #   runs-on: self-hosted
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Build firmware
+  #       run: |
+  #         source toolchains/env.sh
+  #         cd firmware
+  #         make all

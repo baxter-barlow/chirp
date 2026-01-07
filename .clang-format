@@ -1,0 +1,55 @@
+# Clang-format configuration for IWR6843 firmware
+# Matches TI SDK style with minor modifications
+
+Language: Cpp
+BasedOnStyle: LLVM
+
+# Line width (matches ambient's 120)
+ColumnLimit: 120
+
+# Indentation
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+IndentCaseLabels: true
+
+# Braces
+BreakBeforeBraces: Allman
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+# Alignment
+AlignConsecutiveMacros: true
+AlignConsecutiveDeclarations: false
+AlignConsecutiveAssignments: false
+AlignTrailingComments: true
+AlignOperands: true
+
+# Pointer alignment (TI convention)
+PointerAlignment: Right
+
+# Include ordering
+SortIncludes: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  # System headers
+  - Regex: '^<'
+    Priority: 1
+  # TI SDK headers
+  - Regex: '^"ti/'
+    Priority: 2
+  # Project headers
+  - Regex: '^"'
+    Priority: 3
+
+# Spaces
+SpaceAfterCStyleCast: false
+SpaceBeforeParens: ControlStatements
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Other
+MaxEmptyLinesToKeep: 2
+KeepEmptyLinesAtTheStartOfBlocks: false
