@@ -132,27 +132,27 @@ extern "C"
      ******************************************************************************/
 
 /** Validate pointer is not NULL */
-#define CHIRP_VALIDATE_PTR(ptr)   \
-    do                            \
-    {                             \
-        if ((ptr) == NULL)        \
-            return CHIRP_ERR_NULL_PTR; \
+#define CHIRP_VALIDATE_PTR(ptr)                                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if ((ptr) == NULL)                                                                                             \
+            return CHIRP_ERR_NULL_PTR;                                                                                 \
     } while (0)
 
 /** Validate value is within range [min, max] */
-#define CHIRP_VALIDATE_RANGE(val, min, max) \
-    do                                      \
-    {                                       \
-        if ((val) < (min) || (val) > (max)) \
-            return CHIRP_ERR_OUT_OF_RANGE;  \
+#define CHIRP_VALIDATE_RANGE(val, min, max)                                                                            \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if ((val) < (min) || (val) > (max))                                                                            \
+            return CHIRP_ERR_OUT_OF_RANGE;                                                                             \
     } while (0)
 
 /** Validate state is initialized */
-#define CHIRP_VALIDATE_INIT(state)          \
-    do                                      \
-    {                                       \
-        if (!(state)->initialized)          \
-            return CHIRP_ERR_NOT_INITIALIZED; \
+#define CHIRP_VALIDATE_INIT(state)                                                                                     \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (!(state)->initialized)                                                                                     \
+            return CHIRP_ERR_NOT_INITIALIZED;                                                                          \
     } while (0)
 
 #ifdef __cplusplus

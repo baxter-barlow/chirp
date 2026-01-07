@@ -5,6 +5,24 @@ All notable changes to chirp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-01-07
+
+### Added
+- **Production Hardening**
+  - Error codes system with human-readable messages
+  - Software watchdog for hang detection and recovery
+  - Configuration persistence (save/load/reset to flash)
+  - CLI commands: `chirpSaveConfig`, `chirpLoadConfig`, `chirpFactoryReset`, `chirpWatchdog`
+
+### Documentation
+- Complete API reference (`docs/API_REFERENCE.md`)
+- TLV binary specification (`docs/TLV_SPECIFICATION.md`)
+- Integration guide (`docs/INTEGRATION_GUIDE.md`)
+- Updated README with badges and quick start
+
+### Changed
+- Stable v1.0.0 release - ready for production use
+
 ## [0.4.0] - 2026-01-07
 
 ### Added
@@ -69,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI workflow for linting (pre-commit, clang-format, ruff, black)
 - Documentation and development plan
 
+[1.0.0]: https://github.com/baxter-barlow/chirp/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/baxter-barlow/chirp/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/baxter-barlow/chirp/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/baxter-barlow/chirp/compare/v0.1.0...v0.2.0
