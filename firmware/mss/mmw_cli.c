@@ -1521,6 +1521,26 @@ void MmwDemo_CLIInit(uint8_t taskPriority)
     cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_profile;
     cnt++;
 
+    cliCfg.tableEntry[cnt].cmd = "chirpSaveConfig";
+    cliCfg.tableEntry[cnt].helpString = "Save configuration to flash";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_saveConfig;
+    cnt++;
+
+    cliCfg.tableEntry[cnt].cmd = "chirpLoadConfig";
+    cliCfg.tableEntry[cnt].helpString = "Load configuration from flash";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_loadConfig;
+    cnt++;
+
+    cliCfg.tableEntry[cnt].cmd = "chirpFactoryReset";
+    cliCfg.tableEntry[cnt].helpString = "Reset to factory defaults";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_factoryReset;
+    cnt++;
+
+    cliCfg.tableEntry[cnt].cmd = "chirpWatchdog";
+    cliCfg.tableEntry[cnt].helpString = "<enabled> [timeoutMs] [action] (action: 0=LOG, 1=RESET_STATE, 2=RESTART)";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_watchdog;
+    cnt++;
+
 #ifdef SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN
     cliCfg.tableEntry[cnt].cmd = "idlePowerCycle";
     cliCfg.tableEntry[cnt].helpString =

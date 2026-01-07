@@ -66,6 +66,30 @@ extern "C"
      */
     int32_t Chirp_CLI_profile(int32_t argc, char *argv[]);
 
+    /**
+     * @brief Save configuration to flash
+     * Usage: chirpSaveConfig
+     */
+    int32_t Chirp_CLI_saveConfig(int32_t argc, char *argv[]);
+
+    /**
+     * @brief Load configuration from flash
+     * Usage: chirpLoadConfig
+     */
+    int32_t Chirp_CLI_loadConfig(int32_t argc, char *argv[]);
+
+    /**
+     * @brief Reset to factory defaults
+     * Usage: chirpFactoryReset
+     */
+    int32_t Chirp_CLI_factoryReset(int32_t argc, char *argv[]);
+
+    /**
+     * @brief Configure watchdog
+     * Usage: chirpWatchdog <enabled> [timeoutMs] [action]
+     */
+    int32_t Chirp_CLI_watchdog(int32_t argc, char *argv[]);
+
 #ifdef __cplusplus
 }
 #endif

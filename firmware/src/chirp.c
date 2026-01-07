@@ -37,6 +37,9 @@ void Chirp_init(void)
     /* Initialize power management */
     Chirp_Power_init(&gChirpState.powerConfig, &gChirpState.powerState);
 
+    /* Initialize watchdog */
+    Chirp_Wdg_init(&gChirpState.watchdogConfig, &gChirpState.watchdogState);
+
     /* Mark as initialized */
     gChirpState.initialized = 1;
 }

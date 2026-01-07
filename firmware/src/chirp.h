@@ -12,6 +12,8 @@
 #define CHIRP_H
 
 #include "../include/mmw_output.h"
+#include "config_persist.h"
+#include "error_codes.h"
 #include "firmware_config.h"
 #include "motion_detect.h"
 #include "output_modes.h"
@@ -19,6 +21,7 @@
 #include "power_mode.h"
 #include "target_select.h"
 #include "version.h"
+#include "watchdog.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -63,6 +66,12 @@ extern "C"
 
         /** Power management state */
         Chirp_PowerState powerState;
+
+        /** Watchdog configuration */
+        Chirp_WdgConfig watchdogConfig;
+
+        /** Watchdog state */
+        Chirp_WdgState watchdogState;
 
         /** Range resolution in meters (from radar config) */
         float rangeResolution;

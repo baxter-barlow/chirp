@@ -90,6 +90,9 @@ MSS_MMW_DEMO_SOURCES     = \
                        phase_extract.c \
                        motion_detect.c \
                        power_mode.c \
+                       error_codes.c \
+                       watchdog.c \
+                       config_persist.c \
                        chirp.c \
                        chirp_cli.c
 

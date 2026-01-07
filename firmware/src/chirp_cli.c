@@ -269,6 +269,115 @@ int32_t Chirp_CLI_profile(int32_t argc, char *argv[])
 }
 
 /*******************************************************************************
+ * CLI Command: chirpSaveConfig
+ * Usage: chirpSaveConfig
+ ******************************************************************************/
+int32_t Chirp_CLI_saveConfig(int32_t argc, char *argv[])
+{
+    Chirp_ErrorCode err;
+
+    (void)argc;
+    (void)argv;
+
+    err = Chirp_Config_save(CHIRP_CONFIG_FLASH_OFFSET);
+    if (err != CHIRP_OK)
+    {
+        CLI_write("Error: %s (0x%04X)\n", Chirp_Error_getMessage(err), err);
+        return -1;
+    }
+
+    CLI_write("Configuration saved to flash\n");
+    return 0;
+}
+
+/*******************************************************************************
+ * CLI Command: chirpLoadConfig
+ * Usage: chirpLoadConfig
+ ******************************************************************************/
+int32_t Chirp_CLI_loadConfig(int32_t argc, char *argv[])
+{
+    Chirp_ErrorCode err;
+
+    (void)argc;
+    (void)argv;
+
+    err = Chirp_Config_load(CHIRP_CONFIG_FLASH_OFFSET);
+    if (err != CHIRP_OK)
+    {
+        CLI_write("Error: %s (0x%04X)\n", Chirp_Error_getMessage(err), err);
+        return -1;
+    }
+
+    CLI_write("Configuration loaded from flash\n");
+    return 0;
+}
+
+/*******************************************************************************
+ * CLI Command: chirpFactoryReset
+ * Usage: chirpFactoryReset
+ ******************************************************************************/
+int32_t Chirp_CLI_factoryReset(int32_t argc, char *argv[])
+{
+    Chirp_ErrorCode err;
+
+    (void)argc;
+    (void)argv;
+
+    err = Chirp_Config_factoryReset();
+    if (err != CHIRP_OK)
+    {
+        CLI_write("Error: %s (0x%04X)\n", Chirp_Error_getMessage(err), err);
+        return -1;
+    }
+
+    CLI_write("Configuration reset to factory defaults\n");
+    return 0;
+}
+
+/*******************************************************************************
+ * CLI Command: chirpWatchdog
+ * Usage: chirpWatchdog <enabled> [timeoutMs] [action]
+ ******************************************************************************/
+int32_t Chirp_CLI_watchdog(int32_t argc, char *argv[])
+{
+    uint8_t enabled;
+    uint32_t timeoutMs;
+    Chirp_WdgAction action;
+
+    if (argc < 2)
+    {
+        CLI_write("Error: chirpWatchdog requires at least 1 argument\n");
+        CLI_write("Usage: chirpWatchdog <enabled> [timeoutMs] [action]\n");
+        CLI_write("  enabled: 0=disable, 1=enable\n");
+        CLI_write("  timeoutMs: 100-60000 (default 5000)\n");
+        CLI_write("  action: 0=LOG, 1=RESET_STATE, 2=RESTART_SENSOR\n");
+        return -1;
+    }
+
+    enabled = (uint8_t)atoi(argv[1]);
+    timeoutMs = (argc >= 3) ? (uint32_t)atoi(argv[2]) : CHIRP_WDG_DEFAULT_TIMEOUT_MS;
+    action = (argc >= 4) ? (Chirp_WdgAction)atoi(argv[3]) : CHIRP_WDG_ACTION_LOG;
+
+    if (enabled)
+    {
+        if (Chirp_Wdg_configure(&gChirpState.watchdogConfig, timeoutMs, action) != 0)
+        {
+            CLI_write("Error: Invalid watchdog configuration\n");
+            return -1;
+        }
+        CLI_write("Watchdog enabled: %u ms, action=%s\n", timeoutMs, Chirp_Wdg_getActionName(action));
+    }
+    else
+    {
+        gChirpState.watchdogConfig.enabled = 0;
+        Chirp_Wdg_stop(&gChirpState.watchdogState);
+        CLI_write("Watchdog disabled\n");
+    }
+
+    return 0;
+}
+
+/*******************************************************************************
  * CLI Command: chirpPowerMode
  * Usage: chirpPowerMode <mode> [activeMs] [sleepMs]
  * mode: 0=FULL, 1=BALANCED, 2=LOW_POWER, 3=ULTRA_LOW, 4=CUSTOM
