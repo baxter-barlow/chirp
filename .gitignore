@@ -1,13 +1,14 @@
 # =============================================================================
-# IWR6843 Firmware .gitignore
-# Adapted from ambient project conventions
+# chirp .gitignore
 # =============================================================================
 
 # -----------------------------------------------------------------------------
 # SDK and Toolchains (large, downloaded separately)
 # -----------------------------------------------------------------------------
 sdk/
-toolchains/
+toolchains/*
+!toolchains/env.sh.template
+toolchains/env.sh
 *-Install.bin
 *.Install.bin
 mmwave_sdk*.pdf
