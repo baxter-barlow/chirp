@@ -33,6 +33,13 @@ mmwave_sdk*.html
 *_configPkg*/
 *.rov.xs
 
+# Object directories
+obj_*/
+*.oer4f
+*.oe674
+*.xer4f
+*.xe674
+
 # Linker generated
 *.xml
 
