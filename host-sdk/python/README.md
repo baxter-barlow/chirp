@@ -135,4 +135,4 @@ for frame in parser.parse_frames():
 
 ## License
 
-Apache 2.0 - See [LICENSE](../../LICENSE) in repository root.
+MIT - See [LICENSE](../../LICENSE) in repository root.
