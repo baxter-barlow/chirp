@@ -9,7 +9,8 @@
 vpath %.c $(MMWAVE_SDK_INSTALL_PATH)/ti/demo/utils \
           $(MMWAVE_SDK_INSTALL_PATH)/ti/datapath/dpc/objectdetection/objdetrangehwa/src \
 	      $(MMWAVE_SDK_INSTALL_PATH)/ti/board \
-          ./mss
+          ./mss \
+          ./src
 
 ###################################################################################
 # Additional libraries which are required to build the DEMO:
@@ -83,7 +84,13 @@ MSS_MMW_DEMO_SOURCES     = \
                        mmw_lvds_stream.c \
                        mmwdemo_flash.c \
                        objdetrangehwa.c \
-		       		   antenna_geometry.c
+		       		   antenna_geometry.c \
+                       output_modes.c \
+                       target_select.c \
+                       phase_extract.c \
+                       motion_detect.c \
+                       chirp.c \
+                       chirp_cli.c
 
 
 MSS_MMW_DEMO_DEPENDS   = $(addprefix $(PLATFORM_OBJDIR)/, $(MSS_MMW_DEMO_SOURCES:.c=.$(R4F_DEP_EXT)))
@@ -106,7 +113,8 @@ mssDemo: R4F_CFLAGS += --cmd_file=$(BUILD_CONFIGPKG)/compiler.opt \
 		               --define=OBJDET_NO_RANGE \
                        --define=APP_RESOURCE_FILE="<ti/demo/$(MMWAVE_SDK_DEVICE_TYPE)/mmw/mmw_res.h>" \
                        --define=DebugP_LOG_ENABLED \
-                       --define=MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE
+                       --define=MMWDEMO_OUTPUT_COMPLEX_RANGE_FFT_ENABLE \
+                       --include_path=./src
 mssDemo: buildDirectories mmwMssRTSC $(MSS_MMW_DEMO_OBJECTS)
 	$(R4F_LD) $(R4F_LDFLAGS) $(MSS_MMW_DEMO_LOC_LIBS) $(MSS_MMW_DEMO_STD_LIBS) 			\
 	-l$(MSS_MMW_DEMO_CONFIGPKG)/linker.cmd --map_file=$(MSS_MMW_DEMO_MAP) $(MSS_MMW_DEMO_OBJECTS) 	\

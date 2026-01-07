@@ -65,6 +65,9 @@
 #include <ti/demo/utils/mmwdemo_adcconfig.h>
 #include <ti/demo/utils/mmwdemo_rfparser.h>
 
+/* Chirp Include Files */
+#include "chirp_cli.h"
+
 #ifdef SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN
 /* Low Power Library Functions*/
 #include <ti/utils/libsleep/libsleep_xwr68xx.h>
@@ -1508,6 +1511,34 @@ void MmwDemo_CLIInit (uint8_t taskPriority)
     cliCfg.tableEntry[cnt].cmd            = "calibData";
     cliCfg.tableEntry[cnt].helpString    = "<save enable> <restore enable> <Flash offset>";
     cliCfg.tableEntry[cnt].cmdHandlerFxn  = MmwDemo_CLICalibDataSaveRestore;
+    cnt++;
+
+    /***************************************************************************
+     * Chirp CLI Commands
+     **************************************************************************/
+    cliCfg.tableEntry[cnt].cmd            = "chirpOutputMode";
+    cliCfg.tableEntry[cnt].helpString     = "<mode> [enableMotion] [enableTargetInfo] (mode: 0=RAW_IQ, 1=RANGE_FFT, 2=TARGET_IQ, 3=PHASE, 4=PRESENCE)";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn  = Chirp_CLI_outputMode;
+    cnt++;
+
+    cliCfg.tableEntry[cnt].cmd            = "chirpTargetCfg";
+    cliCfg.tableEntry[cnt].helpString     = "<minRange_m> <maxRange_m> <minSNR_dB> <numTrackBins>";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn  = Chirp_CLI_targetCfg;
+    cnt++;
+
+    cliCfg.tableEntry[cnt].cmd            = "chirpMotionCfg";
+    cliCfg.tableEntry[cnt].helpString     = "<enabled> <threshold> <minBin> <maxBin>";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn  = Chirp_CLI_motionCfg;
+    cnt++;
+
+    cliCfg.tableEntry[cnt].cmd            = "chirpStatus";
+    cliCfg.tableEntry[cnt].helpString     = "Display chirp status";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn  = Chirp_CLI_status;
+    cnt++;
+
+    cliCfg.tableEntry[cnt].cmd            = "chirpReset";
+    cliCfg.tableEntry[cnt].helpString     = "Reset chirp state";
+    cliCfg.tableEntry[cnt].cmdHandlerFxn  = Chirp_CLI_reset;
     cnt++;
 
 #ifdef SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN

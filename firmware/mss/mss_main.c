@@ -635,6 +635,9 @@
 #include <ti/demo/utils/mmwdemo_adcconfig.h>
 #include <ti/demo/utils/mmwdemo_flash.h>
 
+/* Chirp Include Files */
+#include "chirp.h"
+
 /* Profiler Include Files */
 #include <ti/utils/cycleprofiler/cycle_profiler.h>
 
@@ -4280,6 +4283,11 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      * Initialize the Profiler
      *****************************************************************************/
     Cycleprofiler_init();
+
+    /*****************************************************************************
+     * Initialize Chirp Firmware
+     *****************************************************************************/
+    Chirp_init();
 
     /*****************************************************************************
      * Initialize the CLI Module:
