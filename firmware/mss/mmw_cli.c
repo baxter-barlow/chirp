@@ -1250,11 +1250,6 @@ static int32_t MmwDemo_CLIConfigDataPort(int32_t argc, char *argv[])
         uartParams.clockFrequency = gMmwMssMCB.cfg.platformCfg.sysClockFrequency;
         uartParams.baudRate = baudrate;
         uartParams.isPinMuxDone = 1U;
-#if CHIRP_UART_DMA_ENABLE
-        uartParams.dmaHandle = gMmwMssMCB.dataPathObj.dmaHandle;
-        uartParams.txDMAChannel = CHIRP_UART_TX_DMA_CHANNEL;
-        uartParams.rxDMAChannel = CHIRP_UART_RX_DMA_CHANNEL;
-#endif
 
         /* Open the Logging UART Instance: */
         gMmwMssMCB.loggingUartHandle = UART_open(1, &uartParams);
@@ -1517,6 +1512,8 @@ void MmwDemo_CLIInit(uint8_t taskPriority)
     cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_reset;
     cnt++;
 
+    /* Phase 2/3 commands disabled to stay within CLI_MAX_CMD=32 limit */
+#if 0
     cliCfg.tableEntry[cnt].cmd = "chirpPowerMode";
     cliCfg.tableEntry[cnt].helpString =
         "<mode> [activeMs] [sleepMs] (mode: 0=FULL, 1=BALANCED, 2=LOW_POWER, 3=ULTRA_LOW, 4=CUSTOM)";
@@ -1547,6 +1544,7 @@ void MmwDemo_CLIInit(uint8_t taskPriority)
     cliCfg.tableEntry[cnt].helpString = "<enabled> [timeoutMs] [action] (action: 0=LOG, 1=RESET_STATE, 2=RESTART)";
     cliCfg.tableEntry[cnt].cmdHandlerFxn = Chirp_CLI_watchdog;
     cnt++;
+#endif
 
 #ifdef SYS_COMMON_XWR68XX_LOW_POWER_MODE_EN
     cliCfg.tableEntry[cnt].cmd = "idlePowerCycle";

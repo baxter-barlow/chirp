@@ -52,7 +52,6 @@
 /* Use local mmw_output.h with chirp TLV definitions */
 #include "../include/mmw_output.h"
 #include <ti/demo/xwr68xx/mmw/mss/mmw_lvds_stream.h>
-#include <ti/drivers/dma/dma.h>
 #include <ti/drivers/gpio/gpio.h>
 #include <ti/drivers/mailbox/mailbox.h>
 #include <ti/drivers/osal/DebugP.h>
@@ -262,9 +261,6 @@ extern "C"
                     the minimum. */
         uint16_t numRangeBins;
 
-        /*! @brief Range resolution in meters per bin */
-        float rangeStep;
-
         /*! @brief  Number of Doppler FFT bins, this is at a minimum the next power of 2 of
                     numDopplerChirps. If Doppler zoom is supported, this can be bigger
                     than the minimum. */
@@ -334,9 +330,6 @@ extern "C"
 
         /*! @brief   Handle of the EDMA driver. */
         EDMA_Handle edmaHandle;
-
-        /*! @brief   Handle of the DMA driver for UART DMA transfers. */
-        DMA_Handle dmaHandle;
 
         /*! @brief   Radar cube memory information from range DPC */
         DPC_ObjectDetectionRangeHWA_preStartCfg_radarCubeMem radarCubeMem;

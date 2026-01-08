@@ -698,6 +698,12 @@ MmwDemo_MSS_MCB gMmwMssMCB;
 
 /**
  * @brief
+ *  Global Variable for chirp range step (meters per bin)
+ */
+float gChirpRangeStep = 0.0f;
+
+/**
+ * @brief
  *  Global Variable for HSRAM buffer used to share results to remote
  */
 MmwDemo_HSRAM gHSRAM;
@@ -1403,12 +1409,12 @@ static void MmwDemo_transmitProcessedOutput(UART_Handle uartHandle, DPC_ObjectDe
         DebugP_assert((uint32_t)result->radarCube.data != SOC_TRANSLATEADDR_INVALID);
     }
 
-    if ((subFrameCfg->rangeStep > 0.0f) && (result->radarCube.data != NULL) &&
+    if ((gChirpRangeStep > 0.0f) && (result->radarCube.data != NULL) &&
         (result->radarCube.datafmt == DPIF_RADARCUBE_FORMAT_1))
     {
         chirpRadarData = (const int16_t *)result->radarCube.data;
         chirpTimestampUs = (uint32_t)((Pmu_getCount(0) * 1000000ULL) / gMmwMssMCB.cfg.platformCfg.sysClockFrequency);
-        Chirp_configure(subFrameCfg->rangeStep, subFrameCfg->numRangeBins);
+        Chirp_configure(gChirpRangeStep, subFrameCfg->numRangeBins);
         if (Chirp_processFrame(chirpRadarData, subFrameCfg->numRangeBins, chirpTimestampUs) == 0)
         {
             chirpReady = 1;
@@ -2222,7 +2228,7 @@ static int32_t MmwDemo_dataPathConfig(void)
             RFparserOutParams.numRangeBins = 1022;
         }
 
-        subFrameCfg->rangeStep = RFparserOutParams.rangeStep;
+        gChirpRangeStep = RFparserOutParams.rangeStep;
         subFrameCfg->numDopplerBins = RFparserOutParams.numDopplerBins;
         subFrameCfg->numChirpsPerChirpEvent = RFparserOutParams.numChirpsPerChirpEvent;
         subFrameCfg->adcBufChanDataSize = RFparserOutParams.adcBufChanDataSize;
@@ -4084,24 +4090,6 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      * Open the mmWave SDK components:
      *****************************************************************************/
 
-#if CHIRP_UART_DMA_ENABLE
-    /* Initialize and open DMA driver for UART DMA transfers */
-    {
-        DMA_Params dmaParams;
-        DMA_init();
-        DMA_Params_init(&dmaParams);
-        gMmwMssMCB.dataPathObj.dmaHandle = DMA_open(0, &dmaParams, &errCode);
-        if (gMmwMssMCB.dataPathObj.dmaHandle == NULL)
-        {
-            System_printf("Error: DMA_open failed [%d]\n", errCode);
-            MmwDemo_debugAssert(0);
-            return;
-        }
-    }
-#else
-    gMmwMssMCB.dataPathObj.dmaHandle = NULL;
-#endif
-
     /* Setup the default UART Parameters */
     UART_Params_init(&uartParams);
     uartParams.clockFrequency = gMmwMssMCB.cfg.platformCfg.sysClockFrequency;
@@ -4123,11 +4111,6 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     uartParams.clockFrequency = gMmwMssMCB.cfg.platformCfg.sysClockFrequency;
     uartParams.baudRate = gMmwMssMCB.cfg.platformCfg.loggingBaudRate;
     uartParams.isPinMuxDone = 1U;
-#if CHIRP_UART_DMA_ENABLE
-    uartParams.dmaHandle = gMmwMssMCB.dataPathObj.dmaHandle;
-    uartParams.txDMAChannel = CHIRP_UART_TX_DMA_CHANNEL;
-    uartParams.rxDMAChannel = CHIRP_UART_RX_DMA_CHANNEL;
-#endif
 
     /* Open the Logging UART Instance: */
     gMmwMssMCB.loggingUartHandle = UART_open(1, &uartParams);
