@@ -1,0 +1,56 @@
+# TI SDK and Toolchains (install separately via SETUP.md)
+bios_6_73_01_01/
+ti-cgt-arm_16.9.6.LTS/
+ti-cgt-c6000_8.3.3/
+xdctools_3_50_08_24_core/
+uniflash_9.4.0/
+dsplib_c64Px_3_4_0_0/
+dsplib_c674x_3_4_0_0/
+mathlib_c674x_3_1_2_1/
+tools/ftdi/
+.metadata/
+
+# Full SDK packages (use reference/ for needed files)
+packages/
+
+# Vendor symlinks (local only)
+vendor/
+
+# Other TI/vendor directories
+Vital_Signs/
+docs/
+
+# Build artifacts
+*.o
+*.obj
+*.out
+*.map
+*.xer4f
+*.xe674
+*.oe674
+*.oer4f
+*.d
+*_configPkg*/
+*.pp
+*.dep
+obj_*/
+
+# IDE files
+.project
+.cproject
+.settings/
+*.launch
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Editor/OS files
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
