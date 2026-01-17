@@ -1,0 +1,45 @@
+# =============================================================================
+# Docker ignore - exclude large files from build context
+# =============================================================================
+
+# Toolchains (mounted at runtime, not copied)
+ti-cgt-arm_*
+ti-cgt-c6000_*
+xdctools_*
+bios_*
+dsplib_*
+mathlib_*
+uniflash_*
+
+# Build artifacts
+*.xer4f
+*.xe674
+*.bin
+*.map
+*.o
+*.obj
+obj_*/
+mmw_configPkg_*/
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+
+# Logs
+*.log

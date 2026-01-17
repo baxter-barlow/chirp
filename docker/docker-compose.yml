@@ -1,0 +1,65 @@
+# =============================================================================
+# Docker Compose for IWR6843AOPEVM Development
+# =============================================================================
+#
+# Usage:
+#   docker-compose -f docker/docker-compose.yml run --rm build
+#   docker-compose -f docker/docker-compose.yml run --rm shell
+#
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # Build service - compiles firmware
+  # ---------------------------------------------------------------------------
+  build:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: dev
+    image: chirp-build:latest
+    volumes:
+      # Mount workspace (source code)
+      - ..:/workspace
+      # Mount toolchains (XDC needs write access for config packages)
+      - ${TOOLCHAIN_PATH:-..}:/opt/ti
+    working_dir: /workspace
+    command: ["./docker/scripts/build.sh"]
+    environment:
+      - VITAL_SIGNS=1
+      - USE_LOCAL_MATHLIB=1
+      - USE_LOCAL_MATHUTILS=1
+
+  # ---------------------------------------------------------------------------
+  # Interactive shell for debugging
+  # ---------------------------------------------------------------------------
+  shell:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: dev
+    image: chirp-build:latest
+    volumes:
+      - ..:/workspace
+      - ${TOOLCHAIN_PATH:-..}:/opt/ti
+    working_dir: /workspace
+    command: ["/bin/bash"]
+    stdin_open: true
+    tty: true
+
+  # ---------------------------------------------------------------------------
+  # Clean build artifacts
+  # ---------------------------------------------------------------------------
+  clean:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: dev
+    image: chirp-build:latest
+    volumes:
+      - ..:/workspace
+      - ${TOOLCHAIN_PATH:-..}:/opt/ti
+    working_dir: /workspace
+    command: ["./docker/scripts/clean.sh"]
