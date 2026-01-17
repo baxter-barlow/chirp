@@ -13,22 +13,41 @@ vpath %.c $(MMWAVE_SDK_INSTALL_PATH)/ti/demo/utils \
 	      ./dss
 
 ###################################################################################
+# Local Library Configuration (for Vital Signs integration)
+###################################################################################
+USE_LOCAL_MATHLIB ?= 1
+USE_LOCAL_DSPLIB ?= 0
+USE_LOCAL_MATHUTILS ?= 1
+
+###################################################################################
 # Additional libraries which are required to build the DEMO:
 ###################################################################################
 DSS_MMW_DEMO_STD_LIBS = $(C674_COMMON_STD_LIB)						\
 		   	-llibcrc_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)		\
 		   	-llibmailbox_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)		\
-			-ldsplib.ae64P	\
 			-llibmmwavealg_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)  	\
-			-lmathlib.$(C674_LIB_EXT) 					\
 			-llibedma_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)		\
 			-llibdpm_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT) 		\
-			-llibmathutils.$(C674_LIB_EXT) 					\
 			-llibosal_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)		\
 			-llibcfarcaproc_dsp_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)    \
 			-llibdopplerproc_dsp_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)   \
 			-llibaoaproc_dsp_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)   \
 			-llibdpedma_hwa_$(MMWAVE_SDK_DEVICE_TYPE).$(C674_LIB_EXT)
+
+# Conditional DSPlib linking (vendor library when not using local source)
+ifneq ($(USE_LOCAL_DSPLIB),1)
+DSS_MMW_DEMO_STD_LIBS += -ldsplib.ae64P
+endif
+
+# Conditional Mathlib linking (vendor library when not using local headers)
+ifneq ($(USE_LOCAL_MATHLIB),1)
+DSS_MMW_DEMO_STD_LIBS += -lmathlib.$(C674_LIB_EXT)
+endif
+
+# Conditional Mathutils linking (vendor library when not using local source)
+ifneq ($(USE_LOCAL_MATHUTILS),1)
+DSS_MMW_DEMO_STD_LIBS += -llibmathutils.$(C674_LIB_EXT)
+endif
 
 DSS_MMW_DEMO_LOC_LIBS = $(C674_COMMON_LOC_LIB)						\
    			-i$(MMWAVE_SDK_INSTALL_PATH)/ti/drivers/crc/lib			\
@@ -56,7 +75,25 @@ DSS_MMW_DEMO_OUT         = $(MMWAVE_SDK_DEVICE_TYPE)_mmw_demo_dss.$(C674_EXE_EXT
 DSS_MMW_DEMO_METAIMG_BIN = $(MMWAVE_SDK_DEVICE_TYPE)_mmw_demo.bin
 DSS_MMW_DEMO_CMD         = dss/mmw_dss_linker.cmd
 DSS_MMW_DEMO_SOURCES     = objectdetection.c \
-                           dss_main.c 
+                           dss_main.c
+
+# Vital Signs DSS sources (conditional)
+ifeq ($(VITAL_SIGNS),1)
+DSS_MMW_DEMO_SOURCES += vitalsign_dsp.c
+vpath %.c $(MMWAVE_SDK_INSTALL_PATH)/../src/dss
+
+# Add local DSPlib sources when enabled (FFT + IFFT)
+ifeq ($(USE_LOCAL_DSPLIB),1)
+DSS_MMW_DEMO_SOURCES += fft_sp.c ifft_sp.c fft_twiddle.c
+vpath %.c $(MMWAVE_SDK_INSTALL_PATH)/../src/dss/dsplib
+endif
+
+# Add local mathutils sources when enabled
+ifeq ($(USE_LOCAL_MATHUTILS),1)
+DSS_MMW_DEMO_SOURCES += mathutils.c
+vpath %.c $(MMWAVE_SDK_INSTALL_PATH)/../src/dss/mathutils
+endif
+endif
 
 DSS_MMW_DEMO_DEPENDS   = $(addprefix $(PLATFORM_OBJDIR)/, $(DSS_MMW_DEMO_SOURCES:.c=.$(C674_DEP_EXT)))
 DSS_MMW_DEMO_OBJECTS   = $(addprefix $(PLATFORM_OBJDIR)/, $(DSS_MMW_DEMO_SOURCES:.c=.$(C674_OBJ_EXT)))
@@ -81,6 +118,31 @@ dssDemo: C674_CFLAGS += --cmd_file=$(BUILD_CONFIGPKG)/compiler.opt \
 			            -i$(C64Px_DSPLIB_INSTALL_PATH)/packages/ti/dsplib/src/DSP_fft16x16_imre/c64P	\
 			            -i$(C64Px_DSPLIB_INSTALL_PATH)/packages/ti/dsplib/src/DSP_fft32x32/c64P	\
 			            --define=DebugP_LOG_ENABLED
+
+# Vital Signs compiler flags (conditional)
+ifeq ($(VITAL_SIGNS),1)
+dssDemo: C674_CFLAGS += --define=VITAL_SIGNS_ENABLED \
+                        -i$(MMWAVE_SDK_INSTALL_PATH)/../src/common \
+                        -i$(MMWAVE_SDK_INSTALL_PATH)/../src/dss
+
+# Local mathlib include path and define
+ifeq ($(USE_LOCAL_MATHLIB),1)
+dssDemo: C674_CFLAGS += --define=USE_LOCAL_MATHLIB \
+                        -i$(MMWAVE_SDK_INSTALL_PATH)/../src/dss/mathlib
+endif
+
+# Local dsplib include path and define
+ifeq ($(USE_LOCAL_DSPLIB),1)
+dssDemo: C674_CFLAGS += --define=USE_LOCAL_DSPLIB \
+                        -i$(MMWAVE_SDK_INSTALL_PATH)/../src/dss/dsplib
+endif
+
+# Local mathutils include path and define
+ifeq ($(USE_LOCAL_MATHUTILS),1)
+dssDemo: C674_CFLAGS += --define=USE_LOCAL_MATHUTILS \
+                        -i$(MMWAVE_SDK_INSTALL_PATH)/../src/dss/mathutils
+endif
+endif
 
 dssDemo: buildDirectories mmwDssRTSC $(DSS_MMW_DEMO_OBJECTS)
 	$(C674_LD) $(C674_LDFLAGS) $(DSS_MMW_DEMO_LOC_LIBS) $(DSS_MMW_DEMO_STD_LIBS) 					\

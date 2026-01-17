@@ -81,6 +81,11 @@ MSS_MMW_DEMO_SOURCES     = \
                        mmwdemo_flash.c \
                        objdetrangehwa.c
 
+# Vital Signs MSS sources (conditional)
+ifeq ($(VITAL_SIGNS),1)
+MSS_MMW_DEMO_SOURCES += vitalsign_cli.c
+vpath %.c $(MMWAVE_SDK_INSTALL_PATH)/../src/mss
+endif
 
 MSS_MMW_DEMO_DEPENDS   = $(addprefix $(PLATFORM_OBJDIR)/, $(MSS_MMW_DEMO_SOURCES:.c=.$(R4F_DEP_EXT)))
 MSS_MMW_DEMO_OBJECTS   = $(addprefix $(PLATFORM_OBJDIR)/, $(MSS_MMW_DEMO_SOURCES:.c=.$(R4F_OBJ_EXT)))
@@ -102,6 +107,14 @@ mssDemo: R4F_CFLAGS += --cmd_file=$(BUILD_CONFIGPKG)/compiler.opt \
 		               --define=OBJDET_NO_RANGE \
                        --define=APP_RESOURCE_FILE="<ti/demo/$(MMWAVE_SDK_DEVICE_TYPE)/mmw/mmw_res.h>" \
                        --define=DebugP_LOG_ENABLED
+
+# Vital Signs compiler flags (conditional)
+ifeq ($(VITAL_SIGNS),1)
+mssDemo: R4F_CFLAGS += --define=VITAL_SIGNS_ENABLED \
+                       -i$(MMWAVE_SDK_INSTALL_PATH)/../src/common \
+                       -i$(MMWAVE_SDK_INSTALL_PATH)/../src/mss
+endif
+
 mssDemo: buildDirectories mmwMssRTSC $(MSS_MMW_DEMO_OBJECTS)
 	$(R4F_LD) $(R4F_LDFLAGS) $(MSS_MMW_DEMO_LOC_LIBS) $(MSS_MMW_DEMO_STD_LIBS) 			\
 	-l$(MSS_MMW_DEMO_CONFIGPKG)/linker.cmd --map_file=$(MSS_MMW_DEMO_MAP) $(MSS_MMW_DEMO_OBJECTS) 	\
