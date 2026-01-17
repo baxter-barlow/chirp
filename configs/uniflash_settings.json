@@ -1,0 +1,6 @@
+{
+    "COMPort": "/dev/ttyUSB0",
+    "MemSelectRadio": "SFLASH",
+    "DownloadFormat": false,
+    "partnum": "IWR6843AOP"
+}
